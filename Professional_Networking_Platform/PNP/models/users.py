@@ -18,6 +18,12 @@ class User(models.Model):
     country = models.CharField(max_length=100)
     #
     cv = models.FileField(upload_to='cv/', null=True, blank=True)
+    photo_profile = models.FileField(upload_to='photo_profile/', null=True, blank=True)
+    #
+    Visibility = models.BooleanField(default=True)
+    #
+    #liste of rooms that the user is a member of
+    rooms = models.ManyToManyField('PNP.Room')
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
