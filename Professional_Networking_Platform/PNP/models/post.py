@@ -7,7 +7,7 @@ class Post(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    comments = models.TextField('[]')
+    comments = models.IntegerField(default=0)
     shares= models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     location = models.CharField(max_length=100)
