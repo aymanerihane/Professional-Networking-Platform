@@ -11,5 +11,7 @@ class Class(models.Model):
     etudiants_id = models.TextField(default='[]') 
     teacher_id = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING)
     #
+    schedule_exams = models.TextField(default='[]')
+    #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

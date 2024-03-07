@@ -68,3 +68,13 @@ def update_post(post_id, title=None, description=None, location=None, link=None,
         return post
     else:
         return None
+    
+
+## Delete operation
+def delete_post(post_id):
+    post = get_post_by_id(post_id)
+    if post:
+        post.delete()
+        return True
+    else:
+        return False
