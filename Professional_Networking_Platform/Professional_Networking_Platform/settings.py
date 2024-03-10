@@ -56,7 +56,7 @@ ROOT_URLCONF = 'Professional_Networking_Platform.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "PNP/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,6 +68,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'Professional_Networking_Platform.wsgi.application'
 
@@ -119,7 +121,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'Professional_Networking_Platform/static')
+    os.path.join(BASE_DIR, 'Professional_Networking_Platform/static'),
+    os.path.join(BASE_DIR, 'PNP/static')
 ]
 
 # Default primary key field type
@@ -129,3 +132,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'PNP/media')
 # MEDIA_URL = '/media/'
+
+
+# redirrect to / after login
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login"

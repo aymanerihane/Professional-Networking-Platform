@@ -1,9 +1,16 @@
 from django.db import models
+from django import forms
+from django.http import HttpResponse
+
 
 #################
 # User model #
+
 class User(models.Model):
+    
+    
     id = models.AutoField(primary_key=True)
+    # forms.py
     ROLE_CHOICES = [
         (1, 'Admin'),
         (2, 'User'),
@@ -19,7 +26,7 @@ class User(models.Model):
     last_name = models.CharField(max_length=100)
     #
     password = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
     #
     phone = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
@@ -36,3 +43,5 @@ class User(models.Model):
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+

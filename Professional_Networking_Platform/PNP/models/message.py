@@ -2,7 +2,7 @@
 import json
 from django.db import models
 
-class Messages(models.Model):
+class Message(models.Model):
     messages = models.TextField(default="[]")
     media = models.TextField(default="[]")
     created_at = models.DateTimeField(auto_now_add=True)
