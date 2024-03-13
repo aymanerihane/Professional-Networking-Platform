@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block content%}
-    <h1>hy</h1>
     <form method="post" action="{% url 'PNP:logout' %}">
         {% csrf_token %}
-        <button type="submit">Logout</button>
+        {% if user.is_authenticated %}
+            <h1>Hello, {{ user.username }}</h1>
+            <button type="submit">Logout</button>
+        {% else %}
+            <a href="{% url 'PNP:login' %}">login</a>
+        {% endif %}
     </form>
-{%endblock content%}
+{% endblock content%}

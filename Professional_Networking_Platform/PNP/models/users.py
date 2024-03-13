@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from django.http import HttpResponse
+from django.contrib.auth.models import User as auth_user
 
 
 #################
@@ -9,11 +10,11 @@ from django.http import HttpResponse
 class User(models.Model):
     
     
-    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(auth_user, on_delete=models.CASCADE)
     # forms.py
     ROLE_CHOICES = [
-        (1, 'Admin'),
-        (2, 'User'),
+        (1, 'Student'),
+        (2, 'Teacher'),
     ]
 
     VISIBILITY_CHOICES = [
@@ -22,19 +23,14 @@ class User(models.Model):
     ]
     role = models.IntegerField(choices=ROLE_CHOICES,default=2) # 1: teacher, 2: student
     #
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    #
-    password = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100, unique=True)
     #
     phone = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     #
-    cv = models.FileField(upload_to='cv/', null=True, blank=True)
-    photo_profile = models.FileField(upload_to='photo_profile/', null=True, blank=True)
+    cv = models.FileField(upload_to='cv/',default='cv_default.jpg', null=True, blank=True)
+    photo_profile = models.FileField(upload_to='photo_profile/',default='pdp_default.jpg', null=True, blank=True)
     #
     Visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='public')
     #

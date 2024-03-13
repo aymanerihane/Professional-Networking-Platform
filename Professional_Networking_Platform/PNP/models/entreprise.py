@@ -14,5 +14,5 @@ class Entreprise(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     #
-    user = models.ForeignKey('PNP.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('PNP.User', on_delete=models.DO_NOTHING)
     #

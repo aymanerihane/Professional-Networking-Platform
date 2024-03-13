@@ -7,8 +7,7 @@ class Message(models.Model):
     media = models.TextField(default="[]")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    sender = models.ForeignKey('PNP.User', on_delete=models.CASCADE, related_name='sent_messages')
-    receiver = models.ForeignKey('PNP.User', on_delete=models.CASCADE, related_name='received_messages')
+    participent = models.ManyToManyField('PNP.User')
 
     def send_message(self, new_message):
         current_messages = self.get_messages_list()

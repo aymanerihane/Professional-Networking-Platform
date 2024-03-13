@@ -21,60 +21,60 @@ class Post(models.Model):
     user = models.ForeignKey('PNP.User', on_delete=models.CASCADE)
     #
 
-###############
+    ###############
 
-######## CRUD operations
+    ######## CRUD operations
 
-## Create operation
-def create_post(title, description, user_id, location=None, link=None, media=None):
-    post = Post.objects.create(
-        title=title,
-        description=description,
-        user_id=user_id,
-        location=location,
-        link=link,
-        media=media
-    )
-    return post
-
-#### Read operation :
-
-## Get all posts
-def get_all_posts():
-    return Post.objects.all()
-
-## Get a specific post by ID
-def get_post_by_id(post_id):
-    try:
-        return Post.objects.get(pk=post_id)
-    except Post.DoesNotExist:
-        return None
-
-## Update operation
-def update_post(post_id, title=None, description=None, location=None, link=None, media=None):
-    post = get_post_by_id(post_id)
-    if post:
-        if title:
-            post.title = title
-        if description:
-            post.description = description
-        if location:
-            post.location = location
-        if link:
-            post.link = link
-        if media:
-            post.media = media
-        post.save()
+    ## Create operation
+    def create_post(title, description, user_id, location=None, link=None, media=None):
+        post = Post.objects.create(
+            title=title,
+            description=description,
+            user_id=user_id,
+            location=location,
+            link=link,
+            media=media
+        )
         return post
-    else:
-        return None
-    
 
-## Delete operation
-def delete_post(post_id):
-    post = get_post_by_id(post_id)
-    if post:
-        post.delete()
-        return True
-    else:
-        return False
+    #### Read operation :
+
+    ## Get all posts
+    def get_all_posts():
+        return Post.objects.all()
+
+    ## Get a specific post by ID
+    def get_post_by_id(post_id):
+        try:
+            return Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            return None
+
+    ## Update operation
+    def update_post(self,post_id, title=None, description=None, location=None, link=None, media=None):
+        post = self.get_post_by_id(post_id)
+        if post:
+            if title:
+                post.title = title
+            if description:
+                post.description = description
+            if location:
+                post.location = location
+            if link:
+                post.link = link
+            if media:
+                post.media = media
+            post.save()
+            return post
+        else:
+            return None
+        
+
+    ## Delete operation
+    def delete_post(self,post_id):
+        post = self.get_post_by_id(post_id)
+        if post:
+            post.delete()
+            return True
+        else:
+            return False

@@ -11,5 +11,5 @@ urlpatterns = [
     path('login/', login , name='login'),
     path("accounts/", include("django.contrib.auth.urls")),
     # path('', views.index, name='indexOfManglib'),
-    # path('<int:manga_id>/', views.show, name='show')
+    # path('sing/<int:manga_id>/', views.show, name='show')
 ] + static(settings.STATIC_URL)
