@@ -19,6 +19,20 @@ def index(request):
     }
     return render(request,'PNP/index.htm' , context)
 
+def profile(request):
+    context = {
+    }
+    return render(request,'profilePage/profile.html' , context)
+def messaging(request):
+    context = {
+    }
+    return render(request,'messagePage/messagePage.html' , context)
+
+def firstPage(request):
+    context = {
+    }
+    return render(request,'firstPage/fisrtPage.html' , context)
+
 def signUp(request):
     if request.method == "POST":
         user = UserCreationForm(request.POST)

@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- navbar ended -->
+    <div class="container">
+        <div class="profile-main">
+            <div class="profile-container">
+                <img src="https://media.licdn.com/dms/image/D4D16AQFtIXq65MaKlQ/profile-displaybackgroundimage-shrink_350_1400/0/1678031428070?e=1690416000&v=beta&t=2rvmFlvsdWbezXYvfuL0Z74epouz98CkoONavSEQ-dY"
+                    width="100%" class="cover-img">
+                <div class="profile-container-inner">
+                    <img src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_200_200/0/1678030659122?e=1690416000&v=beta&t=rR6tak242QPL0LZERB6aJT_1V9Qwl-kV_GV99Ual514"
+                        class="profile-pic">
+                    <h1>AzaanUllah Khan</h1>
+                    <b>Student at Saylani Mass IT Training (Web And App Development Course) || Front-End-Developer ||
+                        MERN Stack Developer</b>
+                    <p>Karachi Division, Sindh, Pakistan &middot; <a href="">Contact Info</a></p>
+                    <div class="mutual-connection">
+                        <img
+                            src="https://media.licdn.com/dms/image/D4D35AQGTdqs4cZFOBw/profile-framedphoto-shrink_200_200/0/1680180892982?e=1685826000&v=beta&t=YRCXIxlGFtfR7g0RpxDyhjohxxDavabl4WrjU3tRM94">
+                        <img
+                            src="https://media.licdn.com/dms/image/D4D35AQHg7vwrZEObDA/profile-framedphoto-shrink_200_200/0/1673134456989?e=1685908800&v=beta&t=pXrvlwZ-rWG8YAwzihbo2Gc-4MQo79V7bsnlPHICg8A" style="margin-left: -20px; z-index: 1;">
+                        <span><span class="mutual-friend">Shahzaib Kesrani 🌟 Front-End
+                                Developer</span> and <span class="mutual-friend">Muhammad Saad Ali</span> are mutual connections</span>
+                    </div>
+                    <div class="profile-btn">
+                        <a href="" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" alt="">Connect</a>
+                        <a href=""><img src="{% static 'PNP/img/message.png' %}" alt="">Chat</a>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-description">
+                <h2>About</h2>
+                <p>I am a MERN Stack Web developer. I have learnt technologies like HTML5, CSS3, BootsStrap, JS,
+                    ReactJS, NodeJS, MangoDB & Express JS<span id="hidden" style="display: none;">My Experties are in
+                        generating Optimized and Clean code. Currently I am Learning in Saylani Mass IT Training (SMIT)
+                        and looking forward to create next google. My Future plans are to learn data science and
+                        Algorithms</span>
+                </p>
+                <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a>
+            </div>
+
+            <div class="profile-description">
+                <h2>Experience</h2>
+                <div class="profile-desc-row">
+                    <img src="{% static 'PNP/img/microsoft.png' %}">
+                    <div>
+                        <h3>Lead Front-End Developer</h3>
+                        <b>Microsoft &middot; Full-Time</b>
+                        <b>Feb 2021 - Present &middot; 1.5 Years</b>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam ducimus a et aperiam, non incidunt eveniet perferendis nam rerum illo at aspernatur consequatur dicta labore quis, sunt, ipsam earum dolores.</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="profile-desc-row">
+                    <img src="{% static 'PNP/img/slack.png' %}">
+                    <div>
+                        <h3>Full Stack Developer</h3>
+                        <b>Slack &middot; Full-Time</b>
+                        <b>June 2018 - Jan 2021 &middot; 2.6 Years</b>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam ducimus a et aperiam, non incidunt eveniet perferendis nam rerum illo at aspernatur consequatur dicta labore quis, sunt, ipsam earum dolores.</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="profile-desc-row">
+                    <img src="{% static 'PNP/img/google.png' %}">
+                    <div>
+                        <h3>Web Developer</h3>
+                        <b>Google.Inc &middot; Full-Time</b>
+                        <b>Sept 2015 - May 2018 &middot; 2.8 Years</b>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam ducimus a et aperiam, non incidunt eveniet perferendis nam rerum illo at aspernatur consequatur dicta labore quis, sunt, ipsam earum dolores.</p>
+                    </div>
+                </div>
+                <hr>
+                <a href="" class="experience-link">Show all 7 Experiences <img src="{% static 'PNP/img/right-arrow.png' %}" alt=""></a>
+            </div>
+            <div class="profile-description">
+                <h2>Education</h2>
+                <div class="profile-desc-row">
+                    <img src="https://media.licdn.com/dms/image/C4D0BAQEBFPcB1s3wrg/company-logo_200_200/0/1675703359239?e=1693440000&v=beta&t=H9M2a8YBEdzm-cXDjYWEJQqIbWpvBWnwJUFD7Zxp4zo" alt="">
+                    <div>
+                        <h3>S.M.I.T (Saylani Mass IT Training)</h3>
+                        <b>Web and App Development</b>
+                        <b>2022 - 2023</b>
+                        <hr>
+                    </div>
+                </div>
+                <div class="profile-desc-row">
+                    <img src="https://media.licdn.com/dms/image/C4E0BAQEeYFL5IrmC7A/company-logo_200_200/0/1519911295498?e=1693440000&v=beta&t=bPnGZgLgDvL0mVTnIfCGMlcPxNJXZP4OFKz2Ly3sCTA" alt="">
+                    <div>
+                        <h3>Nasra School</h3>
+                        <b>Computer Science</b>
+                        <b>2012 - Present</b>
+                        <hr>
+                    </div>
+                </div>
+                <div class="profile-desc-row">
+                    <img src="{% static 'PNP/img/mit.png' %}" alt="">
+                    <div>
+                        <h3>Harvard University</h3>
+                        <b>Senior High School</b>
+                        <b>2005 - 2015</b>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-description">
+                <h2>Skills</h2>
+                <a href="#" class="skill-btn">LeaderShip</a>
+                <a href="#" class="skill-btn">Web Design</a>
+                <a href="#" class="skill-btn">Communication</a>
+                <a href="#" class="skill-btn">UI/UX</a>
+                <a href="#" class="skill-btn">Development</a>
+                <a href="#" class="skill-btn">Planning</a>
+                <a href="#" class="skill-btn">Coding</a>
+                <a href="#" class="skill-btn">JavaScript</a>
+                <a href="#" class="skill-btn">Front-End</a>
+                <a href="#" class="skill-btn">HTML CSS</a>
+            </div>
+            <div class="profile-description">
+                <h2>Languages</h2>
+                <a href="#" class="lang-btn">English</a>
+                <a href="#" class="lang-btn">JavaScript</a>
+                <a href="#" class="lang-btn">HTML 5</a>
+                <a href="#" class="lang-btn">CSS 3</a>
+            </div>
+        </div>
+        <div class="profile-sidebar">
+            <div class="sidebar-ad">
+                <small>AD &middot; &middot; &middot;</small>
+                <p>Master the 5 principles of web design</p>
+                <div>
+                    <img src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_100_100/0/1678030659122?e=1690416000&v=beta&t=9Vnws7rVjaREQebj3HeuNH3GQ_VS0XS4XFnkI5ttBpQ"
+                        alt="">
+                    <img src="{% static 'PNP/img/mi-logo.png' %}" alt="">
+                </div>
+                <b>Brand and demand in Xiaomi</b>
+                <a href="" class="ad-link">Learn More</a>
+            </div>
+            <div class="sidebar-people">
+                <h3>People You May Know</h3>
+                <div class="sidebar-people-row">
+                    <img src="https://media.licdn.com/dms/image/D4D35AQHg7vwrZEObDA/profile-framedphoto-shrink_200_200/0/1673134456989?e=1685908800&v=beta&t=pXrvlwZ-rWG8YAwzihbo2Gc-4MQo79V7bsnlPHICg8A">
+                    <div>
+                        <h2>Muhammad Saad Ali</h2>
+                        <p>Frelance At Upwork</p>
+                        <a href="https://www.linkedin.com/in/mohammad-saad-ali-33074123a/" target="_blank">Connect</a>
+                    </div>
+                </div>
+                <div class="sidebar-people-row">
+                    <img src="https://media.licdn.com/dms/image/D4D03AQHBp9g2SbN6Qw/profile-displayphoto-shrink_200_200/0/1680625175837?e=1691020800&v=beta&t=piTTEWWbNHW-UEFX3Wi9nuCByDPheh3DfMPri7JzdUs">
+                    <div>
+                        <h2>Khizar Wakeel</h2>
+                        <p>Intern | ReactJS | Front-End-Developer</p>
+                        <a href="https://www.linkedin.com/in/khizarwakeel/" target="_blank">Connect</a>
+                    </div>
+                </div>
+                <div class="sidebar-people-row">
+                    <img src="https://media.licdn.com/dms/image/C4E03AQEvYf_1ZHjIgg/profile-displayphoto-shrink_200_200/0/1653166620686?e=1691020800&v=beta&t=QZJ-tNBgLS9y_mjtEsaTKCcHiWwsNmSV2jMDZ2P2bVI">
+                    <div>
+                        <h2>Joshua Akintemi</h2>
+                        <p>Full Stack Developer || MERN</p>
+                        <a href="https://www.linkedin.com/in/joshua-akintemi-952ab419a/" target="_blank">Connect</a>
+                    </div>
+                </div>
+                <div class="sidebar-people-row">
+                    <img src="https://media.licdn.com/dms/image/D4D35AQHyJWN5n0gG5w/profile-framedphoto-shrink_200_200/0/1677020670227?e=1685908800&v=beta&t=L02RCHTiDSwUc67eA6Cy8po3LjDtA_NandoleaJSkBU">
+                    <div>
+                        <h2>Zeeshan Khan</h2>
+                        <p>--</p>
+                        <a href="https://www.linkedin.com/in/zeeshan-khan-34613a250/" target="_blank">Connect</a>
+                    </div>
+                </div>
+                <div class="sidebar-people-row">
+                    <img src="https://media.licdn.com/dms/image/C4D03AQEuh9aU_BTV9Q/profile-displayphoto-shrink_200_200/0/1655560653207?e=1691020800&v=beta&t=N9tKk60vLghT-0hgRC18fUtMVausegz-KJXjTpnOblg">
+                    <div>
+                        <h2>Muhammad Ibrahim</h2>
+                        <p>Student at ILMA University | Former IBT</p>
+                        <a href="https://www.linkedin.com/in/faisal-bhatti-063298265/" target="_blank">Connect</a>
+                    </div>
+                </div>
+                <div class="sidebar-people-row">
+                    <img src="https://media.licdn.com/dms/image/D4D03AQE8-Wj1T17i6A/profile-displayphoto-shrink_200_200/0/1682859810753?e=1691020800&v=beta&t=gURzLUZb_CoQiH6tEgJfgWNRObWFaoFAbMfzEXFTkC4">
+                    <div>
+                        <h2>Faisal Bhatti</h2>
+                        <p>--</p>
+                        <a href="https://www.linkedin.com/in/faisal-bhatti-063298265/" target="_blank">Connect</a>
+                    </div>
+                </div>
+                <div class="sidebar-people-row">
+                    <img src="https://media.licdn.com/dms/image/D4E03AQHan9qTk_mOAw/profile-displayphoto-shrink_200_200/0/1664501898052?e=1691020800&v=beta&t=guZ91535PF7ruPCi1owCeL857mjdHL9WBtAvlLgaUbI">
+                    <div>
+                        <h2>Daniyal Ahmed Hashmi</h2>
+                        <p>Student at Karachi Board</p>
+                        <a href="https://www.linkedin.com/in/daniyal-ahmed-hashmi-8b0267252/" target="_blank">Connect</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="profile-footer">
+        <div class="sidebar-useful-links">
+            <a href="">About</a>
+            <a href="">Accesibility</a>
+            <a href="">Help Center</a>
+            <a href="">Privacy Policy</a>
+            <a href="">Advertising</a>
+            <a href="">Get the App</a>
+            <a href="">More</a>
+            <div class="copyright-msg">
+                <img src="{% static 'PNP/img/logo.png' %}">
+                <p>AzaanUllah &copy; All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        var profileMenu = document.getElementById('profileMenu')
+        var seeMore = document.getElementById('hidden')
+        function toggleMenu() {
+            profileMenu.classList.toggle("open-menu");
+        }
+        function show() {
+            if (seeMore.style.display == "none") {
+                seeMore.style.display = "inline-block"
+                document.getElementById('more').innerHTML = "Less..."
+            }
+            else {
+                seeMore.style.display = "none";
+                document.getElementById('more').innerHTML = "More..."
+            }
+        }
+    </script>
+</div>
+{% endblock %}

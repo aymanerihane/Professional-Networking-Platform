@@ -5,9 +5,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'PNP/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'PNP/css/firstPage.css' %}">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="{% url 'PNP:firstPage' %}">
+                <img src="{% static 'PNP/img/logo.png' %}" class="logo">
+            </a>
+            <div class="search-box">
+                <img src="./img/search.png' %}">
+                <input type="text" placeholder="Search">
+            </div>
+        </div>
+        <div class="navbar-center">
+            <ul>
+                <li><a href="" class="active-link"><img src="{% static 'PNP/img/home.png' %}"><span>Home</span></a></li>
+                <li><a href=""><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
+                <li><a href=""><img src="{% static 'PNP/img/jobs.png' %}"><span>Jobs</span></a></li>
+                <li><a href="{% url 'PNP:messaging' %}"><img src="{% static 'PNP/img/message.png' %}"><span>Messaging</span></a></li>
+                <li><a href=""><img src="{% static 'PNP/img/notification.png' %}"><span>Notification</span></a></li>
+            </ul>
+        </div>
+        <div class="navbar-right">
+            <div class="online">
+                <img src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_100_100/0/1678030659122?e=1690416000&v=beta&t=9Vnws7rVjaREQebj3HeuNH3GQ_VS0XS4XFnkI5ttBpQ"
+                    class="nav-profile-img" onclick="toggleMenu()">
+            </div>
+        </div>
+        <div class="profile-menu-wrap" id="profileMenu">
+            <div class="profile-menu">
+                <div class="user-info">
+                    <img
+                        src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_100_100/0/1678030659122?e=1690416000&v=beta&t=9Vnws7rVjaREQebj3HeuNH3GQ_VS0XS4XFnkI5ttBpQ">
+                    <div>
+                        <h3>AzaanUllah Khan</h3>
+                        <a href="{% url 'PNP:profile'%}">See Your Proflie</a>
+                    </div>
+                </div>
+                <hr>
+                <a href="" class="profile-menu-link">
+                    <img src="{% static 'PNP/img/feedback.png' %}">
+                    <p>Give Feedback</p>
+                    <span>></span>
+                </a>
+                <a href="" class="profile-menu-link">
+                    <img src="{% static 'PNP/img/setting.png' %}">
+                    <p>Settings and Privacy</p>
+                    <span>></span>
+                </a>
+                <a href="" class="profile-menu-link">
+                    <img src="{% static 'PNP/img/help.png' %}">
+                    <p>Help & Support</p>
+                    <span>></span>
+                </a>
+                <a href="" class="profile-menu-link">
+                    <img src="{% static 'PNP/img/display.png' %}">
+                    <p>Display & Accesebility</p>
+                    <span>></span>
+                </a>
+                <a href="https://www.linkedin.com/in/azaanullah-khan-2859bb268/" class="profile-menu-link" target="_blank">
+                    <img src="{% static 'PNP/img/logout.png' %}">
+                    <p>Log Out</p>
+                    <span>></span>
+                </a>
+            </div>
+        </div>
+    </nav>
     {% block content %}
     
     {% endblock content %}
