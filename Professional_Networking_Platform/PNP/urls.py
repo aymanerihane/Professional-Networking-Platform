@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import index, signUp, login, firstPage,profile, messaging
+from .views import index, signUp, login, firstPage,profile, messaging, room
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -14,5 +14,5 @@ urlpatterns = [
     path('profile/', profile , name='profile'),
     path("accounts/", include("django.contrib.auth.urls")),
     # path('', views.index, name='indexOfManglib'),
-    # path('sing/<int:manga_id>/', views.show, name='show')
+    # path('room/<int:room_id>/', room, name='room')
 ] + static(settings.STATIC_URL)

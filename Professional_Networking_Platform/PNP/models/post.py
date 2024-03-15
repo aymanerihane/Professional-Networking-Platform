@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    content = models.TextField()
     num_comments  = models.PositiveIntegerField(default=0)
     num_shares = models.PositiveIntegerField(default=0)
     num_likes  = models.PositiveIntegerField(default=0)

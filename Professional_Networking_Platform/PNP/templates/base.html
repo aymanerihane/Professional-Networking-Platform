@@ -29,17 +29,23 @@
         </div>
         <div class="navbar-right">
             <div class="online">
-                <img src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_100_100/0/1678030659122?e=1690416000&v=beta&t=9Vnws7rVjaREQebj3HeuNH3GQ_VS0XS4XFnkI5ttBpQ"
-                    class="nav-profile-img" onclick="toggleMenu()">
+                    {% if user.photo_profile %}
+                    <img src="{{ user.photo_profile.url }}" alt="" class="nav-profile-img" onclick="toggleMenu()">
+                    {% else %}
+                    <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="" class="nav-profile-img" onclick="toggleMenu()">
+                    {% endif %}
             </div>
         </div>
         <div class="profile-menu-wrap" id="profileMenu">
             <div class="profile-menu">
                 <div class="user-info">
-                    <img
-                        src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_100_100/0/1678030659122?e=1690416000&v=beta&t=9Vnws7rVjaREQebj3HeuNH3GQ_VS0XS4XFnkI5ttBpQ">
+                    {% if user.photo_profile %}
+                    <img src="{{ user.photo_profile.url }}" alt="">
+                    {% else %}
+                    <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
+                    {% endif %}
                     <div>
-                        <h3>AzaanUllah Khan</h3>
+                        <h3>{{user.username}}</h3>
                         <a href="{% url 'PNP:profile'%}">See Your Proflie</a>
                     </div>
                 </div>
@@ -64,7 +70,7 @@
                     <p>Display & Accesebility</p>
                     <span>></span>
                 </a>
-                <a href="https://www.linkedin.com/in/azaanullah-khan-2859bb268/" class="profile-menu-link" target="_blank">
+                <a href="{% url 'PNP:logout' %}" class="profile-menu-link" >
                     <img src="{% static 'PNP/img/logout.png' %}">
                     <p>Log Out</p>
                     <span>></span>

@@ -3,8 +3,8 @@ from django.shortcuts import render , get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import User
-from .forms import SignUpForm
+from .models import User, Post, Room
+from .forms import SignUpForm, NewPost
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 
@@ -24,14 +24,42 @@ def profile(request):
     }
     return render(request,'profilePage/profile.html' , context)
 def messaging(request):
+    userID = request.user.id
+    userInfo = User.objects.get(id=userID)
+    rooms = userInfo.rooms.all()
     context = {
+        'rooms': rooms
     }
     return render(request,'messagePage/messagePage.html' , context)
 
+def room(request, room_id):
+    room = get_object_or_404(Room, pk=room_id)
+    print(room)
+    return render(request, 'messagePage/room.html', {'room': room})
+
 def firstPage(request):
+    posts = Post.get_all_posts()
+    current_user = request.user
     context = {
+        'posts': posts,
+        'user': current_user,
+
     }
     return render(request,'firstPage/fisrtPage.html' , context)
+
+def createPost(request):
+    if request.method == 'POST':
+        form = NewPost(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data['content']
+            link = form.cleaned_data['link']
+            media = form.cleaned_data['media']
+            user_id = request.user.id
+            Post.create_post(content, user_id, link, media)
+            return redirect('PNP:firstPage')
+    else:
+        form = NewPost()
+    return render(request, 'firstPage/createPost.html', {'form': form})
 
 def signUp(request):
     if request.method == "POST":
