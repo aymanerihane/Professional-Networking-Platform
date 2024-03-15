@@ -41,10 +41,11 @@
                 </ul>
             </div>
         </div>
-        <div id="contentMessage">
-            <h1 class="h1message">Messages</h1>
+        {% comment %} <div id="contentMessage"> {% endcomment %}
+            {% comment %} <h1 class="h1message">Messages</h1> {% endcomment %}
+            {% include "./content.html" %}
 
-        </div>
+        {% comment %} </div> {% endcomment %}
     </div>
     <script src="{% static 'PNP/js/messaging.js'%}"></script>
 </body>

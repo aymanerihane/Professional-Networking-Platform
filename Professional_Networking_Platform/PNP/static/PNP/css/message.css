@@ -1,4 +1,7 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css";
+:root{
+    --primary: #00838D;
+}
 
 * {
     padding: 0;
@@ -202,7 +205,7 @@ body {
 }
 
 .chat .content .message-content .message.me .bubble{
-    background: #2195f3;
+    background: var(--pramary-color);
     color: #fff;
 }
 
@@ -250,7 +253,7 @@ body {
 }
 
 .chat .content .message-form ul li.emoji-btn a{
-    background: #339af0;
+    background: var(--pramary-color);
 }
 
 .chat .content .message-form ul li.sound-btn a{

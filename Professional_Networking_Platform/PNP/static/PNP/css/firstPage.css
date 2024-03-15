@@ -1,3 +1,7 @@
+:root{
+    --pramary-color: #00838D;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -53,7 +57,7 @@ a {
     content: '';
     width: 0;
     height: 2px;
-    background-color: #045be6;
+    background-color: var(--pramary-color);
     position: absolute;
     bottom: -15px;
     transition: all .3s ease-in-out;
@@ -196,7 +200,7 @@ a {
 
 .sidebar-profile-info ul li span {
     float: right;
-    color: #045be6;
+    color: var(--pramary-color);
 }
 
 .sidebar-profile-link {
@@ -263,7 +267,7 @@ a {
 }
 
 .discover-more-link a {
-    color: #045be6;
+    color: var(--pramary-color);
     display: inline-block;
     margin: 10px 0;
 }
@@ -302,7 +306,7 @@ a {
 }
 
 .sidebar-news .read-more-link {
-    color: #045be6;
+    color: var(--pramary-color);
     font-weight: 600;
     margin: 20px 0;
 }
@@ -341,7 +345,7 @@ a {
 
 .ad-link {
     display: inline-block;
-    border: 1px solid #045be6;
+    border: 1px solid var(--pramary-color);
     border-radius: 30px;
     padding: 5px 15px;
     color: #045be6;
@@ -430,7 +434,7 @@ a {
 }
 
 .create-post-links li:last-child {
-    background-color: #045be6;
+    background-color: var(--pramary-color);
     color: #fff;
     border: none;
     border-bottom-right-radius: 7px;
@@ -724,7 +728,7 @@ a {
 }
 
 .profile-btn .primary-btn {
-    background-color: #045be6;
+    background-color: var(--pramary-color);
     color: #fff;
 }
 
@@ -887,7 +891,7 @@ a {
     border-radius: 4px;
     border: none;
     color: #FFFFFF;
-    background-color: #045be6;
+    background-color: var(--pramary-color);
     cursor: pointer;
 }
 

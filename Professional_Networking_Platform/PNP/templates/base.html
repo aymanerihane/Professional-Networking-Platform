@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'PNP/css/firstPage.css' %}">
+    
 </head>
 <body>
     <nav class="navbar">
@@ -24,7 +25,7 @@
                 <li><a href=""><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
                 <li><a href=""><img src="{% static 'PNP/img/jobs.png' %}"><span>Jobs</span></a></li>
                 <li><a href="{% url 'PNP:messaging' %}"><img src="{% static 'PNP/img/message.png' %}"><span>Messaging</span></a></li>
-                <li><a href=""><img src="{% static 'PNP/img/notification.png' %}"><span>Notification</span></a></li>
+                <li><a href="{% url 'PNP:mettingPage' %}"><img src="{% static 'PNP/img/notification.png' %}"><span>Metting</span></a></li>
             </ul>
         </div>
         <div class="navbar-right">

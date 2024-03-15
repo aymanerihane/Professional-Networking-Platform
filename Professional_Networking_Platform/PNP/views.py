@@ -23,6 +23,26 @@ def profile(request):
     context = {
     }
     return render(request,'profilePage/profile.html' , context)
+
+def metting(request):
+    context = {
+        'username': request.user.username
+    }
+    return render(request,'messagePage/createMetting.html' , context)
+
+def mettingPage(request):
+    context = {
+    }
+    return render(request,'messagePage/mettingPage.html' , context)
+
+def joinMetting(request):
+    if request.method == 'POST':
+        room_id = request.POST['roomID']
+        return redirect('/metting/?roomID='+room_id)
+    context = {
+    }
+    return render(request,'messagePage/joinMetting.html' , context)
+
 def messaging(request):
     userID = request.user.id
     userInfo = User.objects.get(id=userID)
