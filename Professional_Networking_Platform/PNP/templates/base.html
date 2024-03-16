@@ -9,7 +9,7 @@
     
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar" style="z-index: 2;">
         <div class="navbar-left">
             <a href="{% url 'PNP:firstPage' %}">
                 <img src="{% static 'PNP/img/logo.png' %}" class="logo">
@@ -21,8 +21,8 @@
         </div>
         <div class="navbar-center">
             <ul>
-                <li><a href="" class="active-link"><img src="{% static 'PNP/img/home.png' %}"><span>Home</span></a></li>
-                <li><a href=""><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
+                <li><a href="{% url 'PNP:firstPage' %}" class="active-link"><img src="{% static 'PNP/img/home.png' %}"><span>Home</span></a></li>
+                <li><a href="{% url 'PNP:network' %}"><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
                 <li><a href=""><img src="{% static 'PNP/img/jobs.png' %}"><span>Jobs</span></a></li>
                 <li><a href="{% url 'PNP:messaging' %}"><img src="{% static 'PNP/img/message.png' %}"><span>Messaging</span></a></li>
                 <li><a href="{% url 'PNP:mettingPage' %}"><img src="{% static 'PNP/img/notification.png' %}"><span>Metting</span></a></li>
@@ -71,11 +71,11 @@
                     <p>Display & Accesebility</p>
                     <span>></span>
                 </a>
-                <a href="{% url 'PNP:logout' %}" class="profile-menu-link" >
+                <form action="{% url 'PNP:logout' %}" method="post" >
+                 {% csrf_token %}
                     <img src="{% static 'PNP/img/logout.png' %}">
-                    <p>Log Out</p>
-                    <span>></span>
-                </a>
+                <button type="submit"  class="profile-menu-link" >Logout</button>
+                </form>
             </div>
         </div>
     </nav>

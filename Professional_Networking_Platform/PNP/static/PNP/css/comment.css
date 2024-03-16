@@ -1,0 +1,111 @@
+:root{
+    --pramary-color: #00838D;
+}
+
+/* comment section */
+#comment{
+    cursor: pointer !important;
+    
+}
+
+.comment-box{
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+
+}
+.overlay{
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    visibility: hidden;
+    transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+}
+.overlay-open{
+    visibility: visible;
+
+}
+div#commentSection{
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: -500px !important;
+    width: 500px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 20px 0;
+    z-index: 3;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -ms-border-radius: 7px;
+    -o-border-radius: 7px;
+}
+div#commentSection.open-comment{
+    right: 0 !important;
+    
+}
+
+.img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.fotter-comment{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.btn{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--pramary-color);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+}
+.btn:hover{
+    background-color: #005f63;
+}
+
+.commentFilied{
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    box-shadow: 0 0 5px #ccc;
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+}

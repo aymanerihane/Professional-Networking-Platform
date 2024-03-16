@@ -1,0 +1,25 @@
+    {% load static %}
+    <div class="overlay" id="overlay"></div>
+    <div id="commentSection">
+        <div class="header">
+            <img style="transform: rotate(90deg);cursor:pointer" src="{% static 'PNP/img/down-arrow.png' %}" onclick="closeComment()">
+            <h1>Comments</h1>
+        </div>
+        <div class="comment-box" >
+            <img class="img" src="{% static 'PNP/img/avatar/default.jpg' %}">
+            <div style="width:100%">
+                <div style="display:flex;align-items:center;justify-content: space-between">
+                <h4>AzaanUllah</h4>
+                <h6 style="margin-right: 30px">2 hours ago</h6>
+                
+                </div>
+                <p>It's a great day to learn something new</p>
+            </div>
+        </div>
+        <div class="fotter-comment">
+            <input type="text" class="commentFilied" placeholder="Write a comment">
+            <button onclick="addComment()" class="btn">Comment</button>
+        </div>
+        
+    </div>
+    <script src="{% static 'PNP/js/comment.js' %}"></script>

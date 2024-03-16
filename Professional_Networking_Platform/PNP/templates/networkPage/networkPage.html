@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block content %}
+{% if friends%}
+    {% for friend in friends%}
+        <h1>Friends</h1>
+        <ul>
+            {% for friend in friends %}
+            <li>{{friend.name}}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+{% else %}
+    <h1>No friends</h1>
+{% endif %}
+
+
+
+{% endblock %}

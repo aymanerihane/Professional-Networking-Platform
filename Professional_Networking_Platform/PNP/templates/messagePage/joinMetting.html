@@ -5,15 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link rel="stylesheet" href="{% static 'PNP/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'PNP/css/choixMetting.css' %}">
+    <style>
+      .joinBtn{
+        left: 50%;
+        position: absolute;
+        transform: translate(-50%);
+        margin-top: 20px;
+      }
+      .overlay{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+      .up{
+        position: relative;
+        z-index: 2;
+      }
+      img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="login form">
-      <header>Join Room</header>
+  <div class="overlay">
+    <img src="{% static 'PNP/img/bgcs/backGround1.jpg'%}" ></img>
+  </div>
+  <div class="container up">
+            <a href="{% url 'PNP:mettingPage' %}" class="btn back " style="background-color: #00838D;margin: 10px"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+            </svg>   Back</a>
+    </div>
+  <div class="d-flex align-items-center w-100 h-100 justify-content-center card">
+    <div class="login up form card " style="background-color: #00838D;padding: 100px;border-radius:20px">
+      <header class="h1">Join Room</header>
       <form action="{% url 'PNP:joinMetting' %}" method="POST">
         {% csrf_token %}
-        <input type="text" placeholder="Enter room ID" name="roomID">
-        <input type="submit" class="button" value="Join">
+        <input class="form-control" style="margin-top:10px" type="text" placeholder="Enter room ID" name="roomID">
+        <input type="submit" class="button btn joinBtn btn-primary" value="Join">
       </form>
     </div>
   </div>

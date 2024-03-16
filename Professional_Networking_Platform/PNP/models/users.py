@@ -36,6 +36,8 @@ class User(models.Model):
     #
     #liste of rooms that the user is a member of
     rooms = models.ManyToManyField('PNP.Room',related_name='users', blank=True)
+    #liste of friends
+    friends = models.ManyToManyField('self',related_name='friends', blank=True)
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

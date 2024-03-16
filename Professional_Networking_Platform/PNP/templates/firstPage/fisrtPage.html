@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<head><link rel="stylesheet" href="{% static 'PNP/css/comment.css' %}"></head>
 <div class="container">
     <!-- --popup -->
     <div class="popup-container" id="popup">
@@ -113,11 +114,11 @@
                 </div>
                 <div class="post-activity">
 
-                    <div class="post-activity-link">
-                        <img src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
+                    <div class="post-activity-link" id="like">
+                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
                         <span>Like</span>
                     </div>
-                    <div class="post-activity-link">
+                    <div class="post-activity-link" id="comment">
                         <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
                         <span>Comment</span>
                     </div>
@@ -178,6 +179,27 @@
             </div>
         </div>
     </div>
+    {% include "./comments.html" %}
     <script src="{% static 'PNP/js/firstPage.js' %}"></script>
+    <script>
+    // likes
+
+    // Define static paths
+    var loveImgSrc = window.location.origin + "/static/PNP/img/love.png";
+    var likeImgSrc = window.location.origin + "/static/PNP/img/like.png";
+
+    document.addEventListener('click', (event) => {
+        var likedImg = document.getElementById('likeImg');
+        console.log(event.target.id);
+        if (event.target.id == 'like') {
+            console.log(likedImg.src)
+            if (likedImg.src == loveImgSrc) {
+                likedImg.src = likeImgSrc;
+            } else {
+                likedImg.src = loveImgSrc;
+            }
+        }
+    });
+</script>
 </div>
 {% endblock content %}

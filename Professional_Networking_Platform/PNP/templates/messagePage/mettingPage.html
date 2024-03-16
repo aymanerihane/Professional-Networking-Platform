@@ -7,8 +7,8 @@
 </head>
 <div class="container w-100 h-100" style="overflow: hidden;">
             <a href="{% url 'PNP:firstPage' %}" class="btn back" style="background-color: #00838D;margin: 10px"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
-</svg>   Home</a>
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+            </svg>   Home</a>
     <div class="d-flex align-items-center h-100 justify-content-around">
     <div class="card">
         <a class="card1" href="{% url 'PNP:metting' %}">
@@ -22,10 +22,10 @@
         </a>
     </div>
     <div class="card">
-        <a class="card1" href="">
+        <a class="card1" href="{% url 'PNP:joinMetting' %}">
             <p>Join Metting</p>
             <p class="small">Easily connect to ongoing events with a single click.</p>
-            <div class="go-corner" href="{% url 'PNP:joinMetting' %}">
+            <div class="go-corner" href="">
             <div class="go-arrow">
                 →
             </div>
