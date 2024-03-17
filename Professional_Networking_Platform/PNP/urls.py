@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck
+from .views import loginRed,signUp,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck,like
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -21,10 +21,10 @@ urlpatterns = [
     path('metting/', metting , name='metting'), # metting create page
     path('joinMetting/', joinMetting , name='joinMetting'), # metting join page
     # profile page
-    path('profile/', profile , name='profile'),
+    path('profile/<str:username>/', profile , name='profile'),
     # networking
     path('network/', network, name='network'),
 
-    # path('', views.index, name='indexOfManglib'),
-    # path('room/<int:room_id>/', room, name='room')
+    #post like
+    path('like/<int:postid>', like , name='like'),
 ] + static(settings.STATIC_URL)

@@ -123,7 +123,7 @@
                 </div>
                 <div class="post-activity">
 
-                    <div class="post-activity-link" id="like">
+                    <div class="post-activity-link" id="like" onclick="toggleLike(this)" style="cursor: pointer;">
                         <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
                         <span>Like</span>
                     </div>
@@ -200,19 +200,23 @@
     // Define static paths
     var loveImgSrc = window.location.origin + "/static/PNP/img/love.png";
     var likeImgSrc = window.location.origin + "/static/PNP/img/like.png";
-
-    document.addEventListener('click', (event) => {
-        var likedImg = document.getElementById('likeImg');
-        console.log(event.target.id);
-        if (event.target.id == 'like') {
-            console.log(likedImg.src)
-            if (likedImg.src == loveImgSrc) {
-                likedImg.src = likeImgSrc;
-            } else {
-                likedImg.src = loveImgSrc;
-            }
+    function toggleLike(likeButton) {
+        var likeImg = likeButton.querySelector('img');
+        if (likeImg.src.includes('like.png')) {
+            likeImg.src = loveImgSrc;
+        } else {
+            likeImg.src = likeImgSrc;
         }
-    });
+        //make it Bouncing
+        gsap.from(likeImg, {
+            scale: 0.5,
+            duration: 0.5,
+            ease: "bounce",
+        })
+        
+    }
+
+   
         // gsap
         var posts = document.querySelectorAll('.post');
         var right_sidebar = document.querySelector('.right-sidebar');

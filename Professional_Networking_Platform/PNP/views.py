@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import User, Post, Room
+from .models import User, Post, Room, Like
 from .forms import SignUpForm, NewPost
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
@@ -59,8 +59,9 @@ def signUp2(request):
 
 
 @login_required
-def profile(request):
+def profile(request,username):
     context = {
+        'user': auth_user.objects.get(username=username)
     }
     return render(request,'profilePage/profile.html' , context)
 
@@ -137,3 +138,18 @@ def network(request):
         'friends' : User.objects.get(user_id=request.user.id).friends.all()
     }
     return render(request,'networkPage/networkPage.html' , context)
+
+
+#post like
+def like(request, postid):
+    post = Post.objects.get(id=postid)
+    user = User.objects.get(user_id=request.user.id)
+    if user in Like.user_id.all():
+        post.num_likes = post.num_likes - 1
+        Like.delete_like(user, post)
+    else:
+        Like.create_like(user, post)
+        post.num_likes = post.num_likes + 1
+    
+    post.save()
+    return redirect('PNP:firstPage')

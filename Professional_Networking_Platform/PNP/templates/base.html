@@ -47,7 +47,7 @@
                     {% endif %}
                     <div>
                         <h3>{{user.username}}</h3>
-                        <a href="{% url 'PNP:profile'%}">See Your Proflie</a>
+                        <a href="{% url 'PNP:profile' user.username %}">See Your Proflie</a>
                     </div>
                 </div>
                 <hr>

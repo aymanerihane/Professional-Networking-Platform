@@ -5,8 +5,6 @@ class Like(models.Model):
     user_id = models.ForeignKey('PNP.User', on_delete=models.CASCADE)
     post_id = models.ForeignKey('PNP.Post', on_delete=models.CASCADE)
     #
-    number_of_likes = models.IntegerField()
-    #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
