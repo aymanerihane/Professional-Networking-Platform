@@ -98,7 +98,7 @@
             <!-- allposts -->
             {% for post in posts%}
 
-            <div class="post">
+            <div class="post" data-id="{{post.id}}">
                 <div class="post-author">
                     <img
                         src="https://media.licdn.com/dms/image/D4D35AQGTdqs4cZFOBw/profile-framedphoto-shrink_200_200/0/1680180892982?e=1685826000&v=beta&t=YRCXIxlGFtfR7g0RpxDyhjohxxDavabl4WrjU3tRM94">
@@ -115,7 +115,7 @@
                 <div class="post-stats">
                     <div>
                         <img src="{% static 'PNP/img/thumbsup.png' %}">
-                        <span class="liked-users">{{ post.num_likes }}  reactions</span>
+                        <span class="liked-users" id="{{post.id}}">{{ post.num_likes }}  reactions</span>
                     </div>
                     <div>
                         <span>{{ post.num_comments }} comments &middot; {{ post.num_shares }} shares</span>
@@ -193,6 +193,7 @@
     <script src="{% static 'PNP/js/gsap.min.js' %}"></script>
 
     <script src="{% static 'PNP/js/firstPage.js' %}"></script>
+    <script src="{% static 'PNP/js/jquery-3.7.1.min.js' %}"></script>
     
     <script>
     // likes
@@ -201,21 +202,40 @@
     var loveImgSrc = window.location.origin + "/static/PNP/img/love.png";
     var likeImgSrc = window.location.origin + "/static/PNP/img/like.png";
     function toggleLike(likeButton) {
-        var likeImg = likeButton.querySelector('img');
-        if (likeImg.src.includes('like.png')) {
-            likeImg.src = loveImgSrc;
-        } else {
-            likeImg.src = likeImgSrc;
-        }
-        //make it Bouncing
-        gsap.from(likeImg, {
-            scale: 0.5,
-            duration: 0.5,
-            ease: "bounce",
-        })
-        
+    var postId = likeButton.closest('.post').dataset.id;
+    var likeImg = likeButton.querySelector('img');
+    var likeImgSrc = likeImg.src;
+    var loveImgSrc = "{% static 'PNP/img/love.png' %}";
+
+    if (likeImgSrc.includes('like.png')) {
+        likeImg.src = loveImgSrc;
+    } else {
+        likeImg.src = "{% static 'PNP/img/like.png' %}";
     }
 
+    // Make it Bouncing
+    gsap.from(likeImg, {
+        scale: 0.5,
+        duration: 0.5,
+        ease: "bounce",
+    });
+    
+    // Send AJAX request to update the like count
+    $.ajax({
+        url: '/like/' + postId + '/',
+        type: 'POST',
+        dataType: 'json',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        success: function (response) {
+            if (response.success) {
+                console.log(response.likes);
+                document.querySelector('span[id=\"'+postId+'\"]').innerText = response.likes + ' reactions';
+            }
+        }
+    });
+}
+
+ 
    
         // gsap
         var posts = document.querySelectorAll('.post');
