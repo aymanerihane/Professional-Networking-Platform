@@ -144,12 +144,14 @@ def network(request):
 def like(request, postid):
     post = Post.objects.get(id=postid)
     user = User.objects.get(user_id=request.user.id)
-    if user in Like.user_id.all():
+    if Like.objects.filter(post_id=postid, user_id=user.id).exists():
         post.num_likes = post.num_likes - 1
         Like.delete_like(user, post)
+        print('unlike')
     else:
         Like.create_like(user, post)
         post.num_likes = post.num_likes + 1
+        print('like')
     
     post.save()
-    return redirect('PNP:firstPage')
+    return JsonResponse({'success': True,'likes': post.num_likes})
