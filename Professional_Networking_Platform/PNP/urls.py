@@ -1,16 +1,17 @@
 from django.urls import path, include
-from .views import index, signUp,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network
+from .views import loginRed,signUp,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck
 from django.conf import settings
 from django.conf.urls.static import static
 
 app_name = "PNP"
 
 urlpatterns = [
-    path('', index, name='index'),
+    path("", loginRed , name='loginRed'),
     # registration
     path('signUp/', signUp, name='signUp'),
     path('signUp2/', signUp2, name='signUp2'),
-    path("accounts/", include("django.contrib.auth.urls")),
+    path("", include("django.contrib.auth.urls")),
+    path('logincheck/', logincheck, name='logincheck'),
     # first page after login
     path('firstPage/', firstPage , name='firstPage'),
     # messaging page

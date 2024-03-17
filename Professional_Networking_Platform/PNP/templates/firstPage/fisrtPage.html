@@ -2,7 +2,16 @@
 {% load static %}
 
 {% block content %}
-<head><link rel="stylesheet" href="{% static 'PNP/css/comment.css' %}"></head>
+<head><link rel="stylesheet" href="{% static 'PNP/css/comment.css' %}">
+<style>
+.square{
+    width: 50px;
+    height: 50px;
+    background-color: #00838D;
+}
+
+</style>
+</head>
 <div class="container">
     <!-- --popup -->
     <div class="popup-container" id="popup">
@@ -82,10 +91,10 @@
                     <li onclick="popup()">Post</li>
                 </div>
             </div>
-            <div class="sort-by">
+            {% comment %} <div class="sort-by">
                 <hr>
                 <p>Sort By: <span>Top <img src="{% static 'PNP/img/down-arrow.png' %}" alt=""></span></p>
-            </div>
+            </div> {% endcomment %}
             <!-- allposts -->
             {% for post in posts%}
 
@@ -180,7 +189,11 @@
         </div>
     </div>
     {% include "./comments.html" %}
+    {% comment %} upload gsap framwork {% endcomment %}
+    <script src="{% static 'PNP/js/gsap.min.js' %}"></script>
+
     <script src="{% static 'PNP/js/firstPage.js' %}"></script>
+    
     <script>
     // likes
 
@@ -200,6 +213,44 @@
             }
         }
     });
-</script>
+        // gsap
+        var posts = document.querySelectorAll('.post');
+        var right_sidebar = document.querySelector('.right-sidebar');
+        var left_sidebar = document.querySelector('.left-sidebar');
+        var create_post = document.querySelector('.create-post');
+
+        gsap.from(create_post, {
+            opacity: 0,
+            y: -100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+
+        gsap.from(left_sidebar, {
+            opacity: 0,
+            x: -100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+
+        gsap.from(right_sidebar, {
+            opacity: 0,
+            x: 100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+
+        gsap.from(posts, {
+            opacity: 0,
+            y: 100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+    </script>
+
 </div>
 {% endblock content %}

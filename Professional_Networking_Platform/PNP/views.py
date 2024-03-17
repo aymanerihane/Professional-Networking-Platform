@@ -1,6 +1,6 @@
 # Create your views here.
 from django.shortcuts import render , get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -8,19 +8,27 @@ from .models import User, Post, Room
 from .forms import SignUpForm, NewPost
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 # import datetime
 # @login_required
 
+# sign up and login
+def loginRed(request):
+    return redirect('PNP:login')
+@csrf_exempt
+def logincheck(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            return JsonResponse({'correct': True})
+        else:
+            return JsonResponse({'correct': False})
 
-
-def index(request):
-    context = {
-    }
-    return render(request,'PNP/index.htm' , context)
-
-# sign up 
 def signUp(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)

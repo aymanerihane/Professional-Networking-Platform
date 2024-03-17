@@ -1,12 +1,58 @@
 
-<div class="shadow-wrap">
- <div class="form-wrap">
-  <h3>Login </h3>
-  <form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit">Submit</button>
-  </form>
-  <a class="signup-link" href="{% url 'PNP:signUp' %}">Signup</a>
+{% load static %}
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'PNP/css/login.css' %}">
+</head>
+<body>
+  <div class="loader">
+    <div class="text-container">
+      <span class="cursor" id="cursor">|</span>
+      <div class="overflow-hidden">
+        <span id="text">Welcome to my website</span>
+      </div>
+    </div>
   </div>
-</div>
+
+  <div class="content" id="content" style="display: none;">
+  {% include './loginContent.html' %}
+  </div>
+
+  <script src="{% static 'PNP/js/gsap.min.js' %}"></script>
+  <script>
+      if(!sessionStorage.getItem('loaderShown')){
+        sessionStorage.setItem('loaderShown', 'true');
+        gsap.from('#cursor', {
+          x:100,
+          opacity:0,
+          duration:1,
+        })
+        gsap.from("#text", {
+          duration: 1.5,
+          x: "-100%", // Start from the position of the cursor
+          opacity: 0, // Start with opacity 0
+          ease: "power2.inOut"
+        });
+
+        gsap.to("#text", {
+          duration: 2,
+          delay: 1, // Delay before sliding
+          ease: "power2.inOut",
+          onComplete: function() {
+            gsap.to(".loader", { duration: 1, autoAlpha: 0, onComplete: function() {
+              document.getElementById("content").style.display = "block";
+            }});
+          }
+        });
+      }else{
+        document.getElementById("content").style.display = "block";
+        document.querySelector(".text-container").style.display = "none";
+      }
+  </script>
+</body>
+</html>
+
+
