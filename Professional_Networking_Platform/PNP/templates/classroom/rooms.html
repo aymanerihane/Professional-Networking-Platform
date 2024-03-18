@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block content %}
+<link
+      href="{% static 'PNP/css/rooms.css' %}"
+      rel="stylesheet"
+    />
+    <main class="main">
+      <section class="secondary-header">
+        <div class="secondary-icon-container">
+          <span class="material-icons-outlined">
+            <img src="{% static 'PNP/img/verifier.png' %}" alt="">
+          </span>
+          <span class="secondary-icon-text">To do</span>
+        </div>
+        <div class="secondary-icon-container">
+          <span class="material-icons calender-icon">
+            <img src="{% static 'PNP/img/calendrier.png' %}" alt="">
+          </span>
+          <span class="secondary-icon-text">Calender</span>
+        </div>
+      </section>
+      <section class="card-section">
+        <!-- First Card -->
+        <div class="card">
+          <div class="card-header">
+            <h1 class="subject-name">Computer Networks</h1>
+            <h2 class="section">CSE B</h2>
+            <h3 class="teacher-name">John Doe</h3>
+            <span class="material-icons teacher-icon">
+                <img src="{% static 'PNP/img/network.png' %}" alt="">
+            </span>
+          </div>
+          <div class="card-body"></div>
+          <div class="card-footer">
+            <span class="material-icons-outlined assignment-icon">
+                <img src="{% static 'PNP/img/personne.png' %}" alt="">
+            </span>
+            <span class="material-icons-outlined folder-icon">
+                <img src="{% static 'PNP/img/folder.png' %}" alt="">
+            </span>
+          </div>
+        </div>
+
+      </section>
+    </main>
+    <span class="material-icons help-icon"> 
+        <img src="{% static 'PNP/img/question.png' %}" alt="">
+    </span>
+  </body>
+
+
+{% endblock %}

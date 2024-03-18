@@ -139,6 +139,12 @@ def network(request):
     }
     return render(request,'networkPage/networkPage.html' , context)
 
+#classroom page
+def classroom(request):
+    context = {
+    }
+    return render(request,'classroom/rooms.html' , context)
+
 
 #post like
 def like(request, postid):
