@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom
+from .views import loginRed,signUp,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,comment
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -29,4 +29,5 @@ urlpatterns = [
 
     #post like
     path('like/<int:postid>/', like , name='like'),
+    path('comment/<int:postid>/', comment , name='comment'),
 ] + static(settings.STATIC_URL)

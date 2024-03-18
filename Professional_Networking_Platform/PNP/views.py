@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import User, Post, Room, Like
+from .models import User, Post, Room, Like,Comment
 from .forms import SignUpForm, NewPost
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
@@ -161,3 +161,14 @@ def like(request, postid):
     
     post.save()
     return JsonResponse({'success': True,'likes': post.num_likes})
+
+#post comments
+def comment(request, postid):
+    post = Post.objects.get(id=postid)
+    user = User.objects.get(user_id=request.user.id)
+    comment=request.POST.get('comment')
+    Comment.create_comment(user, post,comment)
+    post.num_comments = post.num_comments + 1
+    print('comment send')
+    post.save()
+    return JsonResponse({'success': True,'likes': post.num_comments})
