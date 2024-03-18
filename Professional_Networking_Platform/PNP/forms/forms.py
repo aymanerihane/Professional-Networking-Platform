@@ -7,6 +7,13 @@ class SignUpForm(forms.ModelForm):
         model = User
         fields = ['phone', 'address', 'city', 'country', 'cv', 'photo_profile', 'Visibility']
 
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['phone'].widget.attrs['placeholder'] = 'Phone'
+        self.fields['address'].widget.attrs['placeholder'] = 'Address'
+        self.fields['city'].widget.attrs['placeholder'] = 'City'
+        self.fields['country'].widget.attrs['placeholder'] = 'Country'
+
 class NewPost(forms.ModelForm):
     content = forms.CharField(label='content')
     class Meta:

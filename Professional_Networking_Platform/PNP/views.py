@@ -36,6 +36,12 @@ def signUp(request):
         if form.is_valid():
             user = form.save()  # user is a User object now
             request.session['user_id'] = user.id  # Store user id in session
+            #prendre la partie apres la @ de l'email
+            afterAt = user.email.split('@')[1]
+            if(afterAt == 'etu.uae.ac.ma'):
+                request.session['role'] = 1
+            else:
+                request.session['role'] = 2
             return redirect('PNP:signUp2')
     else:
         form = UserCreationForm()
@@ -47,8 +53,10 @@ def signUp2(request):
         if form.is_valid():
             form = form.save(commit=False)
             user_id = request.session.get('user_id')  # Retrieve user id from session
+            role = request.session.get('role')
             if user_id is not None:
                 form.user_id = user_id
+                form.role = role
                 form.save()
                 return redirect('PNP:login')
             else:

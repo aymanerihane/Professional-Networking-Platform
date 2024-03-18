@@ -35,14 +35,22 @@
       <div class="input-field">
        <i class="fas fa-user"></i>
        {{form.username}}
+       <p>{{form.username.errors}}</p>
+      </div>
+      <div class="input-field">
+       <i class="fas fa-user"></i>
+       {{form.email}}
+       <p>{{form.email.errors}}</p>
       </div>
       <div class="input-field">
        <i class="fas fa-lock"></i>
        {{form.password1}}
+       <p>{{form.password1.errors}}</p>
       </div>
       <div class="input-field">
        <i class="fas fa-lock"></i>
        {{form.password2}}
+       <p>{{form.password2.errors}}</p>
       </div>
 
       <input class="btn solid" type="submit" value="Sign Up" />

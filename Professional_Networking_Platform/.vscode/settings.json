@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "PNP",
+            "database": "${workspaceFolder:Professional_Networking_Platform}/db.sqlite3"
+        }
+    ]
+}
