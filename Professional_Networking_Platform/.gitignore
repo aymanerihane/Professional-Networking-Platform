@@ -22,3 +22,6 @@ staticfiles/
 
 # Virtual environment
 venv/
+
+Professional_Networking_Platform/db.sqlite3
+Professional_Networking_Platform/PNP/__pycache__
