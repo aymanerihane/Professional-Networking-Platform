@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+*.cache
+.cachefile
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite3
+db.sqlite3
+*.pyc
+Professional_Networking_Platform/db.sqlite3
+Professional_Networking_Platform/PNP/__pycache__
+Professional_Networking_Platform/Professional_Networking_Platform/__pycache__
+# Media files
+media/
+
+# Static files
+staticfiles/
+
+# Virtual environment
+venv/
