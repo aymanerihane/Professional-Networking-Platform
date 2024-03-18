@@ -5,12 +5,10 @@
 
 {% block content %}
 {% if friends%}
-    {% for friend in friends%}
         <h1>Friends</h1>
+    {% for friend in friends%}
         <ul>
-            {% for friend in friends %}
-            <li>{{friend.name}}</li>
-            {% endfor %}
+            <li>{{friend.user.username}}</li>
         </ul>
     {% endfor %}
 {% else %}

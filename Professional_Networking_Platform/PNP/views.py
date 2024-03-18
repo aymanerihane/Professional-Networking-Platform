@@ -9,7 +9,8 @@ from .forms import SignUpForm, NewPost
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db.models import Q
+from django.utils import timezone
 
 
 # import datetime
@@ -107,14 +108,28 @@ def room(request, room_id):
 
 # first page after login
 def firstPage(request):
-    posts = Post.get_all_posts()
-    current_user = request.user
+    friends = User.objects.get(user_id=request.user.id).friends.all()
+    current_user = User.objects.get(user_id=request.user.id)
+    user = request.user
+    posts = Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
+    posts_with_time_since = [{
+        'post': post,
+        'time_since': time_since(post.created_at)
+    } for post in posts]
     context = {
-        'posts': posts,
-        'user': current_user,
-
+        'posts': posts_with_time_since,
+        'user': user,
     }
     return render(request,'firstPage/fisrtPage.html' , context)
+
+
+# add friend
+def addFriend(request, username):
+    user = auth_user.objects.get(username=username)  # get User instance from User model
+    friend= User.objects.get(user_id=user.id)
+    current_user = User.objects.get(user_id=request.user.id)
+    current_user.friends.add(friend)
+    return redirect('PNP:firstPage')
 
 # create post
 def createPost(request):
@@ -172,3 +187,39 @@ def comment(request, postid):
     print('comment send')
     post.save()
     return JsonResponse({'success': True,'likes': post.num_comments})
+
+
+
+
+
+
+
+
+
+
+
+
+# time since function
+
+def time_since(d):
+    now = timezone.now()
+    print(now)
+    diff = now - d
+
+    seconds_in_day = 24 * 60 * 60
+    seconds_in_hour = 60 * 60
+    seconds_in_minute = 60
+
+    if diff.days > 365:
+        return f'{diff.days // 365} years'
+    elif diff.days > 30:
+        return f'{diff.days // 30} months'
+    elif diff.days > 0:
+        return f'{diff.days} days'
+    elif diff.seconds > seconds_in_hour:
+        return f'{diff.seconds // seconds_in_hour} hours'
+    elif diff.seconds > seconds_in_minute:
+        return f'{diff.seconds // seconds_in_minute} minutes'
+    else:
+        return 'just now'
+

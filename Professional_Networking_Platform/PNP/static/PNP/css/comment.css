@@ -3,7 +3,7 @@
 }
 
 /* comment section */
-#comment{
+div.commentpost{
     cursor: pointer !important;
     
 }

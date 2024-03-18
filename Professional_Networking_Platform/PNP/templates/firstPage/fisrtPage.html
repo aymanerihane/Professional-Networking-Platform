@@ -98,27 +98,27 @@
             <!-- allposts -->
             {% for post in posts%}
 
-            <div class="post" data-id="{{post.id}}">
+            <div class="post" data-id="{{post.post.id}}">
                 <div class="post-author">
                     <img
                         src="https://media.licdn.com/dms/image/D4D35AQGTdqs4cZFOBw/profile-framedphoto-shrink_200_200/0/1680180892982?e=1685826000&v=beta&t=YRCXIxlGFtfR7g0RpxDyhjohxxDavabl4WrjU3tRM94">
                     <div>
-                        <h1>{{post.user.user.username}}
+                        <h1>{{post.post.user.user.username}}
                             Developer &middot; <span style="font-weight: lighter;">1st</span></h1>
                         <small>Web Developer | Free-Lancer</small>
-                        <small>2 hours ago</small>
+                        <small>{{post.time_since}}</small>
                     </div>
                 </div>
-                <p>{{post.content}}</p>
-                <img src="{{post.image.url}}" alt="profileImg"
+                <p>{{post.post.content}}</p>
+                <img src="{{post.post.image.url}}" alt="profileImg"
                     width="100%">
                 <div class="post-stats">
                     <div>
                         <img src="{% static 'PNP/img/thumbsup.png' %}">
-                        <span class="liked-users" id="{{post.id}}">{{ post.num_likes }}  reactions</span>
+                        <span class="liked-users" id="{{post.post.id}}">{{ post.post.num_likes }}  reactions</span>
                     </div>
                     <div>
-                        <span>{{ post.num_comments }} comments &middot; {{ post.num_shares }} shares</span>
+                        <span>{{ post.post.num_comments }} comments &middot; {{ post.post.num_shares }} shares</span>
                     </div>
                 </div>
                 <div class="post-activity">
@@ -127,7 +127,7 @@
                         <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
                         <span>Like</span>
                     </div>
-                    <div class="post-activity-link" id="comment">
+                    <div class="post-activity-link commentpost" onclick="openComment()">
                         <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
                         <span>Comment</span>
                     </div>
@@ -192,11 +192,26 @@
     {% comment %} upload gsap framwork {% endcomment %}
     <script src="{% static 'PNP/js/gsap.min.js' %}"></script>
 
+
     <script src="{% static 'PNP/js/firstPage.js' %}"></script>
     <script src="{% static 'PNP/js/jquery-3.7.1.min.js' %}"></script>
 
     
     <script>
+    var section=document.getElementById('commentSection')
+var overlay=document.getElementById('overlay')
+function openComment() {
+        section.classList.toggle('open-comment');
+        overlay.classList.toggle('overlay-open');
+}
+
+function closeComment() {
+    section.classList.remove('open-comment');
+    overlay.classList.remove('overlay-open');
+}
+
+
+
     // likes
 
     // Define static paths
