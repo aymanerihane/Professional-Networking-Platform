@@ -41,8 +41,9 @@
                 </p>
                 <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a>
             </div>
-
+            
             <div class="profile-description">
+                {% if cv.experiences %}
                 <h2>Experience</h2>
                 {% for experience in cv.experiences %}
                 <div class="profile-desc-row">
@@ -55,10 +56,18 @@
                     </div>
                 </div>
                 {% endfor %}
-                <hr>
+                        {% else %}
+            <div class="profile-desc-row">
+                <div>
+                    <p>No experience available</p>
+                </div>
+            </div>
+        {% endif %}
+              <hr>
             </div>
             <div class="profile-description">
                 <h2>Education</h2>
+                {% if cv.educations %}
                 {% for education in cv.educations %} 
                 <div class="profile-desc-row">
                     <img src="https://media.licdn.com/dms/image/C4E0BAQEeYFL5IrmC7A/company-logo_200_200/0/1519911295498?e=1693440000&v=beta&t=bPnGZgLgDvL0mVTnIfCGMlcPxNJXZP4OFKz2Ly3sCTA" alt="">
@@ -70,20 +79,35 @@
                     </div>
                 </div>
                 {% endfor %}
+                        {% else %}
+            <div class="profile-desc-row">
+                <div>
+                    <p>No education available</p>
+                </div>
+            </div>
+        {% endif %}
             </div>
             <div class="profile-description">
+                {% if cv.skills %}
                 <h2>Skills</h2>
                <div> {% for skill in cv.skills.skills %}
                     <div class="skill-btn">{{skill}}</div>{% if not forloop.last %} {% endif %}
                     {% endfor %}
                </div>
+                {% else %}
+            <p>No skills available</p>
+        {% endif %}
             </div>
             <div class="profile-description">
                 <h2>Languages</h2>
+                {% if cv.languages %}
                 <div> {% for lang in cv.languages.languages %}
                     <div class="lang-btn">{{lang}}</div>{% if not forloop.last %} {% endif %}
                     {% endfor %}
                </div>
+               {% else %}
+                <p>No languages available</p>
+            {% endif %}
             </div>
         </div>
         <div class="profile-sidebar">
