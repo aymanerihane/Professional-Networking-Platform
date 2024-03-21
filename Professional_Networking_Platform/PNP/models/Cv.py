@@ -8,8 +8,8 @@ class Cv(models.Model):
     introduction = models.CharField(max_length=100,blank=True)
     languages = models.CharField(max_length=100,blank=True)
     skills = models.CharField(max_length=100,blank=True)
-    experiences = models.JSONField(max_length=100,blank=True, default=list)  # Utilisez un dictionnaire pour stocker les expériences
-    educations = models.JSONField(max_length=100,blank=True, default=list)  # Utilisez un dictionnaire pour stocker les éducations
+    experiences = models.JSONField(max_length=100,blank=True, default=dict)  # Utilisez un dictionnaire pour stocker les expériences
+    educations = models.JSONField(max_length=100,blank=True, default=dict)  # Utilisez un dictionnaire pour stocker les éducations
 
     def add_experience(self, company, job_title, start_date, end_date, description):
         # Ajoute une nouvelle expérience au dictionnaire des expériences
@@ -61,7 +61,7 @@ class Cv(models.Model):
         new_skills = {
             "skills": skills.split(","),
         }
-        skil = json.loads(new_skills)
+        skil = json.dumps(new_skills)
         return skil
     
     @classmethod
@@ -70,7 +70,7 @@ class Cv(models.Model):
         new_languages = {
             "languages": languages.split(","),
         }
-        lang = json.loads(new_languages)
+        lang = json.dumps(new_languages)
         return lang
     
     def get_experiences(self):

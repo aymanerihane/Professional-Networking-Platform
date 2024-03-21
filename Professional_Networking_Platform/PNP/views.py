@@ -156,6 +156,7 @@ def profile(request,username):
     user = auth_user.objects.get(username=username)
     cv = Cv.objects.get(user_id=request.user.id)
     cv.skills = json.loads(cv.skills)
+    cv.languages = json.loads(cv.languages)
     pnp_user = User.objects.get(user_id=user.id)
     if request.user.username != username:
         pnp_user.number_of_profile_visits = pnp_user.number_of_profile_visits + 1
