@@ -1,27 +1,53 @@
     {% load static %}
+    <link rel="stylesheet" href="{% static 'PNP/css/comment2.css' %}">
     <div class="overlay" onclick="closeComment()" id="overlay"></div>
-    <div id="commentSection">
-        <div class="header">
-            <img style="transform: rotate(90deg);cursor:pointer" src="{% static 'PNP/img/down-arrow.png' %}" onclick="closeComment()">
-            <h1>Comments</h1>
-        </div>
-        <div class="comment-box" >
-            <img class="img" src="{% static 'PNP/img/avatar/default.jpg' %}">
-            <div style="width:100%">
-                <div style="display:flex;align-items:center;justify-content: space-between">
-                <h4>AzaanUllah</h4>
-                <h6 style="margin-right: 30px">2 hours ago</h6>
-                
-                </div>
-                <p>It's a great day to learn something new</p>
-            </div>
-        </div>
-        <div class="fotter-comment">
-            <input type="text" class="commentFilied" placeholder="Write a comment">
-            <button class="btn" id="sendcomment">Comment</button>
-        </div>
-        
-    </div>
+    <div id="commentSection" style="right: -600px;">
+        <div class="comment_block">
+
+		<!-- 
+			Comments are structured in the following way:
+
+			{ul} defines a new comment (singular)
+			{li} defines a new reply to the comment {ul}
+
+			example:
+
+			<ul>
+				<comment>
+					
+				</comment
+
+					<li>
+						<reply>
+
+						</reply>
+					</li>
+
+					<li>
+						<reply>
+
+						</reply>
+					</li>
+
+					<li>
+						<reply>
+
+						</reply>
+					</li>
+			</ul>
+
+		 -->
+
+		 <!-- used by #{user} to create a new comment -->
+
+            
+
+
+
+    <!-- new comment -->
+    <div id="comments"></div>
+
+
     <script src="{% static 'PNP/js/comment.js' %}"></script>
 
     <script src="{% static 'PNP/js/jquery-3.7.1.min.js' %}"></script>
@@ -38,23 +64,7 @@ document.addEventListener('click', (e)=> {
     }
 });
 
-// Send AJAX request to update the like count
-function addComment(likeButton) {
-console.log('add comment');
-var postId = likeButton.closest('.post').dataset.id;
-$.ajax({
-    url: '/comment/' + postId + '/',
-    type: 'POST',
-    dataType: 'json',
-    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
-    success: function (response) {
-        if (response.success) {
-            console.log(response.comments);
-            document.querySelector('.comments[id=\"'+postId+'\"]').innerText = response.comments + ' comments';
-        }
-    }
-});
-}
+
 
    
 </script>

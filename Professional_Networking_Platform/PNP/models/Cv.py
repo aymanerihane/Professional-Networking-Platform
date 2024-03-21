@@ -1,14 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User as auth_user
+import json
 
 class Cv(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(auth_user,on_delete=models.CASCADE)
     introduction = models.CharField(max_length=100,blank=True)
-    skills = models.CharField(max_length=100,blank=True)
     languages = models.CharField(max_length=100,blank=True)
-    experiences = models.JSONField(max_length=100,blank=True, default=dict)  # Utilisez un dictionnaire pour stocker les expériences
-    educations = models.JSONField(max_length=100,blank=True, default=dict)  # Utilisez un dictionnaire pour stocker les éducations
+    skills = models.CharField(max_length=100,blank=True)
+    experiences = models.JSONField(max_length=100,blank=True, default=list)  # Utilisez un dictionnaire pour stocker les expériences
+    educations = models.JSONField(max_length=100,blank=True, default=list)  # Utilisez un dictionnaire pour stocker les éducations
 
     def add_experience(self, company, job_title, start_date, end_date, description):
         # Ajoute une nouvelle expérience au dictionnaire des expériences
@@ -58,17 +59,19 @@ class Cv(models.Model):
     def skills_tojson(self, skills):
         # split skills by , and make it as json
         new_skills = {
-            'skills': skills.split(","),
+            "skills": skills.split(","),
         }
-        return new_skills
+        skil = json.loads(new_skills)
+        return skil
     
     @classmethod
     def languages_tojson(self, languages):
         # split languages by , and make it as json
         new_languages = {
-            'languages': languages.split(","),
+            "languages": languages.split(","),
         }
-        return new_languages
+        lang = json.loads(new_languages)
+        return lang
     
     def get_experiences(self):
         # Récupère toutes les expériences associées à ce CV

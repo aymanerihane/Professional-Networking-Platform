@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
+import json
 
 
 # import datetime
@@ -153,12 +154,15 @@ def signUpEntre(request):
 @login_required
 def profile(request,username):
     user = auth_user.objects.get(username=username)
+    cv = Cv.objects.get(user_id=request.user.id)
+    cv.skills = json.loads(cv.skills)
     pnp_user = User.objects.get(user_id=user.id)
     if request.user.username != username:
         pnp_user.number_of_profile_visits = pnp_user.number_of_profile_visits + 1
     pnp_user.save()
     context = {
-        'user': auth_user.objects.get(username=username),
+        'user': user,
+        'cv': cv,
         'isMe': True if request.user.username == username else False,
         'isFriend': True if User.objects.get(user_id=request.user.id).friends.filter(user_id=user.id).exists() else False
     }
@@ -292,15 +296,23 @@ def like(request, postid):
     return JsonResponse({'success': True,'likes': post.num_likes})
 
 #post comments
-def comment(request, postid):
-    post = Post.objects.get(id=postid)
-    user = User.objects.get(user_id=request.user.id)
-    comment=request.POST.get('comment')
-    Comment.create_comment(user, post,comment)
-    post.num_comments = post.num_comments + 1
-    print('comment send')
-    post.save()
-    return JsonResponse({'success': True,'likes': post.num_comments})
+def get_comment(request, itemid, type):
+    # check if it s a post or a replies comment if type = 1 post if type = 2 replies
+    if type == 1: 
+        post = Post.objects.get(pk=itemid)
+        comments = post.comments.all()
+        context = {
+            'comments': comments
+        }
+    #get comment reply for each comment 
+    elif type == 2:
+        comment = Comment.objects.get(object_id=itemid)
+        replies = comment.replies.all()
+        context = {
+            'replies': replies
+        }
+    return render(request, 'commentsFrom.html', context)
+    
 
 
 

@@ -1,11 +1,18 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User as auth_user
 
 class Comment(models.Model):
-    id = models.AutoField(primary_key=True)
+    object_id = models.PositiveSmallIntegerField()
     user_id = models.ForeignKey('PNP.User', on_delete=models.CASCADE)
-    post_id = models.ForeignKey('PNP.Post', on_delete=models.CASCADE)
     #
     comment = models.TextField()
+    #
+    content_type= models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_object = GenericForeignKey('content_type', 'object_id')
+    #
+    replies= GenericRelation('Comment')
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -50,3 +57,8 @@ class Comment(models.Model):
             return True
         else:
             return False
+
+
+    def __str__(self):
+        user= auth_user.objects.get(id=self.user_id.user_id)
+        return user.username + " - " + self.comment

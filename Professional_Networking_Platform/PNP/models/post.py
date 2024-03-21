@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import URLValidator
-from django.core.exceptions import ValidationError
-
+from django.contrib.contenttypes.fields import GenericRelation
 ###########
 # Post Model
 
@@ -14,6 +13,8 @@ class Post(models.Model):
     num_likes  = models.PositiveIntegerField(default=0)
     link = models.CharField(max_length=100, validators=[URLValidator()])
     media = models.FileField(upload_to='media/', null=True, blank=True)
+    #
+    comments= GenericRelation('PNP.Comment')
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

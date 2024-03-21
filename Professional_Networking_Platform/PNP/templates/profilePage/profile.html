@@ -38,11 +38,9 @@
             </div>
             <div class="profile-description">
                 <h2>About</h2>
-                <p>I am a MERN Stack Web developer. I have learnt technologies like HTML5, CSS3, BootsStrap, JS,
-                    ReactJS, NodeJS, MangoDB & Express JS<span id="hidden" style="display: none;">My Experties are in
-                        generating Optimized and Clean code. Currently I am Learning in Saylani Mass IT Training (SMIT)
-                        and looking forward to create next google. My Future plans are to learn data science and
-                        Algorithms</span>
+                <p>{% for skill in cv.skills.skills %}
+                    {{skill}}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
                 </p>
                 <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a>
             </div>
