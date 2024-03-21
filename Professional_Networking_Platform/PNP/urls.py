@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,comment,addFriend
+from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,comment,addFriend,signUpStud
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -8,7 +8,10 @@ app_name = "PNP"
 urlpatterns = [
     path("", loginRed , name='loginRed'),
     # registration
-    path('signUp/', signUp, name='signUp'),
+    path('signUp/', signUp1, name='signUp'),
+    path('signUpEntre/', signUpEntre, name='signUpEntre'),
+    path('signUpStud/', signUpStud, name='signUpStud'),
+    path('signUp1/<int:choix>', signUp, name='signUp1'),
     path('signUp2/', signUp2, name='signUp2'),
     path("", include("django.contrib.auth.urls")),
     path('logincheck/', logincheck, name='logincheck'),

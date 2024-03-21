@@ -48,9 +48,9 @@
                     <h1>{{user.username}}</h1>
                     <h3>Student at Saylani Mass IT Train -ing, Web & App</h3>
                     <ul>
-                        <li>Your Profile Views<span>100</span></li>
-                        <li>Your Post Views<span>370</span></li>
-                        <li>Your Connections<span>1K</span></li>
+                        <li>Your Profile Views<span>{{number_of_visits}}</span></li>
+                        <li>Your Post<span>{{number_of_posts}}</span></li>
+                        <li>Your Connections<span>{{number_of_friends}}</span></li>
                     </ul>
                 </div>
             </div>
@@ -124,7 +124,11 @@
                 <div class="post-activity">
 
                     <div class="post-activity-link" id="like" onclick="toggleLike(this)" style="cursor: pointer;">
+                        {% if post.post.liked == False %}
                         <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
+                        {% else %}
+                        <img id="likeImg" src="{% static 'PNP/img/love.png' %}" class="post-activity-user-icon">
+                        {% endif %}
                         <span>Like</span>
                     </div>
                     <div class="post-activity-link commentpost" onclick="openComment()">
@@ -146,19 +150,14 @@
         </div>
         <div class="right-sidebar">
             <div class="sidebar-news">
-                <img src="{% static 'PNP/img/more.png' %}" class="info-icon">
-                <h3>Trending News</h3>
-                <a href="">High demand for skilled manpower</a>
-                <span>1d ago &middot; 1934 readers</span>
-                <a href="">Carrier growing horizontally too</a>
-                <span>10d ago &middot; 1084 readers</span>
-                <a href="">Less work visa for US, more for UK</a>
-                <span>7h ago &middot; 7980 readers</span>
-                <a href="">More hiring = Higher confidence ?</a>
-                <span>1h ago &middot; 1924 readers</span>
-                <a href="">Saylani has announced batch 4 of Techno Kids</a>
-                <span>8h ago &middot; 1906 readers</span>
-                <a href="" class="read-more-link">Read More</a>
+                {% comment %} create a toolpit for this image {% endcomment %}
+                <img src="{% static 'PNP/img/more.png' %}" class="info-icon" title="Your Network... you can delete a friend or send a message">
+                <h3>My Network</h3>
+                {% for friend in friends %}
+                <a href="{% url 'PNP:profile' friend.user.username %}">{{friend.user.username}}</a>
+                <span style="display:flex;justify-content: space-around"><a style="font-size: 10px;font-weight: 100;" href="{% url 'PNP:addFriend' friend.user.username%}">delete</a> <a style="font-size: 10px;font-weight: 100;">send message</a></span>
+                {% endfor %}
+                
             </div>
             <div class="sidebar-ad">
                 <small>AD &middot; &middot; &middot;</small>

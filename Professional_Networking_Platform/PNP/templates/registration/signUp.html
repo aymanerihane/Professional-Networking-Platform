@@ -1,79 +1,39 @@
-
-
-
 {% load static %}
-<html lang="en">
- <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script
-   src="https://kit.fontawesome.com/64d58efce2.js"
-   crossorigin="anonymous"
-  ></script>
-  <link rel="stylesheet" href="{% static 'PNP/css/login.css' %}" />
-  <title>Sign Up</title>
-  
- </head>
 
- <body>
- <div class="container1">
-  <div class="progress">
-    <div class="percent"></div>
-  </div>
-  <div class="steps">
-    <div class="step selected" id="0"></div>
-    <div class="step" id="1"></div>
-    <div class="step" id="2"></div>
-  </div>
-</div>
-  <div class="container">
-   <div class="forms-container">
-    <div class="signin-signup">
-      <form class="sign-in-form" method="POST">
-    {% csrf_token %}
-      <h2 class="title">Sign Up</h2>
-      <div class="input-field">
-       <i class="fas fa-user"></i>
-       {{form.username}}
-       <p>{{form.username.errors}}</p>
-      </div>
-      <div class="input-field">
-       <i class="fas fa-user"></i>
-       {{form.email}}
-       <p>{{form.email.errors}}</p>
-      </div>
-      <div class="input-field">
-       <i class="fas fa-lock"></i>
-       {{form.password1}}
-       <p>{{form.password1.errors}}</p>
-      </div>
-      <div class="input-field">
-       <i class="fas fa-lock"></i>
-       {{form.password2}}
-       <p>{{form.password2.errors}}</p>
-      </div>
-
-      <input class="btn solid" type="submit" value="Sign Up" />
-      
-     </form>
+<head>
+    <title>Metting</title>
+    <link rel="stylesheet" href="{% static 'PNP/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'PNP/css/choixMetting.css' %}">
+</head>
+<div class="container w-100 h-100" style="overflow: hidden;">
+            <a href="{% url 'PNP:firstPage' %}" class="btn back" style="background-color: #00838D;margin: 10px"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+            </svg>   Log in</a>
+    <div class="d-flex align-items-center h-100 justify-content-around">
+    <div class="card">
+        <a class="card1" href="{% url 'PNP:signUp1' 1 %}">
+            <p>Create Entreprise account</p>
+            <p class="small">Start your adventure like a <strong>student</strong> or a <strong>teacher</strong>!</p>
+            <div class="go-corner" >
+            <div class="go-arrow">
+                →
+            </div>
+            </div>
+        </a>
     </div>
-   </div>
-
-   <div class="panels-container">
-    <div class="panel left-panel">
-     <div class="content">
-      <h3>One of us?</h3>
-      <p>
-        Online tutor Finder provides students the best way to reach out the best tutor for them. 
-        Know more about us <a href="file:///G:/AGILE%20workshop/Website/Home%20Page/index.html">here</a>.
-      </p>
-      <a href="{% url 'PNP:login' %}" style="padding: 10px 20px;margin-top: 20px;text-decoration: none;" class="btn transparent" id="sign-up-btn">Log In</a>
-     </div>
-     <img src="{% static 'PNP/img/loginForm/register.svg' %}" class="image" alt="" />
+    <div class="card">
+        <a class="card1" href="{% url 'PNP:signUp1' 2 %}">
+            <p>Create school account</p>
+            <p class="small">Start your adventure like a <strong>Entreprise</strong>!</p>
+            <div class="go-corner" href="">
+            <div class="go-arrow">
+                →
+            </div>
+            </div>
+        </a>
     </div>
+    
+    </div>
+                
+ </div>
 
-   </div>
-  </div>
-  <script src="app.js"></script>
- </body>
-</html>

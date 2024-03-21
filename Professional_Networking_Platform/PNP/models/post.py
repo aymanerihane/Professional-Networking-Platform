@@ -78,3 +78,6 @@ class Post(models.Model):
             return True
         else:
             return False
+        
+    def __str__(self):
+        return self.title + ' - ' + self.user.user.username

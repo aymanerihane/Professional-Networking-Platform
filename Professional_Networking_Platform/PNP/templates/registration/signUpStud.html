@@ -1,17 +1,3 @@
-{% comment %} 
-<div class="shadow-wrap">
- <div class="form-wrap">
-  <h3>Sign Up </h3>
-<form method="POST">
- {% csrf_token %}
- {{form}}
- <button type="submit">Submit</button>
-</form>
-<a class="signup-link" href="{% url 'PNP:login' %}">Log in</a>
-  </div>
-</div> {% endcomment %}
-
-
 
 
 
@@ -36,53 +22,36 @@
   </div>
   <div class="steps">
     <div class="step selected completed" id="0"></div>
-    <div class="step selected" id="1"></div>
-    <div class="step" id="2"></div>
+    <div class="step selected completed" id="1"></div>
+    <div class="step selected" id="2"></div>
   </div>
 </div>
   <div class="container">
    <div class="forms-container">
     <div class="signin-signup">
-      <form class="sign-in-form" method="POST">
+      <form class="sign-in-form" method="POST" style="display: flex;width: 100%">
     {% csrf_token %}
       <h2 class="title">Sign Up</h2>
-      {% if role == 1 %}
-        <div class="input-field" style="width: 50%">
-          <i class="fas fa-user"></i>
-          <input type="text" name="CNE" placeholder="CNE"  required>
-        </div>
-      {% elif role == 2 %}
-        <div class="input-field" style="width: 50%">
-          <i class="fas fa-user"></i>
-          <input type="text" name="matricule" placeholder="matricule"  required>
-        </div>
-      {% elif role == 3 %}
-        <div class="input-field" style="width: 50%">
-          <i class="fas fa-user"></i>
-          <input type="text" name="ICE" placeholder="ICE"  required>
-        </div>
-      {% endif %}
+    <div style="display: flex;width: 100%;flex-wrap: wrap;flex-direction: row;">
         {% for fields in form %}
-          {% if forloop.counter < 5 %}
-            <div class="input-field" style="width: 50%">
-            <i class="fas fa-user"></i>
-            {{fields}}
-            {% if fields.errors %}
-                <p>{{fields.errors}}</p>
+            {% if forloop.counter == 6 or forloop.counter == 7 or forloop.counter == 11 or forloop.counter == 12 %}
+                <div  style="width: 70%;display:flex;height: 30px">
+                <p style="margin-top: 19px;margin-left:5px">{{fields.label_tag}}</p>
+            {% else %}
+                <div class="input-field" style="width: 50%">
+                <i class="fas fa-user"></i>
             {% endif %}
+            {{fields}}
             </div>
-          {% else %}
-            {{fields.label}}
-            {{fields}}
             {% if fields.errors %}
                 <p>{{fields.errors}}</p>
             {% endif %}
-          {% endif %}
         {% endfor %}
-      <input class="btn solid" type="submit" value="Next" />
+    </div>
+
+      <input class="btn solid" type="submit" value="Sign Up" />
       
      </form>
-
     </div>
    </div>
 

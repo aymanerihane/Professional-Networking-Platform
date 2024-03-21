@@ -1,0 +1,82 @@
+
+
+
+{% load static %}
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script
+   src="https://kit.fontawesome.com/64d58efce2.js"
+   crossorigin="anonymous"
+  ></script>
+  <link rel="stylesheet" href="{% static 'PNP/css/login.css' %}" />
+  <title>Sign Up</title>
+  
+ </head>
+
+ <body>
+ <div class="container1">
+  <div class="progress">
+    <div class="percent"></div>
+  </div>
+  <div class="steps">
+    <div class="step selected" id="0"></div>
+    <div class="step" id="1"></div>
+    <div class="step" id="2"></div>
+  </div>
+</div>
+  <div class="container">
+   <div class="forms-container">
+    <div class="signin-signup">
+      <form class="sign-in-form" method="POST">
+    {% csrf_token %}
+      <h2 class="title">Sign Up</h2>
+      <div class="input-field">
+       <i class="fas fa-user"></i>
+       {{form.username}}
+       <p>{{form.username.errors}}</p>
+      </div>
+      <div class="input-field">
+       <i class="fas fa-user"></i>
+       {{form.email}}
+       <p>{{form.email.errors}}</p>
+       {% if error %}
+        <p>{{error}}</p>
+        {% endif %}
+      </div>
+      <div class="input-field">
+       <i class="fas fa-lock"></i>
+       {{form.password1}}
+       <p>{{form.password1.errors}}</p>
+      </div>
+      <div class="input-field">
+       <i class="fas fa-lock"></i>
+       {{form.password2}}
+       <p>{{form.password2.errors}}</p>
+      </div>
+
+      <input class="btn solid" type="submit" value="Sign Up" />
+      
+     </form>
+    </div>
+   </div>
+
+   <div class="panels-container">
+    <div class="panel left-panel">
+     <div class="content">
+      <h3>One of us?</h3>
+      <p>
+        Online tutor Finder provides students the best way to reach out the best tutor for them. 
+        Know more about us <a href="file:///G:/AGILE%20workshop/Website/Home%20Page/index.html">here</a>.
+      </p>
+      <a href="{% url 'PNP:login' %}" style="padding: 10px 20px;margin-top: 20px;text-decoration: none;" class="btn transparent" id="sign-up-btn">Log In</a>
+     </div>
+     <img src="{% static 'PNP/img/loginForm/register.svg' %}" class="image" alt="" />
+    </div>
+
+   </div>
+  </div>
+  <script src="app.js"></script>
+ </body>
+</html>

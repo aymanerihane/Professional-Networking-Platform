@@ -1,2 +1,2 @@
-from .forms import SignUpForm, NewPost
+from .forms import SignUpForm, NewPost, CVForm
 

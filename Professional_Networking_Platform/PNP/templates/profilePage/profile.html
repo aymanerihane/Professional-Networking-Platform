@@ -24,10 +24,16 @@
                         <span><span class="mutual-friend">Shahzaib Kesrani 🌟 Front-End
                                 Developer</span> and <span class="mutual-friend">Muhammad Saad Ali</span> are mutual connections</span>
                     </div>
+                    {% if not isMe %}
                     <div class="profile-btn">
-                        <a href="" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" alt="">Connect</a>
+                        {% if isFriend %}
+                        <a style="background-color: #efefef;color:black" href="{% url 'PNP:addFriend' user %}"  class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >Connect</a>
+                        {% else %}
+                        <a href="{% url 'PNP:addFriend' user %}" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >Connect</a>
+                        {% endif %}
                         <a href=""><img src="{% static 'PNP/img/message.png' %}" alt="">Chat</a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="profile-description">

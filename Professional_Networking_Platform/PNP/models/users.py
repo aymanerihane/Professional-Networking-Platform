@@ -15,6 +15,7 @@ class User(models.Model):
     ROLE_CHOICES = [
         (1, 'Student'),
         (2, 'Teacher'),
+        (3, 'Entreprise')
     ]
 
     VISIBILITY_CHOICES = [
@@ -39,7 +40,12 @@ class User(models.Model):
     #liste of friends
     friends = models.ManyToManyField('self',related_name='friends', blank=True)
     #
+    number_of_profile_visits = models.PositiveIntegerField(default=0, blank=True, null=True)
+    #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.username
 
 

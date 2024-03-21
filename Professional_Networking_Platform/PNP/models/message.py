@@ -36,3 +36,4 @@ class Message(models.Model):
             return json.loads(self.media)
         except (json.JSONDecodeError, ValueError):
             return []
+
