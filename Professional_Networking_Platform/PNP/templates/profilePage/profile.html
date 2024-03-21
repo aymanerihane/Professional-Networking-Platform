@@ -13,8 +13,7 @@
                     <img src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_200_200/0/1678030659122?e=1690416000&v=beta&t=rR6tak242QPL0LZERB6aJT_1V9Qwl-kV_GV99Ual514"
                         class="profile-pic">
                     <h1>{{user.username}}</h1>
-                    <b>Student at Saylani Mass IT Training (Web And App Development Course) || Front-End-Developer ||
-                        MERN Stack Developer</b>
+                    <b>{{cv.introduction}}</b>
                     <p>Karachi Division, Sindh, Pakistan &middot; <a href="">Contact Info</a></p>
                     <div class="mutual-connection">
                         <img
@@ -38,95 +37,53 @@
             </div>
             <div class="profile-description">
                 <h2>About</h2>
-                <p>{% for skill in cv.skills.skills %}
-                    {{skill}}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
+                <p>
                 </p>
                 <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a>
             </div>
 
             <div class="profile-description">
                 <h2>Experience</h2>
+                {% for experience in cv.experiences %}
                 <div class="profile-desc-row">
                     <img src="{% static 'PNP/img/microsoft.png' %}">
                     <div>
-                        <h3>Lead Front-End Developer</h3>
-                        <b>Microsoft &middot; Full-Time</b>
-                        <b>Feb 2021 - Present &middot; 1.5 Years</b>
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam ducimus a et aperiam, non incidunt eveniet perferendis nam rerum illo at aspernatur consequatur dicta labore quis, sunt, ipsam earum dolores.</p>
-                        <hr>
+                        <h3>{{ cv.experiences.job_title }}r</h3>
+                        <b>{{cv.experiences.company}}</b>
+                        <b>{{cv.experiences.start_date}}-{{cv.experiences.end_date}}</b>
+                        <p>{{cv.experiences.description}}</p>
                     </div>
                 </div>
-                <div class="profile-desc-row">
-                    <img src="{% static 'PNP/img/slack.png' %}">
-                    <div>
-                        <h3>Full Stack Developer</h3>
-                        <b>Slack &middot; Full-Time</b>
-                        <b>June 2018 - Jan 2021 &middot; 2.6 Years</b>
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam ducimus a et aperiam, non incidunt eveniet perferendis nam rerum illo at aspernatur consequatur dicta labore quis, sunt, ipsam earum dolores.</p>
-                        <hr>
-                    </div>
-                </div>
-                <div class="profile-desc-row">
-                    <img src="{% static 'PNP/img/google.png' %}">
-                    <div>
-                        <h3>Web Developer</h3>
-                        <b>Google.Inc &middot; Full-Time</b>
-                        <b>Sept 2015 - May 2018 &middot; 2.8 Years</b>
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam ducimus a et aperiam, non incidunt eveniet perferendis nam rerum illo at aspernatur consequatur dicta labore quis, sunt, ipsam earum dolores.</p>
-                    </div>
-                </div>
+                {% endfor %}
                 <hr>
-                <a href="" class="experience-link">Show all 7 Experiences <img src="{% static 'PNP/img/right-arrow.png' %}" alt=""></a>
             </div>
             <div class="profile-description">
                 <h2>Education</h2>
-                <div class="profile-desc-row">
-                    <img src="https://media.licdn.com/dms/image/C4D0BAQEBFPcB1s3wrg/company-logo_200_200/0/1675703359239?e=1693440000&v=beta&t=H9M2a8YBEdzm-cXDjYWEJQqIbWpvBWnwJUFD7Zxp4zo" alt="">
-                    <div>
-                        <h3>S.M.I.T (Saylani Mass IT Training)</h3>
-                        <b>Web and App Development</b>
-                        <b>2022 - 2023</b>
-                        <hr>
-                    </div>
-                </div>
+                {% for education in cv.educations %} 
                 <div class="profile-desc-row">
                     <img src="https://media.licdn.com/dms/image/C4E0BAQEeYFL5IrmC7A/company-logo_200_200/0/1519911295498?e=1693440000&v=beta&t=bPnGZgLgDvL0mVTnIfCGMlcPxNJXZP4OFKz2Ly3sCTA" alt="">
                     <div>
-                        <h3>Nasra School</h3>
-                        <b>Computer Science</b>
-                        <b>2012 - Present</b>
+                        <h3>{{cv.educations.school}}</h3>
+                        <b>{{cv.educations.degree}}</b>
+                        <b>{{cv.educations.start_date}}-{{cv.educations.end_date}}</b>
                         <hr>
                     </div>
                 </div>
-                <div class="profile-desc-row">
-                    <img src="{% static 'PNP/img/mit.png' %}" alt="">
-                    <div>
-                        <h3>Harvard University</h3>
-                        <b>Senior High School</b>
-                        <b>2005 - 2015</b>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
             <div class="profile-description">
                 <h2>Skills</h2>
-                <a href="#" class="skill-btn">LeaderShip</a>
-                <a href="#" class="skill-btn">Web Design</a>
-                <a href="#" class="skill-btn">Communication</a>
-                <a href="#" class="skill-btn">UI/UX</a>
-                <a href="#" class="skill-btn">Development</a>
-                <a href="#" class="skill-btn">Planning</a>
-                <a href="#" class="skill-btn">Coding</a>
-                <a href="#" class="skill-btn">JavaScript</a>
-                <a href="#" class="skill-btn">Front-End</a>
-                <a href="#" class="skill-btn">HTML CSS</a>
+               <div> {% for skill in cv.skills.skills %}
+                    <div class="skill-btn">{{skill}}</div>{% if not forloop.last %} {% endif %}
+                    {% endfor %}
+               </div>
             </div>
             <div class="profile-description">
                 <h2>Languages</h2>
-                <a href="#" class="lang-btn">English</a>
-                <a href="#" class="lang-btn">JavaScript</a>
-                <a href="#" class="lang-btn">HTML 5</a>
-                <a href="#" class="lang-btn">CSS 3</a>
+                <div> {% for lang in cv.languages.languages %}
+                    <div class="lang-btn">{{lang}}</div>{% if not forloop.last %} {% endif %}
+                    {% endfor %}
+               </div>
             </div>
         </div>
         <div class="profile-sidebar">
