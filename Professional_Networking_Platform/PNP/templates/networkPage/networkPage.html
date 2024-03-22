@@ -1,20 +1,65 @@
 {% extends "base.html" %}
 {% load static %}
 
-
-
 {% block content %}
-{% if friends%}
+<style>
+    .friends-list {
+        font-family: Arial, sans-serif;
+        padding: 0;
+        margin: 0;
+    }
+    .friends-list h1 {
+        color: #333;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .friends-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .friends-list li {
+        cursor: pointer;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        padding: 10px;
+        transition: background-color 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .friends-list li:hover {
+        background-color: #e0e0f0;
+    }
+    .btn {
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="friends-list">
+    {% if friends %}
         <h1>Friends</h1>
-    {% for friend in friends%}
         <ul>
-            <li>{{friend.user.username}}</li>
+            {% for friend in friends %}
+                <li>
+                    {{friend.user.username}}
+                    <div>
+                        <a href="{% url 'PNP:addFriend' friend.user.username %}" class="btn">Delete</a>
+                        <a href="#" class="btn">Send Message</a>
+                    </div>
+                </li>
+            {% endfor %}
         </ul>
-    {% endfor %}
-{% else %}
-    <h1>No friends</h1>
-{% endif %}
-
-
-
+    {% else %}
+        <h1>No friends</h1>
+    {% endif %}
+</div>
 {% endblock %}

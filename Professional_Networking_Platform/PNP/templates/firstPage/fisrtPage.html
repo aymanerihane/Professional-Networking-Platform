@@ -10,6 +10,40 @@
     background-color: #00838D;
 }
 
+    .sidebar-news {
+        padding-bottom: 30px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-news h3 {
+        color: #333;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .sidebar-news a {
+        display: block;
+        color: #333;
+        text-decoration: none;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    .sidebar-news a:last-child {
+        border-bottom: none;
+    }
+    .sidebar-news a:hover {
+        background-color: #e0e0e0;
+    }
+    .sidebar-news .info-icon {
+        display: block;
+        margin: 0 auto;
+    }
+    .sidebar-news span {
+        display: flex;
+        justify-content: space-around;
+        font-size: 10px;
+        font-weight: 100;
+    }
 </style>
 </head>
 <div class="container">
@@ -148,8 +182,9 @@
 
             {% endfor %}
         </div>
+        
         <div class="right-sidebar">
-            <div class="sidebar-news">
+            <div class="sidebar-news" style="padding-bottom: 30px;">
                 {% comment %} create a toolpit for this image {% endcomment %}
                 <img src="{% static 'PNP/img/more.png' %}" class="info-icon" title="Your Network... you can delete a friend or send a message">
                 <h3>My Network</h3>
@@ -192,8 +227,8 @@
     <script src="{% static 'PNP/js/gsap.min.js' %}"></script>
 
 
-    <script src="{% static 'PNP/js/firstPage.js' %}"></script>
-    <script src="{% static 'PNP/js/jquery-3.7.1.min.js' %}"></script>
+
+    
 
     
     <script>
