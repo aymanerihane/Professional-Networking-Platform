@@ -138,3 +138,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'PNP/static/PNP/media')
 # redirrect to / after login
 LOGIN_REDIRECT_URL = "/firstPage/"
 LOGOUT_REDIRECT_URL = "/"
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'

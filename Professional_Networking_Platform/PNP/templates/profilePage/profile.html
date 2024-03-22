@@ -19,6 +19,33 @@
   cursor: pointer;
     
 }
+.overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+#form{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    padding: 20px;
+    background: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+#modifie{
+    display: none;
+
+}
 </style>
     <!-- navbar ended -->
     <div class="container">
@@ -56,26 +83,31 @@
                 </div>
             </div>
             <div class="profile-description">
+                <div class="plus-div" id="addAbout" data-id="0">
                 <h2>About</h2>
+                <i class="fa fa-plus plus-btn" data-id="0"></i>
+                </div>
                 <p>
+                {{cv.about}}
                 </p>
-                <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a>
+                {% comment %} <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a> {% endcomment %}
             </div>
             
             <div class="profile-description">
-                <div class="plus-div" id="addExperience">
+                <div class="plus-div" id="addExperience" data-id="1">
                 <h2>Experience</h2>
-                <i class="fa fa-plus plus-btn"></i>
+                <i class="fa fa-plus plus-btn" data-id="1"></i>
                 </div>
             {% if cv.experiences %}
                 {% for experience in cv.experiences %}
                 <div class="profile-desc-row">
                     <img src="{% static 'PNP/img/microsoft.png' %}">
                     <div>
-                        <h3>{{ experience.job_title }}r</h3>
+                        <h3>{{experience.job_title}}</h3>
                         <b>{{experience.company}}</b>
                         <b>{{experience.start_date}}-{{experience.end_date}}</b>
                         <p>{{experience.description}}</p>
+                        <hr>
                     </div>
                 </div>
                 {% endfor %}
@@ -86,12 +118,11 @@
                 </div>
             </div>
             {% endif %}
-              <hr>
             </div>
             <div class="profile-description">
-                <div class="plus-div " id="addEducation">
+                <div class="plus-div " id="addEducation" data-id="2">
                 <h2>Education</h2>
-                <i class="fa fa-plus plus-btn"></i>
+                <i class="fa fa-plus plus-btn" data-id="2"></i>
                 </div>
                 {% if cv.educations %}
                 {% for education in cv.educations %} 
@@ -114,9 +145,9 @@
                 {% endif %}
             </div>
             <div class="profile-description">
-                <div class="plus-div" id="addSkills">
+                <div class="plus-div" id="addSkills" data-id="3">
                 <h2>Skills</h2>
-                <i class="fa fa-plus plus-btn"></i>
+                <i class="fa fa-plus plus-btn" data-id="3"></i>
                 </div>
                 {% if cv.skills %}
                <div> {% for skill in cv.skills %}
@@ -128,9 +159,9 @@
         {% endif %}
             </div>
             <div class="profile-description">
-                <div class="plus-div" id="addlanguage">
+                <div class="plus-div" id="addlanguage" data-id="4">
                 <h2>Languages</h2>
-                <i class="fa fa-plus plus-btn"></i>
+                <i class="fa fa-plus plus-btn" data-id="4"></i>
                 </div>
                 {% if cv.languages %}
                 <div> {% for lang in cv.languages %}
@@ -141,6 +172,22 @@
                 <p>No languages available</p>
             {% endif %}
             </div>
+                
+            <div class="profile-description">
+                <h2>CV</h2>
+                {% if cv.user.user.cv %}
+                    <iframe style="overflow: hidden" loading="lazy" type="application/pdf" title="PDF-file" src="{{cv.user.user.cv.url}}" width="100%" height="1100px"></iframe>
+               {% else %}
+                <p>No Cv available</p>
+            {% endif %}
+            </div>
+            
+        </div>
+        <div id="modifie">
+            <div class="overlay"></div>
+            <div id="form">
+        </div>
+        
         </div>
         <div class="profile-sidebar">
             <div class="sidebar-ad">
@@ -230,6 +277,7 @@
             </div>
         </div>
     </div>
+    
     <script>
         var profileMenu = document.getElementById('profileMenu')
         var seeMore = document.getElementById('hidden')
@@ -246,5 +294,29 @@
                 document.getElementById('more').innerHTML = "More..."
             }
         }
+        document.addEventListener('click',(e)=> {
+            console.log(e.target);
+            if (e.target.classList.contains('fa-plus')) {
+                var id = e.target.dataset.id;
+                document.getElementById('modifie').style.display = 'block';
+                getData(id);
+            }
+            if (e.target.classList.contains('overlay')) {
+                document.getElementById('modifie').style.display = 'none';
+            }
+
+        });
+
+        function getData(id){
+    $.ajax({
+        url: '/formProfile/' + id + '/',
+        type: 'GET',
+        success: function (response) {
+            console.log(response);
+            var commentsContainer = document.getElementById('form');
+            commentsContainer.innerHTML = response;
+        }
+    });
+}
     </script>
 {% endblock %}

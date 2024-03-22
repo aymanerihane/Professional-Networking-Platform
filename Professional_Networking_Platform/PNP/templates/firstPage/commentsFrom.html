@@ -6,7 +6,12 @@
 
 		 		<!-- current #{user} avatar -->
 			 	<div class="user_avatar">
-			 		<img src="/media/avatar/{{comment.user_id.photo_profile}}">
+				{% if comment.user_id.photo_profile %}
+                    <img style="width: 40px; height: 40px;object-fit: cover;"  src="{{comment.user_id.photo_profile.url}}">
+				{% else %}
+				<img src="/media/avatar/default.jpg">
+				{% endif %}
+			 		
 			 	</div><!-- the comment body --><div class="comment_body">
 			 		<p>{{comment.comment}}</p>
 			 	</div>
@@ -35,7 +40,11 @@
 				<li>
 					<!-- current #{user} avatar -->
 					<div class="user_avatar">
-						<img src="/media/avatar/{{reply.user_id.photo_profile}}">
+						{% if reply.user_id.photo_profile %}
+                    		<img style="width: 40px; height: 40px;object-fit: cover;" src="{{reply.user_id.photo_profile.url}}">
+						{% else %}
+							<img src="/media/avatar/default.jpg">
+						{% endif %}
 					</div><!-- the comment body --><div class="comment_body">
 						<p><div class="replied_to"><p><a href="{% url 'PNP:profile' reply.user_id.user.username %}"><span class="user">{{reply.user_id.user.username}}:</span></a>{{comment.comment}}</p></div>{{reply.comment}}</p>
 					</div>

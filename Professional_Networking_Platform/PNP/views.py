@@ -5,7 +5,7 @@ from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv
-from .forms import SignUpForm, NewPost, CVForm
+from .forms import SignUpForm, NewPost, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
@@ -179,6 +179,60 @@ def profile(request,username):
         'isFriend': True if User.objects.get(user_id=request.user.id).friends.filter(user_id=user.id).exists() else False
     }
     return render(request,'profilePage/profile.html' , context)
+
+def formProfile(request, id):
+    form_classes = {
+        0: AboutForm,
+        1: ExperienceForm,
+        2: EducationForm,
+        3: SkillsForm,
+        4: LanguagesForm,
+    }
+
+    if id not in form_classes:
+        return HttpResponse("Error")
+
+    FormClass = form_classes[id]
+
+    if request.method == "POST":
+        form = FormClass(request.POST)
+        if form.is_valid():
+            cv = Cv.objects.get(user_id=request.user.id)
+            if id == 0:
+                cv.about = form.cleaned_data['about']
+                cv.save()
+                return redirect('PNP:profile', username=request.user.username)
+            elif id == 1:
+                cv.add_experience(
+                    company=form.cleaned_data['company'],
+                    job_title=form.cleaned_data['job_title'],
+                    start_date=form.cleaned_data['start_date'],
+                    end_date=form.cleaned_data['end_date'],
+                    description=form.cleaned_data['description']
+                )
+                return redirect('PNP:profile', username=request.user.username)
+            elif id == 2:
+                cv.add_education(
+                    school=form.cleaned_data['school'],
+                    degree=form.cleaned_data['degree'],
+                    start_dateE=form.cleaned_data['start_dateE'],
+                    end_dateE=form.cleaned_data['end_dateE']
+                )
+                return redirect('PNP:profile', username=request.user.username)
+            elif id == 3:
+                cv.add_skills(form.cleaned_data['skills'])
+                cv.save()
+                return redirect('PNP:profile', username=request.user.username)
+            elif id == 4:
+                cv.add_languages(form.cleaned_data['languages'])
+                cv.save()
+                return redirect('PNP:profile', username=request.user.username)
+        else:
+            return render(request, 'profilePage/formProfile.html', {"form": form, "id": id})
+    else:  # GET request
+        form = FormClass()
+
+    return render(request, 'profilePage/formProfile.html', {"form": form, "id": id})
 
 # metting pages
 

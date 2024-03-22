@@ -134,8 +134,12 @@
 
             <div class="post" data-id="{{post.post.id}}">
                 <div class="post-author">
+                    {% if post.post.user.photo_profile %}
                     <img
-                        src="https://media.licdn.com/dms/image/D4D35AQGTdqs4cZFOBw/profile-framedphoto-shrink_200_200/0/1680180892982?e=1685826000&v=beta&t=YRCXIxlGFtfR7g0RpxDyhjohxxDavabl4WrjU3tRM94">
+                        src="{{post.post.user.photo_profile.url}}">
+                    {% else %}
+                    <img src="/media/avatar/default.jpg">
+                    {% endif %}
                     <div>
                         <h1>{{post.post.user.user.username}}
                             Developer &middot; <span style="font-weight: lighter;">1st</span></h1>

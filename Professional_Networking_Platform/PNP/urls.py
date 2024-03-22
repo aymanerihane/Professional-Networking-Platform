@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search
+from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,6 +25,7 @@ urlpatterns = [
     path('joinMetting/', joinMetting , name='joinMetting'), # metting join page
     # profile page
     path('profile/<str:username>/', profile , name='profile'),
+    path('formProfile/<int:id>/', formProfile , name='formProfile'),
     # clasroom page
     path('classroom/', classroom , name='classroom'),
     # networking
@@ -35,6 +36,7 @@ urlpatterns = [
     #post like
     path('like/<int:postid>/', like , name='like'),
     path('comment/<int:itemid>/', get_comment , name='comment'),
+    #search
     path('search/<str:username>/', search , name='search'),
 ] + static(settings.STATIC_URL)
 

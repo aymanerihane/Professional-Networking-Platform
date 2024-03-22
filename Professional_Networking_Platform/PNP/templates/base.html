@@ -65,19 +65,15 @@
                     <p>Settings and Privacy</p>
                     <span>></span>
                 </a>
-                <a href="" class="profile-menu-link">
-                    <img src="{% static 'PNP/img/help.png' %}">
-                    <p>Help & Support</p>
-                    <span>></span>
-                </a>
+
                 <a href="" class="profile-menu-link">
                     <img src="{% static 'PNP/img/display.png' %}">
                     <p>Display & Accesebility</p>
                     <span>></span>
                 </a>
-                <form action="{% url 'PNP:logout' %}" method="post" >
+                <form style="display: flex;align-items: center;justify-content: space-between;"  action="{% url 'PNP:logout' %}" method="post" >
                  {% csrf_token %}
-                    <img src="{% static 'PNP/img/logout.png' %}">
+                    <img style="width: 35px;" src="{% static 'PNP/img/logout.png' %}">
                 <button type="submit"  class="profile-menu-link" >Logout</button>
                 </form>
             </div>
