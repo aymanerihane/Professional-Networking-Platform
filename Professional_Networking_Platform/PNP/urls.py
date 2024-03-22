@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud
+from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -34,7 +34,8 @@ urlpatterns = [
     path('addFriend/<str:username>', addFriend, name='addFriend'),
     #post like
     path('like/<int:postid>/', like , name='like'),
-    path('comment/<int:itemid>/<int:type>/', get_comment , name='comment'),
+    path('comment/<int:itemid>/', get_comment , name='comment'),
+    path('search/<str:username>/', search , name='search'),
 ] + static(settings.STATIC_URL)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,10 +1,4 @@
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'PNP/css/comment2.css' %}">
-    <div class="overlay" onclick="closeComment()" id="overlay"></div>
-    <div id="commentSection" style="right: -600px;">
-        <div class="comment_block">
-
-		<!-- 
+    <!-- 
 			Comments are structured in the following way:
 
 			{ul} defines a new comment (singular)
@@ -45,6 +39,14 @@
 
 
     <!-- new comment -->
+	
+	{% load static %}
+    <link rel="stylesheet" href="{% static 'PNP/css/comment2.css' %}">
+    <div class="overlay" onclick="closeComment()" id="overlay"></div>
+    <div id="commentSection" style="right: -600px;">
+        <div class="comment_block">
+
+		
     <div id="comments"></div>
 
 

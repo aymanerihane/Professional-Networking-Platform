@@ -226,7 +226,8 @@ def firstPage(request):
             post.liked = False
     posts_with_time_since = [{
         'post': post,
-        'time_since': time_since(post.created_at)
+        'time_since': time_since(post.created_at),
+        'numberComments': Comment.objects.filter(object_id=post.id).count()
     } for post in posts]
     context = {
         'posts': posts_with_time_since,
@@ -297,28 +298,25 @@ def like(request, postid):
     return JsonResponse({'success': True,'likes': post.num_likes})
 
 #post comments
-def get_comment(request, itemid, type):
+def get_comment(request, itemid):
     # check if it s a post or a replies comment if type = 1 post if type = 2 replies
-    if type == 1: 
-        post = Post.objects.get(pk=itemid)
-        comments = post.comments.all()
-        context = {
-            'comments': comments
-        }
-    #get comment reply for each comment 
-    elif type == 2:
-        comment = Comment.objects.get(object_id=itemid)
-        replies = comment.replies.all()
-        context = {
-            'replies': replies
-        }
-    return render(request, 'commentsFrom.html', context)
+    post = Post.objects.get(pk=itemid)
+    comments = post.comments.all().order_by('-created_at')
+    print(comments)
+    #get all replies for eacxh comment
+    context = {
+        'comments': comments,
+    }
+    return render(request, 'firstPage/commentsFrom.html', context)
     
 
 
 
 
-
+#seach
+def search(request, username):
+    user = auth_user.objects.filter(username__startswith=username)
+    return render(request,'firstPage/search.html' , {'users': user})
 
 
 

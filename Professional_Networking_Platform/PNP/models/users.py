@@ -31,7 +31,7 @@ class User(models.Model):
     country = models.CharField(max_length=100)
     #
     cv = models.FileField(upload_to='media/cv/',default='cv_default.jpg', null=True, blank=True)
-    photo_profile = models.FileField(upload_to='media/avatar/',default='pdp_default.jpg', null=True, blank=True)
+    photo_profile = models.FileField(upload_to='media/avatar/',default='default.jpg', null=True, blank=True)
     #
     Visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='public')
     #

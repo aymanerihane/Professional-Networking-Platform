@@ -118,7 +118,7 @@
                         <span class="liked-users" id="{{post.post.id}}">{{ post.post.num_likes }}  reactions</span>
                     </div>
                     <div>
-                        <span>{{ post.post.num_comments }} comments &middot; {{ post.post.num_shares }} shares</span>
+                        <span>{{ post.numberComments }} comments &middot; {{ post.post.num_shares }} shares</span>
                     </div>
                 </div>
                 <div class="post-activity">
@@ -131,7 +131,7 @@
                         {% endif %}
                         <span>Like</span>
                     </div>
-                    <div class="post-activity-link commentpost" onclick="openComment()">
+                    <div class="post-activity-link commentpost" onclick="openComment(this)">
                         <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
                         <span>Comment</span>
                     </div>
@@ -199,7 +199,9 @@
     <script>
     var section=document.getElementById('commentSection')
 var overlay=document.getElementById('overlay')
-function openComment() {
+function openComment(commentButton) {
+    var postId = commentButton.closest('.post').dataset.id;
+    fetchComments(postId);
         section.classList.toggle('open-comment');
         overlay.classList.toggle('overlay-open');
 }
@@ -207,6 +209,20 @@ function openComment() {
 function closeComment() {
     section.classList.remove('open-comment');
     overlay.classList.remove('overlay-open');
+}
+
+{% comment %} ajax function to fetch comments {% endcomment %}
+function fetchComments(postId) {
+    console.log(postId);
+    $.ajax({
+        url: '/comment/' + postId + '/',
+        type: 'GET',
+        success: function (response) {
+            console.log(response);
+            var commentsContainer = document.getElementById('comments');
+            commentsContainer.innerHTML = response;
+        }
+    });
 }
 
 

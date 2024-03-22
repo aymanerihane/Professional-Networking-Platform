@@ -13,6 +13,8 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     #
     replies= GenericRelation('Comment')
+    number_of_replies = models.PositiveIntegerField(default=0)
+    number_of_likes = models.PositiveIntegerField(default=0)
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

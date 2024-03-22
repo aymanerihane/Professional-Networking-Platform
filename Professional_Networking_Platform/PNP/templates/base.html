@@ -14,9 +14,12 @@
             <a href="{% url 'PNP:firstPage' %}">
                 <img src="{% static 'PNP/img/logo.png' %}" class="logo">
             </a>
-            <div class="search-box">
+            <div class="search-box" style="position: relative;">
                 <img src="./img/search.png' %}">
-                <input type="text" placeholder="Search">
+                <input id="search" type="text" placeholder="Search">
+                <div style="overflow:scroll;max-height: 300px;position: absolute;top: 110%;background-color: #efefef;width: 100%;left: 0;border-radius: 5px 5px 10px 10px; display:none">
+                
+                </div>
             </div>
         </div>
         <div class="navbar-center">
@@ -84,5 +87,37 @@
     
     {% endblock content %}
     
+
+    <script>
+    var search = document.getElementById('search');
+    var searchBox = document.querySelector('.search-box div');
+    search.addEventListener('focus',()=>{
+        searchBox.style.display = 'block';
+    })
+    search.addEventListener('blur',()=>{
+        if(search.value == '')
+            searchBox.style.display = 'none';
+        else
+            searchBox.style.display = 'block';
+        
+    })
+    search.addEventListener('keyup',()=>{
+        searchBox.innerHTML = '';
+        $.ajax({
+        url: '/search/' + search.value + '/',
+        type: 'GET',
+        success: function (response) {
+            searchBox.innerHTML = response;
+        }
+    });
+    })
+    function fetchProfiles(){
+        fetch('/fetchFriends')
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data);
+        })
+    }
+    </script>
 </body>
 </html>
