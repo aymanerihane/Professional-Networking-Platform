@@ -43,7 +43,7 @@
   <div class="container">
    <div class="forms-container">
     <div class="signin-signup">
-      <form class="sign-in-form" method="POST">
+      <form class="sign-in-form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
       <h2 class="title">Sign Up</h2>
       {% if role == 1 %}

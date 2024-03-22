@@ -74,8 +74,8 @@
                 <img src="{% static 'PNP/img/avatar/defaultBgc.jpg' %}"
                     width="100%" class="cover-img">
                 <div class="sidebar-profile-info">
-                    {% if user and user.photo_profile %}
-                        <img src="{{ user.photo_profile.url }}">
+                    {% if user and user.user.photo_profile %}
+                        <img style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}">
                     {% else %}
                         <img src="{% static 'PNP/img/avatar/default.jpg' %}">
                     {% endif %}
@@ -198,8 +198,8 @@
                 <small>AD &middot; &middot; &middot;</small>
                 <p>Master the 5 principles of web design</p>
                 <div>
-                    {% if user.photo_profile %}
-                    <img src="{{ user.photo_profile.url }}" alt="">
+                    {% if user.user.photo_profile %}
+                    <img style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}" alt="">
                     {% else %}
                     <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}

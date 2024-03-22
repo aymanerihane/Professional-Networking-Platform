@@ -2,16 +2,36 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
+<style>
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
+.plus-div {
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.plus-btn {
+   background-color: #0073b1;
+  color: white;
+  margin: 10px 0 20px;
+  padding: 3px 5px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+    
+}
+</style>
     <!-- navbar ended -->
     <div class="container">
         <div class="profile-main">
             <div class="profile-container">
-                <img src="https://media.licdn.com/dms/image/D4D16AQFtIXq65MaKlQ/profile-displaybackgroundimage-shrink_350_1400/0/1678031428070?e=1690416000&v=beta&t=2rvmFlvsdWbezXYvfuL0Z74epouz98CkoONavSEQ-dY"
+                <img src="{% static 'PNP/img/Bgcs/backGround1.jpg' %}"
                     width="100%" class="cover-img">
                 <div class="profile-container-inner">
-                    <img src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_200_200/0/1678030659122?e=1690416000&v=beta&t=rR6tak242QPL0LZERB6aJT_1V9Qwl-kV_GV99Ual514"
-                        class="profile-pic">
+                    {% if user.user.photo_profile %}
+                    <img class="profile-pic" style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}" alt="">
+                    {% else %}
+                    <img class="profile-pic" src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
+                    {% endif %}
                     <h1>{{user.username}}</h1>
                     <b>{{cv.introduction}}</b>
                     <p>Karachi Division, Sindh, Pakistan &middot; <a href="">Contact Info</a></p>
@@ -43,54 +63,63 @@
             </div>
             
             <div class="profile-description">
-                {% if cv.experiences %}
+                <div class="plus-div" id="addExperience">
                 <h2>Experience</h2>
+                <i class="fa fa-plus plus-btn"></i>
+                </div>
+            {% if cv.experiences %}
                 {% for experience in cv.experiences %}
                 <div class="profile-desc-row">
                     <img src="{% static 'PNP/img/microsoft.png' %}">
                     <div>
-                        <h3>{{ cv.experiences.job_title }}r</h3>
-                        <b>{{cv.experiences.company}}</b>
-                        <b>{{cv.experiences.start_date}}-{{cv.experiences.end_date}}</b>
-                        <p>{{cv.experiences.description}}</p>
+                        <h3>{{ experience.job_title }}r</h3>
+                        <b>{{experience.company}}</b>
+                        <b>{{experience.start_date}}-{{experience.end_date}}</b>
+                        <p>{{experience.description}}</p>
                     </div>
                 </div>
                 {% endfor %}
-                        {% else %}
+            {% else %}
             <div class="profile-desc-row">
                 <div>
                     <p>No experience available</p>
                 </div>
             </div>
-        {% endif %}
+            {% endif %}
               <hr>
             </div>
             <div class="profile-description">
+                <div class="plus-div " id="addEducation">
                 <h2>Education</h2>
+                <i class="fa fa-plus plus-btn"></i>
+                </div>
                 {% if cv.educations %}
                 {% for education in cv.educations %} 
                 <div class="profile-desc-row">
-                    <img src="https://media.licdn.com/dms/image/C4E0BAQEeYFL5IrmC7A/company-logo_200_200/0/1519911295498?e=1693440000&v=beta&t=bPnGZgLgDvL0mVTnIfCGMlcPxNJXZP4OFKz2Ly3sCTA" alt="">
+                    <img src="{% static 'PNP/img/microsoft.png' %}">
                     <div>
-                        <h3>{{cv.educations.school}}</h3>
-                        <b>{{cv.educations.degree}}</b>
-                        <b>{{cv.educations.start_date}}-{{cv.educations.end_date}}</b>
+                        <h3>{{education.school}}</h3>
+                        <b>{{education.degree}}</b>
+                        <b>{{education.start_date}}-{{education.end_date}}</b>
                         <hr>
                     </div>
                 </div>
                 {% endfor %}
-                        {% else %}
-            <div class="profile-desc-row">
-                <div>
-                    <p>No education available</p>
-                </div>
-            </div>
-        {% endif %}
+                {% else %}
+                    <div class="profile-desc-row">
+                        <div>
+                            <p>No education available</p>
+                        </div>
+                    </div> 
+                {% endif %}
             </div>
             <div class="profile-description">
-                {% if cv.skills %}
+                <div class="plus-div" id="addSkills">
                 <h2>Skills</h2>
-               <div> {% for skill in cv.skills.skills %}
+                <i class="fa fa-plus plus-btn"></i>
+                </div>
+                {% if cv.skills %}
+               <div> {% for skill in cv.skills %}
                     <div class="skill-btn">{{skill}}</div>{% if not forloop.last %} {% endif %}
                     {% endfor %}
                </div>
@@ -99,9 +128,12 @@
         {% endif %}
             </div>
             <div class="profile-description">
+                <div class="plus-div" id="addlanguage">
                 <h2>Languages</h2>
+                <i class="fa fa-plus plus-btn"></i>
+                </div>
                 {% if cv.languages %}
-                <div> {% for lang in cv.languages.languages %}
+                <div> {% for lang in cv.languages %}
                     <div class="lang-btn">{{lang}}</div>{% if not forloop.last %} {% endif %}
                     {% endfor %}
                </div>
@@ -215,5 +247,4 @@
             }
         }
     </script>
-</div>
 {% endblock %}

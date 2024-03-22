@@ -22,6 +22,8 @@ def loginRed(request):
     return redirect('PNP:login')
 @csrf_exempt
 def logincheck(request):
+    if request.user.is_authenticated:
+        redirect('PNP:firstPage')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -34,12 +36,15 @@ def logincheck(request):
 #page of choice entreprise account or school account
 def signUp1(request):
     if request.user.is_authenticated:
+        redirect('PNP:firstPage')
+    if request.user.is_authenticated:
         return redirect('PNP:firstPage')
     return render(request, 'registration/signUp.html', {})
 
 # commun singup 1
 def signUp(request,choix):
-
+    if request.user.is_authenticated:
+        redirect('PNP:firstPage')
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -67,6 +72,8 @@ def signUp(request,choix):
 
 # commun singup 2
 def signUp2(request):
+    if request.user.is_authenticated:
+        redirect('PNP:firstPage')
     if request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
@@ -108,6 +115,8 @@ def signUp2(request):
 
 # student singup (page3)
 def signUpStud(request):
+    if request.user.is_authenticated:
+        redirect('PNP:firstPage')
     if request.method == "POST":
         cv_form = CVForm(request.POST)
         print("###############")
@@ -125,11 +134,11 @@ def signUpStud(request):
             start_dateE = cv_form.cleaned_data['start_dateE']
             end_dateE = cv_form.cleaned_data['end_dateE']
             if company is not None and job_title is not None and start_date is not None and end_date is not None and description is not None:
-                cv.experiences = Cv.tojson_experience(company, job_title, start_date, end_date, description)
+                cv.add_experience(company=company, job_title=job_title,  start_date=start_date, end_date=end_date, description=description)
             else:
                 return HttpResponse("Experience is missing")
             if school is not None and degree is not None and start_dateE is not None and end_dateE is not None:
-                cv.educations = Cv.tojson_education(school, degree, start_dateE, end_dateE)
+                cv.add_education(school, degree, start_dateE, end_dateE)
             else:
                 return HttpResponse("Education is missing")
             cv.skills = Cv.skills_tojson(cv_form.cleaned_data['skills'])
@@ -142,6 +151,8 @@ def signUpStud(request):
 
 # entreprise singup (page3)
 def signUpEntre(request):
+    if request.user.is_authenticated:
+        redirect('PNP:firstPage')
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():

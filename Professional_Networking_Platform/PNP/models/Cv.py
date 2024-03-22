@@ -8,11 +8,11 @@ class Cv(models.Model):
     introduction = models.CharField(max_length=100,blank=True)
     languages = models.CharField(max_length=100,blank=True)
     skills = models.CharField(max_length=100,blank=True)
-    experiences = models.JSONField(max_length=100,blank=True, default=dict)  # Utilisez un dictionnaire pour stocker les expériences
-    educations = models.JSONField(max_length=100,blank=True, default=dict)  # Utilisez un dictionnaire pour stocker les éducations
+    experiences = models.JSONField(blank=True, default=list)  # Use a list to store multiple experiences
+    educations = models.JSONField(blank=True, default=list)  # Use a list to store multiple educations
 
     def add_experience(self, company, job_title, start_date, end_date, description):
-        # Ajoute une nouvelle expérience au dictionnaire des expériences
+        # Add a new experience to the list of experiences
         new_experience = {
             'company': company,
             'job_title': job_title,
@@ -24,7 +24,7 @@ class Cv(models.Model):
         self.save()
 
     def add_education(self, school, degree, start_dateE, end_dateE):
-        # Ajoute une nouvelle éducation au dictionnaire des éducations
+        # Add a new education to the list of educations
         new_education = {
             'school': school,
             'degree': degree,
@@ -35,41 +35,16 @@ class Cv(models.Model):
         self.save()
 
     @classmethod
-    def tojson_experience(self, company, job_title, start_date, end_date, description):
-        new_experience = {
-            'company': company,
-            'job_title': job_title,
-            'start_date': start_date,
-            'end_date': end_date,
-            'description': description,
-        }
-        return new_experience
-
-    @classmethod
-    def tojson_education(self, school, degree, start_dateE, end_dateE):
-        new_education = {
-            'school': school,
-            'degree': degree,
-            'start_date': start_dateE,
-            'end_date': end_dateE,
-        }
-        return new_education
-    
-    @classmethod
     def skills_tojson(self, skills):
         # split skills by , and make it as json
-        new_skills = {
-            "skills": skills.split(","),
-        }
-        skil = json.dumps(new_skills)
-        return skil
+        new_skills = skills.split(",")
+        skill = json.dumps(new_skills)
+        return skill
     
     @classmethod
     def languages_tojson(self, languages):
         # split languages by , and make it as json
-        new_languages = {
-            "languages": languages.split(","),
-        }
+        new_languages = languages.split(",")
         lang = json.dumps(new_languages)
         return lang
     

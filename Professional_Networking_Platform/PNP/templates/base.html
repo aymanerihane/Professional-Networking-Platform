@@ -34,8 +34,8 @@
         </div>
         <div class="navbar-right">
             <div class="online">
-                    {% if user.photo_profile %}
-                    <img src="{{ user.photo_profile.url }}" alt="" class="nav-profile-img" onclick="toggleMenu()">
+                    {% if user.user.photo_profile %}
+                    <img style="object-fit: cover;height: 50px;width: 50px;" src="{{ user.user.photo_profile.url }}" alt="" class="nav-profile-img" onclick="toggleMenu()">
                     {% else %}
                     <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="" class="nav-profile-img" onclick="toggleMenu()">
                     {% endif %}
@@ -44,20 +44,20 @@
         <div class="profile-menu-wrap" id="profileMenu">
             <div class="profile-menu">
                 <div class="user-info">
-                    {% if user.photo_profile %}
-                    <img src="{{ user.photo_profile.url }}" alt="">
+                    {% if user.user.photo_profile %}
+                    <img style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}" alt="">
                     {% else %}
                     <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}
                     <div>
                         <h3>{{user.username}}</h3>
-                        <a href="{% url 'PNP:profile' user.username %}">See Your Proflie</a>
+                        
                     </div>
                 </div>
                 <hr>
-                <a href="" class="profile-menu-link">
+                <a href="{% url 'PNP:profile' user.username %}" class="profile-menu-link">
                     <img src="{% static 'PNP/img/feedback.png' %}">
-                    <p>Give Feedback</p>
+                    <p>See Your Profile</p>
                     <span>></span>
                 </a>
                 <a href="" class="profile-menu-link">

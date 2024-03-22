@@ -10,6 +10,7 @@ class MonthYearSelectWidget(SelectDateWidget):
 
 
 class SignUpForm(forms.ModelForm):
+    cv = forms.FileField(required=True)
     class Meta:
         model = User
         fields = ['phone', 'address', 'city', 'country', 'cv', 'photo_profile', 'Visibility']
