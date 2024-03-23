@@ -74,7 +74,28 @@ class CVForm(forms.ModelForm):
         }
 
 
+class EditCV(forms.ModelForm):
+    # if the cv is already exist show it avec le nom du fichier
+    cv = forms.FileField(required=True, label='CV')
+    class Meta:
+        model = User
+        fields = ['cv']
 
+class EditProfile(forms.ModelForm):
+    username = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    email = forms.EmailField(max_length=100, required=False, widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
+    old_password = forms.CharField(max_length=100, required=False, widget=forms.PasswordInput(attrs={'placeholder': 'Old Password'}))
+    new_password = forms.CharField(max_length=100, required=False, widget=forms.PasswordInput(attrs={'placeholder': 'New Password'}))
+    class Meta:
+        model = User
+        fields = ['username','email','old_password','new_password','photo_profile','phone', 'address', 'city', 'country', 'Visibility']
+
+    widgets = {
+        'phone': forms.TextInput(attrs={'placeholder': 'Phone'}),
+        'address': forms.TextInput(attrs={'placeholder': 'Address'}),
+        'city': forms.TextInput(attrs={'placeholder': 'City'}),
+        'country': forms.TextInput(attrs={'placeholder': 'Country'}),
+        }
 
 #form to update user profile
 

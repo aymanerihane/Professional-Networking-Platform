@@ -29,7 +29,7 @@
     z-index: 1000;
 }
 
-#form{
+#form-container{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -59,11 +59,16 @@
                     {% else %}
                     <img class="profile-pic" src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}
-                    <div class="plus-div" id="addAbout" data-id="0">
+                    {% if isMe %}
+                    <div class="plus-div" id="addAbout" data-id="6">
                         <h1>{{the_user.username}}</h1>
-                        <i class="fa fa-pencil edit-btn plus-btn" data-id="{{the_user.id}}"></i>
+                        <i class="fa fa-pencil edit-btn plus-btn" data-id="6"></i>
                     </div>
+                    {% endif %}
                     <b>{{cv.introduction}}</b>
+                    <p>{{the_user.user.country}},{{the_user.user.address}},{{the_user.user.city}}</p>
+                    <p>{{the_user.user.phone}}</p>
+
                     
                     {% if not isMe %}
                     <div class="profile-btn">
@@ -87,10 +92,12 @@
                 </div>
             </div>
             <div class="profile-description">
+            {% if isMe %}
                 <div class="plus-div" id="addAbout" data-id="0">
                 <h2>About</h2>
                 <i class="fa fa-pencil plus-btn" data-id="0"></i>
                 </div>
+            {% endif %}
                 <p>
                 {{cv.about}}
                 </p>
@@ -98,10 +105,12 @@
             </div>
             
             <div class="profile-description">
+            {% if isMe %}
                 <div class="plus-div" id="addExperience" data-id="1">
                 <h2>Experience</h2>
                 <i class="fa fa-plus plus-btn" data-id="1"></i>
                 </div>
+            {% endif %}
             {% if cv.experiences %}
                 {% for experience in cv.experiences %}
                 <div class="profile-desc-row">
@@ -124,10 +133,12 @@
             {% endif %}
             </div>
             <div class="profile-description">
+            {% if isMe %}
                 <div class="plus-div " id="addEducation" data-id="2">
                 <h2>Education</h2>
                 <i class="fa fa-plus plus-btn" data-id="2"></i>
                 </div>
+            {% endif %}
                 {% if cv.educations %}
                 {% for education in cv.educations %} 
                 <div class="profile-desc-row">
@@ -149,10 +160,12 @@
                 {% endif %}
             </div>
             <div class="profile-description">
+            {% if isMe %}
                 <div class="plus-div" id="addSkills" data-id="3">
                 <h2>Skills</h2>
                 <i class="fa fa-plus plus-btn" data-id="3"></i>
                 </div>
+            {% endif %}
                 {% if cv.skills %}
                <div> {% for skill in cv.skills %}
                     <div class="skill-btn">{{skill}}</div>{% if not forloop.last %} {% endif %}
@@ -163,10 +176,12 @@
         {% endif %}
             </div>
             <div class="profile-description">
+            {% if isMe %}
                 <div class="plus-div" id="addlanguage" data-id="4">
                 <h2>Languages</h2>
                 <i class="fa fa-plus plus-btn" data-id="4"></i>
                 </div>
+            {% endif %}
                 {% if cv.languages %}
                 <div> {% for lang in cv.languages %}
                     <div class="lang-btn">{{lang}}</div>{% if not forloop.last %} {% endif %}
@@ -178,7 +193,12 @@
             </div>
                 
             <div class="profile-description">
+            {% if isMe %}
+                <div class="plus-div" id="addlanguage" data-id="5">
                 <h2>CV</h2>
+                <i class="fa fa-pencil plus-btn" data-id="5"></i>
+                </div>
+            {% endif %}
                 {% if cv.user.user.cv %}
                     <iframe style="overflow: hidden" loading="lazy" type="application/pdf" title="PDF-file" src="{{cv.user.user.cv.url}}" width="100%" height="1100px"></iframe>
                {% else %}
@@ -189,9 +209,7 @@
         </div>
         <div id="modifie">
             <div class="overlay"></div>
-            <div id="form">
-        </div>
-        
+            <div id="form-container"></div>
         </div>
         <div class="profile-sidebar">
         {% if isMe %}
@@ -305,41 +323,28 @@
         }
         document.addEventListener('click',(e)=> {
             console.log(e.target);
-            if (e.target.classList.contains('fa-plus')) {
+            var username='{{user.username}}';
+            if ((e.target.classList.contains('fa-plus')) || (e.target.classList.contains('fa-pencil'))) {
                 var id = e.target.dataset.id;
                 document.getElementById('modifie').style.display = 'block';
-                getData(id);
-            }else if (e.target.classList.contains('fa-pencil')) {
-                var id = e.target.dataset.id;
-                document.getElementById('modifie').style.display = 'block'; 
-                getData(id);
+                getFormData(id,username);
             }else if (e.target.classList.contains('overlay')) {
                 document.getElementById('modifie').style.display = 'none';
             }
 
         });
 
-        function getUserData(id){
-            $.ajax({
-                url: '/formProfile/' + id + '/',
-                type: 'GET',
-                success: function (response) {
-                    console.log(response);
-                    var commentsContainer = document.getElementById('form');
-                    commentsContainer.innerHTML = response;
-                }
-            });
-        }
 
-        function getData(id){
-            console.log({{the_user.username}})
+
+        function getFormData(id,username){
+            console.log("test")
             $.ajax({
-                url: '/formProfile/' + id + '/'+{{the_user.username}}+'/',
+                url: '/formProfile/' + id + '/'+username+'/',
                 type: 'GET',
                 success: function (response) {
-                    console.log(response);
-                    var commentsContainer = document.getElementById('form');
-                    commentsContainer.innerHTML = response;
+                    console.log("secess")
+                    var form = document.getElementById('form-container');
+                    form.innerHTML = response;
                 }
             });
         }

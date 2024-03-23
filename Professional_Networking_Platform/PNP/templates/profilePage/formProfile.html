@@ -1,5 +1,5 @@
 <style>
-    #form {
+    #form-container {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -49,19 +49,12 @@
         background-color: #0056b3;
     }
 </style>
-
-<form method="post" action="{% url 'PNP:formProfile' id %}">
+<form style="overflow: scroll;max-height: 629px;" method="post"enctype="multipart/form-data" action="{% url 'PNP:formProfile' id username %}">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="reset" value="reset">
     <button type="submit" value="add">add</button>
 </form>
-<script>
-$('form').on('submit', (event)=> {
-    event.preventDefault();  // prevent the form from being submitted normally
-});
-</script>
-
 <script>
 $('form').on('submit', (event)=> {
     event.preventDefault();  // prevent the form from being submitted normally

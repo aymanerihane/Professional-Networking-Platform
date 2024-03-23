@@ -5,14 +5,15 @@ from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv
-from .forms import SignUpForm, NewPost, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm
+from .forms import SignUpForm, NewPost, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
-import json
+import json ,os
+from django.conf import settings
 
 
 # import datetime
@@ -192,12 +193,15 @@ def profile(request,username):
     return render(request,'profilePage/profile.html' , context)
 
 def formProfile(request, id, username):
+    print("entred")
     form_classes = {
         0: AboutForm,
         1: ExperienceForm,
         2: EducationForm,
         3: SkillsForm,
         4: LanguagesForm,
+        5: EditCV,
+        6: EditProfile,
     }
 
     if id not in form_classes:
@@ -206,9 +210,10 @@ def formProfile(request, id, username):
     FormClass = form_classes[id]
 
     if request.method == "POST":
-        form = FormClass(request.POST)
+        form = FormClass(request.POST, request.FILES)
         if form.is_valid():
             user = auth_user.objects.get(username=username)
+            pnp_user = User.objects.get(user_id=user.id)
             cv = Cv.objects.get(user_id=user.id)
             if id == 0:
                 cv.about = form.cleaned_data['about']
@@ -239,12 +244,44 @@ def formProfile(request, id, username):
                 cv.add_languages(form.cleaned_data['languages'])
                 cv.save()
                 return redirect('PNP:profile', username=request.user.username)
+            elif id == 5:
+                #delete the previews file local from media cv
+                pnp_user.deleteFile()
+                pnp_user.cv = form.cleaned_data['cv']
+                pnp_user.save()
+                return redirect('PNP:profile', username=request.user.username)
+            elif id == 6:
+                user.username = form.cleaned_data['username']
+                user.email = form.cleaned_data['email']
+                #check if the old password is correct
+                if form.cleaned_data['old_password'] != '':
+                    if user.check_password(form.cleaned_data['old_password']):
+                        user.set_password(form.cleaned_data['new_password'])
+                    else:
+                        return HttpResponse("Old password is incorrect")
+                pnp_user.phone = form.cleaned_data['phone']
+                pnp_user.address = form.cleaned_data['address']
+                pnp_user.city = form.cleaned_data['city']
+                pnp_user.country = form.cleaned_data['country']
+                pnp_user.Visibility = form.cleaned_data['Visibility']
+                pnp_user.save()
+                user.save()
+                return redirect('PNP:profile', username=request.user.username)
         else:
-            return render(request, 'profilePage/formProfile.html', {"form": form, "id": id})
+            return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "username": username})
     else:  # GET request
         form = FormClass()
+        if id == 6:
+            form.fields['username'].initial = User.objects.get(user_id=request.user.id).user.username
+            form.fields['old_password'].initial = None
+            form.fields['email'].initial = User.objects.get(user_id=request.user.id).user.email
+            form.fields['phone'].initial = User.objects.get(user_id=request.user.id).phone
+            form.fields['address'].initial = User.objects.get(user_id=request.user.id).address
+            form.fields['city'].initial = User.objects.get(user_id=request.user.id).city
+            form.fields['country'].initial = User.objects.get(user_id=request.user.id).country
+            form.fields['Visibility'].initial = User.objects.get(user_id=request.user.id).Visibility
 
-    return render(request, 'profilePage/formProfile.html', {"form": form, "id": id})
+    return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "username": request.user.username})
 
 # metting pages
 

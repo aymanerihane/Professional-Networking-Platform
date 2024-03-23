@@ -25,9 +25,7 @@ urlpatterns = [
     path('joinMetting/', joinMetting , name='joinMetting'), # metting join page
     # profile page
     path('profile/<str:username>/', profile , name='profile'),
-    path('formProfile/<int:id>/<str:username>', formProfile , name='formProfile'),
-    path('accept_request/<str:username>', accept_request , name='accept_request'),
-    path('reject_request/<str:username>', reject_request , name='reject_request'),
+    path('formProfile/<int:id>/<str:username>/', formProfile , name='formProfile'),
     # clasroom page
     path('classroom/', classroom , name='classroom'),
     # networking
@@ -35,6 +33,8 @@ urlpatterns = [
 
     #friends
     path('addFriend/<str:username>', addFriend, name='addFriend'),
+    path('accept_request/<str:username>', accept_request , name='accept_request'),
+    path('reject_request/<str:username>', reject_request , name='reject_request'),
     #post like
     path('like/<int:postid>/', like , name='like'),
     path('showCommentForm/<int:itemid>/<int:type>/', showCommentForm , name='showCommentForm'),

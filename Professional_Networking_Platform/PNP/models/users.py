@@ -1,7 +1,7 @@
 from django.db import models
-from django import forms
-from django.http import HttpResponse
 from django.contrib.auth.models import User as auth_user
+from django.conf import settings
+import os
 
 
 #################
@@ -45,6 +45,10 @@ class User(models.Model):
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def deleteFile(self):
+        os.remove(os.path.join(settings.MEDIA_ROOT, self.cv.name))
+        self.cv.delete()
 
     def __str__(self):
         return self.user.username
