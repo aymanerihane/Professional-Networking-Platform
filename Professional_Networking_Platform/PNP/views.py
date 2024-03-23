@@ -174,7 +174,7 @@ def profile(request, username):
     context = {}
 
     if request.user.is_authenticated:
-        current_user = User.objects.get(id=request.user.id)
+        current_user = User.objects.get(user_id=request.user.id)
         all_requests = current_user.friends_request.all()
         segg = seggestedFriends(request)
 

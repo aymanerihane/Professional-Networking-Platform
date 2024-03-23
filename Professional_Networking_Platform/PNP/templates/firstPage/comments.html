@@ -4,12 +4,17 @@
     <link rel="stylesheet" href="{% static 'PNP/css/comment2.css' %}">
     <div class="overlay" onclick="closeComment()" id="overlay"></div>
     <div id="commentSection" style="right: -600px;">
-        <div class="comment_block">
+        <div class="comment_block" style="height: 91%;">
 
 		
     <div id="comments">
 	<div id="headercomment"></div>
+	{% if auth_user.is_authenticated%}
 	<div id="footercomment"></div>
+	
+	{% endif %}
+	</div>
+	</div>
 	</div>
 
 

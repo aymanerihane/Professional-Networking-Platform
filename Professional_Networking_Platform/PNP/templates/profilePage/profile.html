@@ -207,7 +207,7 @@
             {% endif %}
             </div>
 
-            <div class="profile-description">
+        <div class="profile-description">
              {% for post in posts%}
 
             <div class="post" data-id="{{post.id}}">
@@ -237,10 +237,11 @@
                         <span>{{ post.numberComments }} comments &middot; {{ post.num_shares }} shares</span>
                     </div>
                 </div>
+                {% if auth_user.is_authenticated %}
                 <div class="post-activity">
 
                     <div class="post-activity-link" id="like" onclick="toggleLike(this)" style="cursor: pointer;">
-                        {% if post.liked == False %}
+                        {% if post.post.liked == False %}
                         <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
                         {% else %}
                         <img id="likeImg" src="{% static 'PNP/img/love.png' %}" class="post-activity-user-icon">
@@ -257,6 +258,20 @@
                         <span>Send</span>
                     </div>
                 </div>
+                {% else %}
+                    <div class="post-activity">
+
+                    <div class="post-activity-link" id="like" style="cursor: pointer;">
+                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link commentpost" onclick="openComment(this)">
+                        <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
+                        <span>Comment</span>
+                    </div>
+
+                </div>
+                {% endif %}
             </div>
 
             {% endfor %}
@@ -285,32 +300,34 @@
                 {% endfor %}
             </div>
         {% endif %}
+                {% if auth_user.is_authenticated %}
             <div class="sidebar-people">
-                <h3>People You May Know</h3>
-                {% for sugg in segguestedFriends %}
-                <div class="sidebar-people-row">
-                    {% if sugg.user.user.photo_profile %}
-                        <img src="{{sugg.user.user.photo_profile.url}}">
-                    {% else %}
-                        <img src="/media/avatar/default.jpg">
-                    {% endif %}
-                    <div>
-                        <h2>{{sugg.user.username}}</h2>
-                        <p>{{sugg.user.user.introduction}}</p>
-                        
-                            <a href="{% url 'PNP:addFriend' sugg.user.username %}">
-                            {% if sugg.user.user.Visibility == 'private' %}
-                                send request
-                            {% else %}
-                                Connect
-                            {% endif %}
-                            </a>
+                    <h3>People You May Know</h3>
+                    {% for sugg in segguestedFriends %}
+                    <div class="sidebar-people-row">
+                        {% if sugg.user.user.photo_profile %}
+                            <img src="{{sugg.user.user.photo_profile.url}}">
+                        {% else %}
+                            <img src="/media/avatar/default.jpg">
+                        {% endif %}
+                        <div>
+                            <h2>{{sugg.user.username}}</h2>
+                            <p>{{sugg.user.user.introduction}}</p>
+                            
+                                <a href="{% url 'PNP:addFriend' sugg.user.username %}">
+                                {% if sugg.user.user.Visibility == 'private' %}
+                                    send request
+                                {% else %}
+                                    Connect
+                                {% endif %}
+                                </a>
+                        </div>
                     </div>
-                </div>
-                {% endfor %}
-
+                    {% endfor %}
             </div>
+                {% endif %}
         </div>
+
     </div>
     <div class="profile-footer">
         <div class="sidebar-useful-links">

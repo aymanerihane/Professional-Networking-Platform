@@ -194,6 +194,19 @@
                         <span>Send</span>
                     </div>
                 </div>
+                {% else %}
+                    <div class="post-activity">
+
+                    <div class="post-activity-link" id="like" style="cursor: pointer;">
+                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link commentpost" onclick="openComment(this)">
+                        <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
+                        <span>Comment</span>
+                    </div>
+
+                </div>
                 {% endif %}
             </div>
 
