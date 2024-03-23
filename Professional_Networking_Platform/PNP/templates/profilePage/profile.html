@@ -54,29 +54,33 @@
                 <img src="{% static 'PNP/img/Bgcs/backGround1.jpg' %}"
                     width="100%" class="cover-img">
                 <div class="profile-container-inner">
-                    {% if user.user.photo_profile %}
-                    <img class="profile-pic" style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}" alt="">
+                    {% if the_user.user.photo_profile %}
+                    <img class="profile-pic" style="object-fit: cover;height: 100px;width: 95px;" src="{{ the_user.user.photo_profile.url }}" alt="">
                     {% else %}
                     <img class="profile-pic" src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}
-                    <h1>{{user.username}}</h1>
-                    <b>{{cv.introduction}}</b>
-                    <p>Karachi Division, Sindh, Pakistan &middot; <a href="">Contact Info</a></p>
-                    <div class="mutual-connection">
-                        <img
-                            src="https://media.licdn.com/dms/image/D4D35AQGTdqs4cZFOBw/profile-framedphoto-shrink_200_200/0/1680180892982?e=1685826000&v=beta&t=YRCXIxlGFtfR7g0RpxDyhjohxxDavabl4WrjU3tRM94">
-                        <img
-                            src="https://media.licdn.com/dms/image/D4D35AQHg7vwrZEObDA/profile-framedphoto-shrink_200_200/0/1673134456989?e=1685908800&v=beta&t=pXrvlwZ-rWG8YAwzihbo2Gc-4MQo79V7bsnlPHICg8A" style="margin-left: -20px; z-index: 1;">
-                        <span><span class="mutual-friend">Shahzaib Kesrani 🌟 Front-End
-                                Developer</span> and <span class="mutual-friend">Muhammad Saad Ali</span> are mutual connections</span>
+                    <div class="plus-div" id="addAbout" data-id="0">
+                        <h1>{{the_user.username}}</h1>
+                        <i class="fa fa-pencil edit-btn plus-btn" data-id="{{the_user.id}}"></i>
                     </div>
+                    <b>{{cv.introduction}}</b>
+                    
                     {% if not isMe %}
                     <div class="profile-btn">
-                        {% if isFriend %}
-                        <a style="background-color: #efefef;color:black" href="{% url 'PNP:addFriend' user %}"  class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >Connect</a>
+                        {% if requestsend %}
+                            <a style="background-color: #efefef;color:black" href="{% url 'PNP:addFriend' the_user %}"  class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >waitting to be accepted</a>
                         {% else %}
-                        <a href="{% url 'PNP:addFriend' user %}" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >Connect</a>
+                            {% if isFriend %}
+                                <a style="background-color: #efefef;color:black" href="{% url 'PNP:addFriend' the_user %}"  class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >unfollow </a>
+                            {% else %}
+                                {% if is_private %}
+                                    <a href="{% url 'PNP:addFriend' the_user %}" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >send request</a>
+                                {% else %}
+                                        <a href="{% url 'PNP:addFriend' the_user %}" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >Connect</a>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
+                        
                         <a href=""><img src="{% static 'PNP/img/message.png' %}" alt="">Chat</a>
                     </div>
                     {% endif %}
@@ -85,7 +89,7 @@
             <div class="profile-description">
                 <div class="plus-div" id="addAbout" data-id="0">
                 <h2>About</h2>
-                <i class="fa fa-plus plus-btn" data-id="0"></i>
+                <i class="fa fa-pencil plus-btn" data-id="0"></i>
                 </div>
                 <p>
                 {{cv.about}}
@@ -190,17 +194,22 @@
         
         </div>
         <div class="profile-sidebar">
+        {% if isMe %}
             <div class="sidebar-ad">
-                <small>AD &middot; &middot; &middot;</small>
-                <p>Master the 5 principles of web design</p>
-                <div>
-                    <img src="https://media.licdn.com/dms/image/D4D03AQHyJrtE6WbAfw/profile-displayphoto-shrink_100_100/0/1678030659122?e=1690416000&v=beta&t=9Vnws7rVjaREQebj3HeuNH3GQ_VS0XS4XFnkI5ttBpQ"
-                        alt="">
-                    <img src="{% static 'PNP/img/mi-logo.png' %}" alt="">
+                <h1>Request</h1>
+                {% for req in request_recieved %}
+                <div class="sidebar-people-row">
+                    <img src="{{req.user.user.photo_profile}}">
+                    <div>
+                        <h2>{{req.user.username}}</h2>
+                        <p>{{req.user.user.introduction}}</p>
+                        <a href="{% url 'PNP:accept_request' req.user.username %}">accepted</a>
+                        <a href="{% url 'PNP:reject_request' req.user.username %}">rejected</a>
+                    </div>
                 </div>
-                <b>Brand and demand in Xiaomi</b>
-                <a href="" class="ad-link">Learn More</a>
+                {% endfor %}
             </div>
+        {% endif %}
             <div class="sidebar-people">
                 <h3>People You May Know</h3>
                 <div class="sidebar-people-row">
@@ -300,23 +309,39 @@
                 var id = e.target.dataset.id;
                 document.getElementById('modifie').style.display = 'block';
                 getData(id);
-            }
-            if (e.target.classList.contains('overlay')) {
+            }else if (e.target.classList.contains('fa-pencil')) {
+                var id = e.target.dataset.id;
+                document.getElementById('modifie').style.display = 'block'; 
+                getData(id);
+            }else if (e.target.classList.contains('overlay')) {
                 document.getElementById('modifie').style.display = 'none';
             }
 
         });
 
-        function getData(id){
-    $.ajax({
-        url: '/formProfile/' + id + '/',
-        type: 'GET',
-        success: function (response) {
-            console.log(response);
-            var commentsContainer = document.getElementById('form');
-            commentsContainer.innerHTML = response;
+        function getUserData(id){
+            $.ajax({
+                url: '/formProfile/' + id + '/',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    var commentsContainer = document.getElementById('form');
+                    commentsContainer.innerHTML = response;
+                }
+            });
         }
-    });
-}
+
+        function getData(id){
+            console.log({{the_user.username}})
+            $.ajax({
+                url: '/formProfile/' + id + '/'+{{the_user.username}}+'/',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    var commentsContainer = document.getElementById('form');
+                    commentsContainer.innerHTML = response;
+                }
+            });
+        }
     </script>
 {% endblock %}

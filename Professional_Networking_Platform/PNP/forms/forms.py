@@ -77,6 +77,21 @@ class CVForm(forms.ModelForm):
 
 
 #form to update user profile
+
+##etid user info
+# class EditUserForm(forms.ModelForm):
+#     class Meta:
+#         model = User, auth_user
+#         fields = ['username','phone', 'address', 'city', 'country', 'cv', 'photo_profile', 'Visibility']
+
+#     def __init__(self, *args, **kwargs):
+#         super(EditUserForm, self).__init__(*args, **kwargs)
+#         self.fields['username'].widget.attrs['placeholder'] = 'Username'
+#         self.fields['phone'].widget.attrs['placeholder'] = 'Phone'
+#         self.fields['address'].widget.attrs['placeholder'] = 'Address'
+#         self.fields['city'].widget.attrs['placeholder'] = 'City'
+#         self.fields['country'].widget.attrs['placeholder'] = 'Country'
+
 ##add experience
 class ExperienceForm(forms.ModelForm):
     company = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Company'}))

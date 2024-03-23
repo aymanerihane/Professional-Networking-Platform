@@ -17,7 +17,7 @@
             <div class="search-box" style="position: relative;">
                 <img src="./img/search.png' %}">
                 <input id="search" type="text" placeholder="Search">
-                <div style="overflow:scroll;max-height: 300px;position: absolute;top: 110%;background-color: #efefef;width: 100%;left: 0;border-radius: 5px 5px 10px 10px; display:none">
+                <div style="overflow:scroll;max-height: 300px;height: 300px;position: absolute;top: 110%;background-color: #efefef;width: 100%;left: 0;border-radius: 5px 5px 10px 10px; display:none">
                 
                 </div>
             </div>
@@ -88,17 +88,12 @@
     <script>
     var search = document.getElementById('search');
     var searchBox = document.querySelector('.search-box div');
-    search.addEventListener('focus',()=>{
-        searchBox.style.display = 'block';
-    })
-    search.addEventListener('blur',()=>{
+
+    search.addEventListener('keyup',()=>{
         if(search.value == '')
             searchBox.style.display = 'none';
         else
             searchBox.style.display = 'block';
-        
-    })
-    search.addEventListener('keyup',()=>{
         searchBox.innerHTML = '';
         $.ajax({
         url: '/search/' + search.value + '/',

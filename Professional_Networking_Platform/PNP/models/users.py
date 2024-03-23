@@ -39,6 +39,7 @@ class User(models.Model):
     rooms = models.ManyToManyField('PNP.Room',related_name='users', blank=True)
     #liste of friends
     friends = models.ManyToManyField('self',related_name='friends', blank=True)
+    friends_request = models.ManyToManyField('self',related_name='friends_request', blank=True)
     #
     number_of_profile_visits = models.PositiveIntegerField(default=0, blank=True, null=True)
     #

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile
+from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,7 +25,9 @@ urlpatterns = [
     path('joinMetting/', joinMetting , name='joinMetting'), # metting join page
     # profile page
     path('profile/<str:username>/', profile , name='profile'),
-    path('formProfile/<int:id>/', formProfile , name='formProfile'),
+    path('formProfile/<int:id>/<str:username>', formProfile , name='formProfile'),
+    path('accept_request/<str:username>', accept_request , name='accept_request'),
+    path('reject_request/<str:username>', reject_request , name='reject_request'),
     # clasroom page
     path('classroom/', classroom , name='classroom'),
     # networking
@@ -35,7 +37,10 @@ urlpatterns = [
     path('addFriend/<str:username>', addFriend, name='addFriend'),
     #post like
     path('like/<int:postid>/', like , name='like'),
+    path('showCommentForm/<int:itemid>/<int:type>/', showCommentForm , name='showCommentForm'),
     path('comment/<int:itemid>/', get_comment , name='comment'),
+    path('addComment/<int:itemid>/<int:type>/', addComment , name='addComment'),
+
     #search
     path('search/<str:username>/', search , name='search'),
 ] + static(settings.STATIC_URL)

@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib.contenttypes.models import ContentType
 import json
 
 
@@ -164,23 +165,33 @@ def signUpEntre(request):
 
 @login_required
 def profile(request,username):
-    user = auth_user.objects.get(username=username)
-    cv = Cv.objects.get(user_id=request.user.id)
+    the_user = auth_user.objects.get(username=username)
+    user = auth_user.objects.get(id=request.user.id)
+    cv = Cv.objects.get(user_id=the_user.id) #should be user.id without request
+    print(cv.id)
     cv.skills = json.loads(cv.skills)
     cv.languages = json.loads(cv.languages)
-    pnp_user = User.objects.get(user_id=user.id)
+    pnp_user = User.objects.get(user_id=the_user.id)
+
     if request.user.username != username:
         pnp_user.number_of_profile_visits = pnp_user.number_of_profile_visits + 1
+    currentuserPnp = User.objects.get(user_id=request.user.id)
+    allrequest= currentuserPnp.friends_request.all()
+    print(allrequest)
     pnp_user.save()
     context = {
         'user': user,
+        'the_user':the_user,
         'cv': cv,
+        'request_recieved': allrequest,
+        'requestsend': True if request.user.user.friends_request.filter(user_id=the_user.id).exists() else False,
+        'is_private': True if pnp_user.Visibility == 'private' else False,
         'isMe': True if request.user.username == username else False,
-        'isFriend': True if User.objects.get(user_id=request.user.id).friends.filter(user_id=user.id).exists() else False
+        'isFriend': True if User.objects.get(user_id=request.user.id).friends.filter(user_id=the_user.id).exists() else False
     }
     return render(request,'profilePage/profile.html' , context)
 
-def formProfile(request, id):
+def formProfile(request, id, username):
     form_classes = {
         0: AboutForm,
         1: ExperienceForm,
@@ -197,7 +208,8 @@ def formProfile(request, id):
     if request.method == "POST":
         form = FormClass(request.POST)
         if form.is_valid():
-            cv = Cv.objects.get(user_id=request.user.id)
+            user = auth_user.objects.get(username=username)
+            cv = Cv.objects.get(user_id=user.id)
             if id == 0:
                 cv.about = form.cleaned_data['about']
                 cv.save()
@@ -308,14 +320,36 @@ def firstPage(request):
 # add friend
 def addFriend(request, username):
     user = auth_user.objects.get(username=username)  # get User instance from User model
-    friend= User.objects.get(user_id=user.id)
+    friend = User.objects.get(user_id=user.id)
     current_user = User.objects.get(user_id=request.user.id)
-    if not current_user.friends.filter(user_id=user.id).exists():
-        current_user.friends.add(friend)
+    
+    # Check if a friend request is already sent in either direction
+    if not current_user.friends.filter(user_id=user.id).exists() and not friend.friends_request.filter(user_id=current_user.id).exists():
+        if friend.Visibility == "public":
+            current_user.friends.add(friend)
+        else:
+            current_user.friends_request.add(friend)
+    elif current_user.friends_request.filter(user_id=user.id).exists():
+        current_user.friends_request.remove(friend)
     else:
         current_user.friends.remove(friend)
+    
     return redirect('PNP:profile', username=username)
 
+def accept_request(request, username):
+    user = auth_user.objects.get(username=username)
+    friend = User.objects.get(user_id=user.id)
+    current_user = User.objects.get(user_id=request.user.id)
+    current_user.friends.add(friend)
+    current_user.friends_request.remove(friend)
+    return redirect('PNP:profile', username=current_user.user.username)
+
+def reject_request(request, username):
+    user = auth_user.objects.get(username=username)
+    friend = User.objects.get(user_id=user.id)
+    current_user = User.objects.get(user_id=request.user.id)
+    current_user.friends_request.remove(friend)
+    return redirect('PNP:profile', username=current_user.user.username)
 # create post
 def createPost(request):
     if request.method == 'POST':
@@ -364,18 +398,40 @@ def like(request, postid):
 
 #post comments
 def get_comment(request, itemid):
-    # check if it s a post or a replies comment if type = 1 post if type = 2 replies
+    # type =1 for post and 2 for comment
+    request.session['postId'] = itemid
     post = Post.objects.get(pk=itemid)
-    comments = post.comments.all().order_by('-created_at')
-    print(comments)
+    comments = post.comments.all()
+
     #get all replies for eacxh comment
     context = {
         'comments': comments,
+
     }
     return render(request, 'firstPage/commentsFrom.html', context)
     
+def showCommentForm(request, itemid,type):
+    if(type == 2):
+        item = Comment.objects.get(pk=itemid)
+    else:
+        item = Post.objects.get(pk=itemid)
+    postId=request.session.get('postId')
+    return render(request, 'firstPage/addComment.html', {'postId':postId,'itemId': itemid,'comment':item, 'type': type,'is_reply': False if type == 1 else True})
 
-
+def addComment(request, itemid,type):
+    if request.method == 'POST':
+        content = request.POST.get('commentContent')
+        user = User.objects.get(user_id=request.user.id)
+        print(type)
+        if type == 1:
+            object = Post.objects.get(id=itemid)
+        else:
+            object = Comment.objects.get(id=itemid)
+        request.session['type'] = type
+        contentType = ContentType.objects.get_for_model(object)
+        Comment.create_comment(user, itemid , content,contentType)
+        return redirect(request.path_info)
+    return redirect('PNP:firstPage')
 
 
 #seach

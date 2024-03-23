@@ -22,11 +22,14 @@ class Comment(models.Model):
     # CRUD operations
 
     # Create operation
-    def create_comment(user_id, post_id, comment_text):
+    @staticmethod
+    def create_comment(user_id, object_id, comment_text,content_type):
         comment = Comment.objects.create(
             user_id=user_id,
-            post_id=post_id,
-            comment=comment_text
+            object_id=object_id,
+            comment=comment_text,
+            content_type=content_type
+
         )
         return comment
 

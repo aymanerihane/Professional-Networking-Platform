@@ -173,10 +173,7 @@
                         <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
                         <span>Comment</span>
                     </div>
-                    <div class="post-activity-link">
-                        <img src="{% static 'PNP/img/share.png' %}" class="post-activity-user-icon">
-                        <span>Share</span>
-                    </div>
+
                     <div class="post-activity-link">
                         <img src="{% static 'PNP/img/send.png' %}" class="post-activity-user-icon">
                         <span>Send</span>
@@ -188,7 +185,7 @@
         </div>
         
         <div class="right-sidebar">
-            <div class="sidebar-news" style="padding-bottom: 30px;">
+            <div class="sidebar-news" style="padding-bottom: 30px;background-color: #FFFF">
                 {% comment %} create a toolpit for this image {% endcomment %}
                 <img src="{% static 'PNP/img/more.png' %}" class="info-icon" title="Your Network... you can delete a friend or send a message">
                 <h3>My Network</h3>
@@ -241,6 +238,7 @@ var overlay=document.getElementById('overlay')
 function openComment(commentButton) {
     var postId = commentButton.closest('.post').dataset.id;
     fetchComments(postId);
+    fetchFormComment(postId,1);
         section.classList.toggle('open-comment');
         overlay.classList.toggle('overlay-open');
 }
@@ -257,8 +255,40 @@ function fetchComments(postId) {
         url: '/comment/' + postId + '/',
         type: 'GET',
         success: function (response) {
-            console.log(response);
-            var commentsContainer = document.getElementById('comments');
+            var commentsContainer = document.getElementById('headercomment');
+            commentsContainer.innerHTML = response;
+        }
+    });
+}
+
+            
+function addComment(itemId, type,postId) {
+    var commentContent=document.getElementById('commentContent').value;
+    console.log(commentContent);
+        $.ajax({
+            url: '/addComment/' + postId + '/'+ type + '/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            data: {
+                'commentContent': commentContent,
+            },
+            success: function (response) {
+                fetchComments(postId);
+                fetchFormComment(postId,1);
+            }
+        });
+    }
+    function removeReply(){
+        var replyContainer=document.getElementById('ReplyContainer');
+        replyContainer.innerHTML='';
+        fetchFormComment(postId,1);
+    }
+function fetchFormComment(itemId,type) { //type = 1 is a post and type = 2 is a comment
+    $.ajax({
+        url: '/showCommentForm/' + itemId + '/'+type+'/',
+        type: 'GET',
+        success: function (response) {
+            var commentsContainer = document.getElementById('footercomment');
             commentsContainer.innerHTML = response;
         }
     });
@@ -298,7 +328,6 @@ function fetchComments(postId) {
         headers: { 'X-CSRFToken': '{{ csrf_token }}' },
         success: function (response) {
             if (response.success) {
-                console.log(response.likes);
                 document.querySelector('span[id=\"'+postId+'\"]').innerText = response.likes + ' reactions';
             }
         }

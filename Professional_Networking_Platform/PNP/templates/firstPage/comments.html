@@ -47,26 +47,13 @@
         <div class="comment_block">
 
 		
-    <div id="comments"></div>
+    <div id="comments">
+	<div id="headercomment"></div>
+	<div id="footercomment"></div>
+	</div>
 
 
     <script src="{% static 'PNP/js/comment.js' %}"></script>
 
     <script src="{% static 'PNP/js/jquery-3.7.1.min.js' %}"></script>
 
-    
-    <script>
-    
-    
-document.addEventListener('click', (e)=> {
-    console.log("add")
-    console.log(e.target);
-    if (e.target.id == 'sendcomment') {
-        addComment(e.target);
-    }
-});
-
-
-
-   
-</script>

@@ -1,11 +1,49 @@
-    <div class="fotter-comment" style="width:100%;left: 0;">
-        
+    <div class="fotter-comment" style="flex-direction: column;width:100%;left: 0;">
+
+{% if is_reply and comment %}
+    <div id="ReplyContainer" style="width:100%">
+	<div class="new_comment" >
+
+			<!-- build comment -->
+		 	<ul class="user_comment">
+
+		 		<!-- current #{user} avatar -->
+			 	<div class="user_avatar">
+				{% if comment.user_id.photo_profile %}
+                    <img style="width: 40px; height: 40px;object-fit: cover;"  src="{{comment.user_id.photo_profile.url}}">
+				{% else %}
+				<img src="/media/avatar/default.jpg">
+				{% endif %}
+			 		
+			 	</div><!-- the comment body --><div class="comment_body" style="min-height: 0">
+                <div class="replied_to"><p><a href="{% url 'PNP:profile' comment.user_id.user.username %}"><span class="user">{{comment.user_id.user.username}}:</span></a>{{comment.comment}}</p></div>
+					</div>
+			 	</div>
+
+            </ul>
+            <div onclick="removeReply()" style="position: absolute; top: 0; right: 20px; cursor: pointer;">x</div>
+        </div>
+    
+
+{% endif %}
+<div style="display:flex;justify-content: space-between;align-items: center;width:100%;left: 0;">
+        {% comment %} <form style="width:100%" method="post" action="{% url 'PNP:addComment' itemId type %}"> {% endcomment %}
+            {% comment %} {% csrf_token %} {% endcomment %}
                 <div class="user_avatar" style="">
+                    {% if user.user.photo_profile %}
+                    <img style="object-fit: cover;height: 50px;width: 50px;"
+                        src="{{user.user.photo_profile.url}}">
+                    {% else %}
                     <img src="/media/avatar/default.jpg">
+                    {% endif %}
                 </div>
-		 		<input type="text" class="commentFilied" placeholder="Write a comment" style="width: 63%;">
-                <button class="btn" id="sendcomment">Comment</button>
+		 		<input name="commentContent" id="commentContent" type="text" class="commentFilied" placeholder="Write a comment" style="width: 63%;">
+                {{type}}
+                <button class="btn" onclick="addComment({{itemId}},{{type}},{{postId}})" type="submit">Comment</button>
                 
 		 	</div>
+        {% comment %} </form> {% endcomment %}
         
     </div>
+    </div>
+    
