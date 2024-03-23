@@ -48,10 +48,11 @@
 </head>
 <div class="container">
     <!-- --popup -->
+    
     <div class="popup-container" id="popup">
         <div class="header">
             <img src="{% static 'PNP/img/logo.png' %}">
-            <h1>Welcome to LinkedIn</h1>
+            <h1>Welcome to Carrer</h1>
         </div>
         {{form}}
         <div class="buttons-container"> 
@@ -73,21 +74,31 @@
             <div class="sidebar-profile-box">
                 <img src="{% static 'PNP/img/avatar/defaultBgc.jpg' %}"
                     width="100%" class="cover-img">
+                {% if auth_user.is_authenticated %}
                 <div class="sidebar-profile-info">
                     {% if user and user.user.photo_profile %}
                         <img style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}">
                     {% else %}
                         <img src="{% static 'PNP/img/avatar/default.jpg' %}">
                     {% endif %}
-                    <h1>{{user.username}}</h1>
-                    <h3>Student at Saylani Mass IT Train -ing, Web & App</h3>
+                    <h1>{{user.user.username}}</h1>
+                    <h3>{{user.introduction}}</h3>
                     <ul>
                         <li>Your Profile Views<span>{{number_of_visits}}</span></li>
                         <li>Your Post<span>{{number_of_posts}}</span></li>
                         <li>Your Connections<span>{{number_of_friends}}</span></li>
                     </ul>
                 </div>
+                {% else %}
+                <div class="sidebar-profile-info">
+                    <img src="{% static 'PNP/img/avatar/default.jpg' %}">
+                    <h1>Guest</h1>
+                    <p style="text-align: center;margin: 10px;">Join the community to connect with other people you may know.</p>
+                </div>
+                {% endif %}
+
             </div>
+            {% if auth_user.is_authenticated %}
             <div class="sidebar-activity" id="sidebarActivity">
                 <h3>RECENT</h3>
                 <a href=""><img src="{% static 'PNP/img/recent.png' %}">Web Development</a>
@@ -110,8 +121,10 @@
                 </div>
             </div>
             <p id="showMoreLink" onclick="showSideBar()">Show More <b>+</b></p>
+            {% endif %}
         </div>
         <div class="main-content" id="main">
+        {% if auth_user.is_authenticated %}
             <div class="create-post">
                 <div class="create-post-input">
                     <img
@@ -125,6 +138,7 @@
                     <li onclick="popup()">Post</li>
                 </div>
             </div>
+        {% endif %}
             {% comment %} <div class="sort-by">
                 <hr>
                 <p>Sort By: <span>Top <img src="{% static 'PNP/img/down-arrow.png' %}" alt=""></span></p>
@@ -159,6 +173,7 @@
                         <span>{{ post.numberComments }} comments &middot; {{ post.post.num_shares }} shares</span>
                     </div>
                 </div>
+                {% if auth_user.is_authenticated %}
                 <div class="post-activity">
 
                     <div class="post-activity-link" id="like" onclick="toggleLike(this)" style="cursor: pointer;">
@@ -179,12 +194,14 @@
                         <span>Send</span>
                     </div>
                 </div>
+                {% endif %}
             </div>
 
             {% endfor %}
         </div>
         
         <div class="right-sidebar">
+        {% if auth_user.is_authenticated %}
             <div class="sidebar-news" style="padding-bottom: 30px;background-color: #FFFF">
                 {% comment %} create a toolpit for this image {% endcomment %}
                 <img src="{% static 'PNP/img/more.png' %}" class="info-icon" title="Your Network... you can delete a friend or send a message">
@@ -193,21 +210,34 @@
                 <a href="{% url 'PNP:profile' friend.user.username %}">{{friend.user.username}}</a>
                 <span style="display:flex;justify-content: space-around"><a style="font-size: 10px;font-weight: 100;" href="{% url 'PNP:addFriend' friend.user.username%}">delete</a> <a style="font-size: 10px;font-weight: 100;">send message</a></span>
                 {% endfor %}
-                
+        
             </div>
-            <div class="sidebar-ad">
-                <small>AD &middot; &middot; &middot;</small>
-                <p>Master the 5 principles of web design</p>
-                <div>
-                    {% if user.user.photo_profile %}
-                    <img style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}" alt="">
+             <div class="sidebar-people">
+                <h3>People You May Know</h3>
+                {% for sugg in segguestedFriends %}
+                <div class="sidebar-people-row">
+                    {% if sugg.user.user.photo_profile %}
+                        <img src="{{sugg.user.user.photo_profile.url}}">
                     {% else %}
-                    <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
+                        <img src="/media/avatar/default.jpg">
                     {% endif %}
+                    <div>
+                        <h2>{{sugg.user.username}}</h2>
+                        <p>{{sugg.user.user.introduction}}</p>
+                        
+                            <a href="{% url 'PNP:addFriend' sugg.user.username %}">
+                            {% if sugg.user.user.Visibility == 'private' %}
+                                send request
+                            {% else %}
+                                Connect
+                            {% endif %}
+                            </a>
+                    </div>
                 </div>
-                <b>Share Your Experience With Saylani</b>
-                <a href="https://www.linkedin.com/feed/update/urn:li:activity:7068264850904293377/" class="ad-link" target="_blank">Learn More</a>
+                {% endfor %}
+
             </div>
+            {% endif %}
             <div class="sidebar-useful-links">
                 <a href="">About</a>
                 <a href="">Accesibility</a>

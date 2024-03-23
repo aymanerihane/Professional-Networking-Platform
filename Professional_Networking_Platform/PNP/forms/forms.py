@@ -12,7 +12,7 @@ class MonthYearSelectWidget(SelectDateWidget):
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['phone', 'address', 'city', 'country', 'cv', 'photo_profile', 'Visibility']
+        fields = ['introduction','phone', 'address', 'city', 'country', 'cv', 'photo_profile', 'Visibility']
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
@@ -65,7 +65,7 @@ class CVForm(forms.ModelForm):
     description = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Experience description'}))
     class Meta:
         model = Cv
-        fields = ['introduction', 'skills', 'languages','company', 'job_title', 'start_date', 'end_date', 'description','school', 'degree', 'start_dateE', 'end_dateE']
+        fields = ['skills', 'languages','company', 'job_title', 'start_date', 'end_date', 'description','school', 'degree', 'start_dateE', 'end_dateE']
 
         widgets = {
             'introduction': forms.TextInput(attrs={'placeholder': 'Introduction'}),
@@ -86,8 +86,8 @@ class EditProfile(forms.ModelForm):
     email = forms.EmailField(max_length=100, required=False, widget=forms.EmailInput(attrs={'placeholder': 'Email','autocomplete': 'off'}))
     old_password = forms.CharField(
         max_length=100, 
-        required=True, 
-        label='Old Password***',
+        required=False, 
+        label='Old Password(required if wanna change password)***',
         widget=forms.PasswordInput(attrs={'placeholder': 'Old Password**', 'autocomplete': 'off'})
     )
     new_password = forms.CharField(max_length=100, required=False, widget=forms.PasswordInput(attrs={'placeholder': 'New Password','autocomplete': 'off'}))

@@ -1,46 +1,6 @@
-    <!-- 
-			Comments are structured in the following way:
 
-			{ul} defines a new comment (singular)
-			{li} defines a new reply to the comment {ul}
-
-			example:
-
-			<ul>
-				<comment>
-					
-				</comment
-
-					<li>
-						<reply>
-
-						</reply>
-					</li>
-
-					<li>
-						<reply>
-
-						</reply>
-					</li>
-
-					<li>
-						<reply>
-
-						</reply>
-					</li>
-			</ul>
-
-		 -->
-
-		 <!-- used by #{user} to create a new comment -->
-
-            
-
-
-
-    <!-- new comment -->
-	
 	{% load static %}
+	<link rel="stylesheet" href="{% static 'PNP/css/comment.css' %}">
     <link rel="stylesheet" href="{% static 'PNP/css/comment2.css' %}">
     <div class="overlay" onclick="closeComment()" id="overlay"></div>
     <div id="commentSection" style="right: -600px;">

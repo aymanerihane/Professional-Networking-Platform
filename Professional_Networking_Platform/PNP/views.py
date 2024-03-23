@@ -164,34 +164,41 @@ def signUpEntre(request):
     return render(request, 'registration/signUp1.html', {"form": form})
 
 
-@login_required
-def profile(request,username):
+def profile(request, username):
     the_user = auth_user.objects.get(username=username)
-    user = auth_user.objects.get(id=request.user.id)
-    cv = Cv.objects.get(user_id=the_user.id) #should be user.id without request
-    print(cv.id)
+    cv = Cv.objects.get(user_id=the_user.id)
     cv.skills = json.loads(cv.skills)
     cv.languages = json.loads(cv.languages)
     pnp_user = User.objects.get(user_id=the_user.id)
+    posts = Post.objects.filter(user_id=pnp_user.id).all()
+    context = {}
 
-    if request.user.username != username:
-        pnp_user.number_of_profile_visits = pnp_user.number_of_profile_visits + 1
-    currentuserPnp = User.objects.get(user_id=request.user.id)
-    allrequest= currentuserPnp.friends_request.all()
-    print(allrequest)
-    pnp_user.save()
-    context = {
-        'user': user,
-        'the_user':the_user,
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        all_requests = current_user.friends_request.all()
+        segg = seggestedFriends(request)
+
+        pnp_user.number_of_profile_visits += 1
+        pnp_user.save()
+
+        context.update({
+            'auth_user': request.user,
+            'user': current_user,
+            'request_recieved': all_requests,
+            'requestsend': current_user.friends_request.filter(user_id=the_user.id).exists(),
+            'isMe': request.user.username == username,
+            'isFriend': current_user.friends.filter(user_id=the_user.id).exists(),
+            'segguestedFriends': segg,
+        })
+
+    context.update({
+        'posts': posts,
+        'the_user': the_user,
         'cv': cv,
-        'request_recieved': allrequest,
-        'requestsend': True if request.user.user.friends_request.filter(user_id=the_user.id).exists() else False,
-        'is_private': True if pnp_user.Visibility == 'private' else False,
-        'isMe': True if request.user.username == username else False,
-        'isFriend': True if User.objects.get(user_id=request.user.id).friends.filter(user_id=the_user.id).exists() else False
-    }
-    return render(request,'profilePage/profile.html' , context)
+        'is_private': pnp_user.Visibility == 'private',
+    })
 
+    return render(request, 'profilePage/profile.html', context)
 def formProfile(request, id, username):
     print("entred")
     form_classes = {
@@ -258,8 +265,8 @@ def formProfile(request, id, username):
                     if user.check_password(form.cleaned_data['old_password']):
                         user.set_password(form.cleaned_data['new_password'])
                     else:
-                        form = FormClass()
-                        return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "username": username, 'error': 'Old password is incorrect'})
+                        request.session['error'] = 'Old password is incorrect'
+                        return redirect('PNP:profile', username=request.user.username)
                 pnp_user.phone = form.cleaned_data['phone']
                 pnp_user.address = form.cleaned_data['address']
                 pnp_user.city = form.cleaned_data['city']
@@ -269,7 +276,10 @@ def formProfile(request, id, username):
                 user.save()
                 return redirect('PNP:profile', username=request.user.username)
         else:
-            return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "username": username})
+            if request.session.get('error') is not None:
+                error = request.session.get('error')
+                del request.session['error']
+            return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "username": username,"error": error})
     else:  # GET request
         form = FormClass()
         if id == 6:
@@ -327,32 +337,48 @@ def room(request, room_id):
     return render(request, 'messagePage/room.html', {'room': room})
 
 # first page after login
-def firstPage(request):
-    friends = User.objects.get(user_id=request.user.id).friends.all()
-    current_user = User.objects.get(user_id=request.user.id)
-    user = request.user
-    posts = Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
-    #check if the current user is likerd the post or not
-    for post in posts:
-        if Like.objects.filter(post_id=post.id, user_id=current_user.id).exists():
-            post.liked = True
-        else:
-            post.liked = False
-    posts_with_time_since = [{
-        'post': post,
-        'time_since': time_since(post.created_at),
-        'numberComments': Comment.objects.filter(object_id=post.id).count()
-    } for post in posts]
-    context = {
-        'posts': posts_with_time_since,
-        'user': user,
-        'number_of_visits': current_user.number_of_profile_visits,
-        'number_of_posts': Post.objects.filter(user_id=current_user.id).count(),
-        'number_of_friends': current_user.friends.count(),
-        'friends': friends,
-    }
-    return render(request,'firstPage/fisrtPage.html' , context)
 
+def firstPage(request):
+    users = User.objects.filter(Visibility='public')
+    posts = Post.objects.filter(user_id__in=users)
+    context = {}
+    posts_with_time_since = [{
+            'post': post,
+            'time_since': time_since(post.created_at),
+            'numberComments': Comment.objects.filter(object_id=post.id).count()
+        } for post in posts]
+
+    if request.user.is_authenticated:
+        current_user = User.objects.get(user_id=request.user.id)
+        friends = current_user.friends.all()
+        segg = seggestedFriends(request)
+        posts = Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
+
+        # check if the current user liked the post or not
+        for post in posts:
+            post.liked = Like.objects.filter(post_id=post.id, user_id=current_user.id).exists()
+
+        posts_with_time_since = [{
+            'post': post,
+            'time_since': time_since(post.created_at),
+            'numberComments': Comment.objects.filter(object_id=post.id).count()
+        } for post in posts]
+
+        context.update({
+            'segguestedFriends': segg,
+            'user': current_user,
+            'auth_user': request.user,
+            'number_of_visits': current_user.number_of_profile_visits,
+            'number_of_posts': Post.objects.filter(user_id=current_user.id).count(),
+            'number_of_friends': current_user.friends.count(),
+            'friends': friends,
+        })
+
+    context.update({
+        'posts': posts_with_time_since,
+    })
+
+    return render(request, 'firstPage/fisrtPage.html', context)
 
 # add friend
 def addFriend(request, username):
@@ -372,6 +398,20 @@ def addFriend(request, username):
         current_user.friends.remove(friend)
     
     return redirect('PNP:profile', username=username)
+
+def seggestedFriends(request):
+    user = User.objects.get(user_id=request.user.id)
+    friends = user.friends.all()
+    friends_request = user.friends_request.all()
+    all_users = User.objects.all()
+    suggested_friends = []
+    for u in all_users:
+        if u != user and u not in friends and u not in friends_request:
+            suggested_friends.append(u)
+    # get just the 7 first suggested friends
+    suggested_friends = suggested_friends[:7]
+    return suggested_friends
+
 
 def accept_request(request, username):
     user = auth_user.objects.get(username=username)

@@ -65,12 +65,12 @@
                         <i class="fa fa-pencil edit-btn plus-btn" data-id="6"></i>
                     </div>
                     {% endif %}
-                    <b>{{cv.introduction}}</b>
-                    <p>{{the_user.user.country}},{{the_user.user.address}},{{the_user.user.city}}</p>
+                    <b>{{the_user.user.introduction}}</b>
+                    <p>{{the_user.user.country}} | {{the_user.user.address}} | {{the_user.user.city}}</p>
                     <p>{{the_user.user.phone}}</p>
 
                     
-                    {% if not isMe %}
+                    {% if not isMe  and auth_user.is_authenticated %}
                     <div class="profile-btn">
                         {% if requestsend %}
                             <a style="background-color: #efefef;color:black" href="{% url 'PNP:addFriend' the_user %}"  class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >waitting to be accepted</a>
@@ -98,6 +98,7 @@
                 <i class="fa fa-pencil plus-btn" data-id="0"></i>
                 </div>
             {% endif %}
+                <h2>About</h2>
                 <p>
                 {{cv.about}}
                 </p>
@@ -205,12 +206,68 @@
                 <p>No Cv available</p>
             {% endif %}
             </div>
+
+            <div class="profile-description">
+             {% for post in posts%}
+
+            <div class="post" data-id="{{post.id}}">
+                <div class="post-author">
+                    {% if post.user.photo_profile %}
+                    <img
+                        src="{{post.user.photo_profile.url}}">
+                    {% else %}
+                    <img src="/media/avatar/default.jpg">
+                    {% endif %}
+                    <div>
+                        <h1>{{post.user.user.username}}
+                            {{post.user.introduction}} &middot; <span style="font-weight: lighter;">1st</span></h1>
+                        <small>{{post.user.introduction}}</small>
+                        <small>{{post.time_since}}</small>
+                    </div>
+                </div>
+                <p>{{post.content}}</p>
+                <img src="{{post.image.url}}" alt="profileImg"
+                    width="100%">
+                <div class="post-stats">
+                    <div>
+                        <img src="{% static 'PNP/img/thumbsup.png' %}">
+                        <span class="liked-users" id="{{post.id}}">{{ post.num_likes }}  reactions</span>
+                    </div>
+                    <div>
+                        <span>{{ post.numberComments }} comments &middot; {{ post.num_shares }} shares</span>
+                    </div>
+                </div>
+                <div class="post-activity">
+
+                    <div class="post-activity-link" id="like" onclick="toggleLike(this)" style="cursor: pointer;">
+                        {% if post.liked == False %}
+                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
+                        {% else %}
+                        <img id="likeImg" src="{% static 'PNP/img/love.png' %}" class="post-activity-user-icon">
+                        {% endif %}
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link commentpost" onclick="openComment(this)">
+                        <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
+                        <span>Comment</span>
+                    </div>
+
+                    <div class="post-activity-link">
+                        <img src="{% static 'PNP/img/send.png' %}" class="post-activity-user-icon">
+                        <span>Send</span>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+            </div>
             
         </div>
         <div id="modifie">
             <div class="overlay"></div>
             <div id="form-container"></div>
         </div>
+        {% include "../firstPage/comments.html" %}
         <div class="profile-sidebar">
         {% if isMe %}
             <div class="sidebar-ad">
@@ -230,62 +287,28 @@
         {% endif %}
             <div class="sidebar-people">
                 <h3>People You May Know</h3>
+                {% for sugg in segguestedFriends %}
                 <div class="sidebar-people-row">
-                    <img src="https://media.licdn.com/dms/image/D4D35AQHg7vwrZEObDA/profile-framedphoto-shrink_200_200/0/1673134456989?e=1685908800&v=beta&t=pXrvlwZ-rWG8YAwzihbo2Gc-4MQo79V7bsnlPHICg8A">
+                    {% if sugg.user.user.photo_profile %}
+                        <img src="{{sugg.user.user.photo_profile.url}}">
+                    {% else %}
+                        <img src="/media/avatar/default.jpg">
+                    {% endif %}
                     <div>
-                        <h2>Muhammad Saad Ali</h2>
-                        <p>Frelance At Upwork</p>
-                        <a href="https://www.linkedin.com/in/mohammad-saad-ali-33074123a/" target="_blank">Connect</a>
+                        <h2>{{sugg.user.username}}</h2>
+                        <p>{{sugg.user.user.introduction}}</p>
+                        
+                            <a href="{% url 'PNP:addFriend' sugg.user.username %}">
+                            {% if sugg.user.user.Visibility == 'private' %}
+                                send request
+                            {% else %}
+                                Connect
+                            {% endif %}
+                            </a>
                     </div>
                 </div>
-                <div class="sidebar-people-row">
-                    <img src="https://media.licdn.com/dms/image/D4D03AQHBp9g2SbN6Qw/profile-displayphoto-shrink_200_200/0/1680625175837?e=1691020800&v=beta&t=piTTEWWbNHW-UEFX3Wi9nuCByDPheh3DfMPri7JzdUs">
-                    <div>
-                        <h2>Khizar Wakeel</h2>
-                        <p>Intern | ReactJS | Front-End-Developer</p>
-                        <a href="https://www.linkedin.com/in/khizarwakeel/" target="_blank">Connect</a>
-                    </div>
-                </div>
-                <div class="sidebar-people-row">
-                    <img src="https://media.licdn.com/dms/image/C4E03AQEvYf_1ZHjIgg/profile-displayphoto-shrink_200_200/0/1653166620686?e=1691020800&v=beta&t=QZJ-tNBgLS9y_mjtEsaTKCcHiWwsNmSV2jMDZ2P2bVI">
-                    <div>
-                        <h2>Joshua Akintemi</h2>
-                        <p>Full Stack Developer || MERN</p>
-                        <a href="https://www.linkedin.com/in/joshua-akintemi-952ab419a/" target="_blank">Connect</a>
-                    </div>
-                </div>
-                <div class="sidebar-people-row">
-                    <img src="https://media.licdn.com/dms/image/D4D35AQHyJWN5n0gG5w/profile-framedphoto-shrink_200_200/0/1677020670227?e=1685908800&v=beta&t=L02RCHTiDSwUc67eA6Cy8po3LjDtA_NandoleaJSkBU">
-                    <div>
-                        <h2>Zeeshan Khan</h2>
-                        <p>--</p>
-                        <a href="https://www.linkedin.com/in/zeeshan-khan-34613a250/" target="_blank">Connect</a>
-                    </div>
-                </div>
-                <div class="sidebar-people-row">
-                    <img src="https://media.licdn.com/dms/image/C4D03AQEuh9aU_BTV9Q/profile-displayphoto-shrink_200_200/0/1655560653207?e=1691020800&v=beta&t=N9tKk60vLghT-0hgRC18fUtMVausegz-KJXjTpnOblg">
-                    <div>
-                        <h2>Muhammad Ibrahim</h2>
-                        <p>Student at ILMA University | Former IBT</p>
-                        <a href="https://www.linkedin.com/in/faisal-bhatti-063298265/" target="_blank">Connect</a>
-                    </div>
-                </div>
-                <div class="sidebar-people-row">
-                    <img src="https://media.licdn.com/dms/image/D4D03AQE8-Wj1T17i6A/profile-displayphoto-shrink_200_200/0/1682859810753?e=1691020800&v=beta&t=gURzLUZb_CoQiH6tEgJfgWNRObWFaoFAbMfzEXFTkC4">
-                    <div>
-                        <h2>Faisal Bhatti</h2>
-                        <p>--</p>
-                        <a href="https://www.linkedin.com/in/faisal-bhatti-063298265/" target="_blank">Connect</a>
-                    </div>
-                </div>
-                <div class="sidebar-people-row">
-                    <img src="https://media.licdn.com/dms/image/D4E03AQHan9qTk_mOAw/profile-displayphoto-shrink_200_200/0/1664501898052?e=1691020800&v=beta&t=guZ91535PF7ruPCi1owCeL857mjdHL9WBtAvlLgaUbI">
-                    <div>
-                        <h2>Daniyal Ahmed Hashmi</h2>
-                        <p>Student at Karachi Board</p>
-                        <a href="https://www.linkedin.com/in/daniyal-ahmed-hashmi-8b0267252/" target="_blank">Connect</a>
-                    </div>
-                </div>
+                {% endfor %}
+
             </div>
         </div>
     </div>
@@ -304,7 +327,7 @@
             </div>
         </div>
     </div>
-    
+    <script src={% static 'PNP/js/formProfile.js' %}></script>
     <script>
         var profileMenu = document.getElementById('profileMenu')
         var seeMore = document.getElementById('hidden')
@@ -349,4 +372,149 @@
             });
         }
     </script>
+    <script src="{% static 'PNP/js/gsap.min.js' %}"></script>
+    
+    <script>
+    var section=document.getElementById('commentSection')
+var overlay=document.getElementById('overlay')
+function openComment(commentButton) {
+    var postId = commentButton.closest('.post').dataset.id;
+    fetchComments(postId);
+    fetchFormComment(postId,1);
+        section.classList.toggle('open-comment');
+        overlay.classList.toggle('overlay-open');
+}
+
+function closeComment() {
+    section.classList.remove('open-comment');
+    overlay.classList.remove('overlay-open');
+}
+
+{% comment %} ajax function to fetch comments {% endcomment %}
+function fetchComments(postId) {
+    console.log(postId);
+    $.ajax({
+        url: '/comment/' + postId + '/',
+        type: 'GET',
+        success: function (response) {
+            var commentsContainer = document.getElementById('headercomment');
+            commentsContainer.innerHTML = response;
+        }
+    });
+}
+
+            
+function addComment(itemId, type,postId) {
+    var commentContent=document.getElementById('commentContent').value;
+    console.log(commentContent);
+        $.ajax({
+            url: '/addComment/' + postId + '/'+ type + '/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            data: {
+                'commentContent': commentContent,
+            },
+            success: function (response) {
+                fetchComments(postId);
+                fetchFormComment(postId,1);
+            }
+        });
+    }
+    function removeReply(){
+        var replyContainer=document.getElementById('ReplyContainer');
+        replyContainer.innerHTML='';
+        fetchFormComment(postId,1);
+    }
+function fetchFormComment(itemId,type) { //type = 1 is a post and type = 2 is a comment
+    $.ajax({
+        url: '/showCommentForm/' + itemId + '/'+type+'/',
+        type: 'GET',
+        success: function (response) {
+            var commentsContainer = document.getElementById('footercomment');
+            commentsContainer.innerHTML = response;
+        }
+    });
+}
+
+
+
+    // likes
+
+    // Define static paths
+    var loveImgSrc = window.location.origin + "/static/PNP/img/love.png";
+    var likeImgSrc = window.location.origin + "/static/PNP/img/like.png";
+    function toggleLike(likeButton) {
+    var postId = likeButton.closest('.post').dataset.id;
+    var likeImg = likeButton.querySelector('img');
+    var likeImgSrc = likeImg.src;
+    var loveImgSrc = "{% static 'PNP/img/love.png' %}";
+
+    if (likeImgSrc.includes('like.png')) {
+        likeImg.src = loveImgSrc;
+    } else {
+        likeImg.src = "{% static 'PNP/img/like.png' %}";
+    }
+
+    // Make it Bouncing
+    gsap.from(likeImg, {
+        scale: 0.5,
+        duration: 0.5,
+        ease: "bounce",
+    });
+    
+    // Send AJAX request to update the like count
+    $.ajax({
+        url: '/like/' + postId + '/',
+        type: 'POST',
+        dataType: 'json',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        success: function (response) {
+            if (response.success) {
+                document.querySelector('span[id=\"'+postId+'\"]').innerText = response.likes + ' reactions';
+            }
+        }
+    });
+}
+
+ 
+   
+        // gsap
+        var posts = document.querySelectorAll('.post');
+        var right_sidebar = document.querySelector('.right-sidebar');
+        var left_sidebar = document.querySelector('.left-sidebar');
+        var create_post = document.querySelector('.create-post');
+
+        gsap.from(create_post, {
+            opacity: 0,
+            y: -100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+
+        gsap.from(left_sidebar, {
+            opacity: 0,
+            x: -100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+
+        gsap.from(right_sidebar, {
+            opacity: 0,
+            x: 100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+
+        gsap.from(posts, {
+            opacity: 0,
+            y: 100,
+            duration: 1,
+            ease: "power2.Out",
+            delay: 0.5,
+        })
+    </script>
+
 {% endblock %}

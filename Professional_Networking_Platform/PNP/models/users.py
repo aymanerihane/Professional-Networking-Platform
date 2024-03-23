@@ -24,6 +24,7 @@ class User(models.Model):
     ]
     role = models.IntegerField(choices=ROLE_CHOICES,default=2) # 1: teacher, 2: student
     #
+    introduction = models.TextField(max_length=500, blank=True, null=True)
     #
     phone = models.CharField(max_length=100)
     address = models.CharField(max_length=100)

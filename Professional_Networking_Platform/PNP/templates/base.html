@@ -23,6 +23,7 @@
             </div>
         </div>
         <div class="navbar-center">
+        {% if auth_user.is_authenticated %}
             <ul>
                 <li><a href="{% url 'PNP:firstPage' %}" class="active-link"><img src="{% static 'PNP/img/home.png' %}"><span>Home</span></a></li>
                 <li><a href="{% url 'PNP:network' %}"><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
@@ -31,8 +32,12 @@
                 <li><a href="{% url 'PNP:mettingPage' %}"><img src="{% static 'PNP/img/notification.png' %}"><span>Metting</span></a></li>
                 <li><a href="{% url 'PNP:classroom' %}"><img src="{% static 'PNP/img/classroom.png' %}"><span>classroom</span></a></li>
             </ul>
+        {% else %}
+        <h1>Guest Page</h1>
+        {% endif %}
         </div>
         <div class="navbar-right">
+        {% if auth_user.is_authenticated %}
             <div class="online">
                     {% if user.user.photo_profile %}
                     <img style="object-fit: cover;height: 50px;width: 50px;" src="{{ user.user.photo_profile.url }}" alt="" class="nav-profile-img" onclick="toggleMenu()">
@@ -40,9 +45,14 @@
                     <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="" class="nav-profile-img" onclick="toggleMenu()">
                     {% endif %}
             </div>
+        {% else %}
+            <a href="{% url 'PNP:login' %}" class="login">Login</a>
+            <a href="{% url 'PNP:signUp' %}" class="register">Register</a>
+        {% endif %}
         </div>
         <div class="profile-menu-wrap" id="profileMenu">
             <div class="profile-menu">
+            {% if auth_user.is_authenticated%}
                 <div class="user-info">
                     {% if user.user.photo_profile %}
                     <img style="object-fit: cover;height: 100px;width: 95px;" src="{{ user.user.photo_profile.url }}" alt="">
@@ -50,12 +60,13 @@
                     <img src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}
                     <div>
-                        <h3>{{user.username}}</h3>
+                        <h3>{{auth_user.username}}</h3>
                         
                     </div>
                 </div>
+            
                 <hr>
-                <a href="{% url 'PNP:profile' user.username %}" class="profile-menu-link">
+                <a href="{% url 'PNP:profile' auth_user.username %}" class="profile-menu-link">
                     <img src="{% static 'PNP/img/feedback.png' %}">
                     <p>See Your Profile</p>
                     <span>></span>
@@ -76,6 +87,9 @@
                     <img style="width: 35px;" src="{% static 'PNP/img/logout.png' %}">
                 <button type="submit"  class="profile-menu-link" >Logout</button>
                 </form>
+
+
+            {% endif %}
             </div>
         </div>
     </nav>

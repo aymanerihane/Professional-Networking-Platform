@@ -5,7 +5,6 @@ import json
 class Cv(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(auth_user,on_delete=models.CASCADE)
-    introduction = models.CharField(max_length=100,blank=True)
     about = models.TextField(blank=True)
     languages = models.CharField(max_length=100,blank=True)
     skills = models.CharField(max_length=100,blank=True)

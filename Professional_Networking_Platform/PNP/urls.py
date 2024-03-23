@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 app_name = "PNP"
 
 urlpatterns = [
-    path("", loginRed , name='loginRed'),
+    path("", firstPage , name='firstPage'),
     # registration
     path('signUp/', signUp1, name='signUp'),
     path('signUpEntre/', signUpEntre, name='signUpEntre'),
