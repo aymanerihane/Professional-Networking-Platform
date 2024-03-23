@@ -15,6 +15,7 @@ class Post(models.Model):
     media = models.ManyToManyField('PNP.PostMedia', related_name='posts', blank=True)
     #
     comments= GenericRelation('PNP.Comment')
+    likes= GenericRelation('PNP.Like')
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -12,6 +12,8 @@ class Comment(models.Model):
     content_type= models.ForeignKey(ContentType, on_delete=models.CASCADE)
     content_object = GenericForeignKey('content_type', 'object_id')
     #
+    likes = GenericRelation('PNP.Like')
+    #
     replies= GenericRelation('Comment')
     number_of_replies = models.PositiveIntegerField(default=0)
     number_of_likes = models.PositiveIntegerField(default=0)
