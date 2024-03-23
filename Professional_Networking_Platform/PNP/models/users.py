@@ -37,6 +37,7 @@ class User(models.Model):
     #
     #liste of rooms that the user is a member of
     rooms = models.ManyToManyField('PNP.Room',related_name='users', blank=True)
+    classes = models.ManyToManyField('PNP.Class',related_name='students', blank=True)
     #liste of friends
     friends = models.ManyToManyField('self',related_name='friends', blank=True)
     friends_request = models.ManyToManyField('self',related_name='friends_request', blank=True)

@@ -258,7 +258,8 @@ def formProfile(request, id, username):
                     if user.check_password(form.cleaned_data['old_password']):
                         user.set_password(form.cleaned_data['new_password'])
                     else:
-                        return HttpResponse("Old password is incorrect")
+                        form = FormClass()
+                        return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "username": username, 'error': 'Old password is incorrect'})
                 pnp_user.phone = form.cleaned_data['phone']
                 pnp_user.address = form.cleaned_data['address']
                 pnp_user.city = form.cleaned_data['city']
@@ -272,8 +273,7 @@ def formProfile(request, id, username):
     else:  # GET request
         form = FormClass()
         if id == 6:
-            form.fields['username'].initial = User.objects.get(user_id=request.user.id).user.username
-            form.fields['old_password'].initial = None
+            form.fields['username'].initial = username
             form.fields['email'].initial = User.objects.get(user_id=request.user.id).user.email
             form.fields['phone'].initial = User.objects.get(user_id=request.user.id).phone
             form.fields['address'].initial = User.objects.get(user_id=request.user.id).address

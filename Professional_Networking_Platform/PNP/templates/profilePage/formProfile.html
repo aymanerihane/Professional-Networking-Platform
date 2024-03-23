@@ -49,14 +49,19 @@
         background-color: #0056b3;
     }
 </style>
-<form style="overflow: scroll;max-height: 629px;" method="post"enctype="multipart/form-data" action="{% url 'PNP:formProfile' id username %}">
+<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post"enctype="multipart/form-data" action="{% url 'PNP:formProfile' id username %}">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+        <div class="fieldWrapper">
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+        </div>
+    {% endfor %}
+    {{error}}
     <input type="reset" value="reset">
     <button type="submit" value="add">add</button>
 </form>
 <script>
-$('form').on('submit', (event)=> {
-    event.preventDefault();  // prevent the form from being submitted normally
-});
+alert("testttttt")
 </script>
+

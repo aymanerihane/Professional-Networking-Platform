@@ -82,10 +82,15 @@ class EditCV(forms.ModelForm):
         fields = ['cv']
 
 class EditProfile(forms.ModelForm):
-    username = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
-    email = forms.EmailField(max_length=100, required=False, widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
-    old_password = forms.CharField(max_length=100, required=False, widget=forms.PasswordInput(attrs={'placeholder': 'Old Password'}))
-    new_password = forms.CharField(max_length=100, required=False, widget=forms.PasswordInput(attrs={'placeholder': 'New Password'}))
+    username = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Username','autocomplete': 'off'}))
+    email = forms.EmailField(max_length=100, required=False, widget=forms.EmailInput(attrs={'placeholder': 'Email','autocomplete': 'off'}))
+    old_password = forms.CharField(
+        max_length=100, 
+        required=True, 
+        label='Old Password***',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Old Password**', 'autocomplete': 'off'})
+    )
+    new_password = forms.CharField(max_length=100, required=False, widget=forms.PasswordInput(attrs={'placeholder': 'New Password','autocomplete': 'off'}))
     class Meta:
         model = User
         fields = ['username','email','old_password','new_password','photo_profile','phone', 'address', 'city', 'country', 'Visibility']

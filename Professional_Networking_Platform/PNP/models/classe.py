@@ -8,8 +8,9 @@ class Class(models.Model):
     id = models.AutoField(primary_key=True)
     Title = models.CharField(max_length=100)
     Description = models.TextField()
-    etudiants_id = models.TextField(default='[]') 
+    #
     teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    #
     #
     schedule_exams = models.TextField(default='[]')
     #
