@@ -54,7 +54,7 @@
             <img src="{% static 'PNP/img/logo.png' %}">
             <h1>Welcome to Carrer</h1>
         </div>
-        {{form}}
+        <div id="form_post"></div>
         <div class="buttons-container"> 
             {% if form_is_valid %}
                 <button onclick="popup()">Discard</button>
@@ -276,6 +276,17 @@
 
     
     <script>
+
+    //post and popup
+
+    var popupcont = document.getElementById('popup')
+    function popup() {
+        popupcont.classList.toggle('open-popup')
+    }
+
+
+
+    //comments
     var section=document.getElementById('commentSection')
 var overlay=document.getElementById('overlay')
 function openComment(commentButton) {
@@ -291,7 +302,7 @@ function closeComment() {
     overlay.classList.remove('overlay-open');
 }
 
-{% comment %} ajax function to fetch comments {% endcomment %}
+
 function fetchComments(postId) {
     console.log(postId);
     $.ajax({
@@ -307,9 +318,8 @@ function fetchComments(postId) {
             
 function addComment(itemId, type,postId) {
     var commentContent=document.getElementById('commentContent').value;
-    console.log(commentContent);
         $.ajax({
-            url: '/addComment/' + postId + '/'+ type + '/',
+            url: '/addComment/' + itemId + '/'+ type + '/',
             type: 'POST',
             headers: { 'X-CSRFToken': '{{ csrf_token }}' },
             data: {

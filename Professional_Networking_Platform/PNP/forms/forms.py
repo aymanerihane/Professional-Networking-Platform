@@ -8,7 +8,7 @@ class MonthYearSelectWidget(SelectDateWidget):
         super(MonthYearSelectWidget, self).__init__(*args, **kwargs)
         self.format = '%Y-%m'  # Set the format to year-month
 
-
+# signUp2
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
@@ -21,13 +21,7 @@ class SignUpForm(forms.ModelForm):
         self.fields['city'].widget.attrs['placeholder'] = 'City'
         self.fields['country'].widget.attrs['placeholder'] = 'Country'
 
-class NewPost(forms.ModelForm):
-    content = forms.CharField(label='content')
-    class Meta:
-        model = Post
-        fields = ['content']
-
-
+# signUp3
 class CVForm(forms.ModelForm):
     company = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Company'}))
     job_title = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'job_title'}))
@@ -73,14 +67,25 @@ class CVForm(forms.ModelForm):
             'languages': forms.TextInput(attrs={'placeholder': 'Languages(separeted by , ex: English, French, Spanish)'}),
         }
 
+# new post
+class NewPost(forms.ModelForm):
+    pass
+    # content = forms.CharField(label='content')
+    # class Meta:
+    #     model = Post
+    #     fields = ['content','media','link']
 
-class EditCV(forms.ModelForm):
-    # if the cv is already exist show it avec le nom du fichier
-    cv = forms.FileField(required=True, label='CV')
-    class Meta:
-        model = User
-        fields = ['cv']
+    #     widgets = {
+    #         'content': forms.Textarea(attrs={'placeholder': 'content'}),
+    #         'media': forms.ClearableFileInput(attrs={'multiple': True, 'accept': 'image/*,video/*'}),
+    #         'link': forms.TextInput(attrs={'placeholder': 'link'}),
+    #     }
 
+
+
+
+
+# edit user info
 class EditProfile(forms.ModelForm):
     username = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Username','autocomplete': 'off'}))
     email = forms.EmailField(max_length=100, required=False, widget=forms.EmailInput(attrs={'placeholder': 'Email','autocomplete': 'off'}))
@@ -100,23 +105,19 @@ class EditProfile(forms.ModelForm):
         'address': forms.TextInput(attrs={'placeholder': 'Address'}),
         'city': forms.TextInput(attrs={'placeholder': 'City'}),
         'country': forms.TextInput(attrs={'placeholder': 'Country'}),
+        'photo_profile': forms.FileInput(attrs={'accept': 'image/*'}),
         }
+# edit cv 
+class EditCV(forms.ModelForm):
+    # if the cv is already exist show it avec le nom du fichier
+    cv = forms.FileField(required=True, label='CV')
+    class Meta:
+        model = User
+        fields = ['cv']
 
-#form to update user profile
-
-##etid user info
-# class EditUserForm(forms.ModelForm):
-#     class Meta:
-#         model = User, auth_user
-#         fields = ['username','phone', 'address', 'city', 'country', 'cv', 'photo_profile', 'Visibility']
-
-#     def __init__(self, *args, **kwargs):
-#         super(EditUserForm, self).__init__(*args, **kwargs)
-#         self.fields['username'].widget.attrs['placeholder'] = 'Username'
-#         self.fields['phone'].widget.attrs['placeholder'] = 'Phone'
-#         self.fields['address'].widget.attrs['placeholder'] = 'Address'
-#         self.fields['city'].widget.attrs['placeholder'] = 'City'
-#         self.fields['country'].widget.attrs['placeholder'] = 'Country'
+        widget = {
+            'cv': forms.FileInput(attrs={'accept': '.pdf'}),
+        }
 
 ##add experience
 class ExperienceForm(forms.ModelForm):

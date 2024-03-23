@@ -163,7 +163,7 @@ def signUpEntre(request):
         form = UserCreationForm()
     return render(request, 'registration/signUp1.html', {"form": form})
 
-
+# profile views
 def profile(request, username):
     the_user = auth_user.objects.get(username=username)
     cv = Cv.objects.get(user_id=the_user.id)
@@ -488,10 +488,10 @@ def get_comment(request, itemid):
     return render(request, 'firstPage/commentsFrom.html', context)
     
 def showCommentForm(request, itemid,type):
-    if(type == 2):
-        item = Comment.objects.get(pk=itemid)
-    else:
+    if(type == 1):
         item = Post.objects.get(pk=itemid)
+    else:
+        item = Comment.objects.get(pk=itemid)
     postId=request.session.get('postId')
     return render(request, 'firstPage/addComment.html', {'postId':postId,'itemId': itemid,'comment':item, 'type': type,'is_reply': False if type == 1 else True})
 
@@ -506,7 +506,10 @@ def addComment(request, itemid,type):
             object = Comment.objects.get(id=itemid)
         request.session['type'] = type
         contentType = ContentType.objects.get_for_model(object)
-        Comment.create_comment(user, itemid , content,contentType)
+        if type == 1:
+            Comment.create_comment(user, itemid , content,contentType)
+        else:
+            object.create_reply(user, itemid , content,contentType)
         return redirect(request.path_info)
     return redirect('PNP:firstPage')
 

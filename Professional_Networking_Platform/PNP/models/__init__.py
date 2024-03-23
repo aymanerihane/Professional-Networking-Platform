@@ -9,4 +9,5 @@ from .message import Message
 from .room import Room
 from .like import Like
 from .Cv import Cv
+from .postMedia import PostMedia
 

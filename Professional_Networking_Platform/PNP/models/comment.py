@@ -32,6 +32,17 @@ class Comment(models.Model):
 
         )
         return comment
+    
+    def create_reply(self, user_id, object_id, comment_text, content_type):
+        comment = Comment.objects.create(
+            user_id=user_id,
+            object_id=object_id,
+            comment=comment_text,
+            content_type=content_type
+        )
+        self.number_of_replies += 1
+        self.save()
+        return comment
 
     # Read operation - Get all comments for a specific post
     def get_comments_for_post(post_id):

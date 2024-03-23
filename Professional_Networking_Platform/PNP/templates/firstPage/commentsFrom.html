@@ -3,7 +3,7 @@
 
 			<!-- build comment -->
 			{% for comment in comments %}
-		 	<ul class="user_comment">
+		 	<ul class="user_comment" style="margin-bottom: 30px;margin-top: 20px;">
 
 		 		<!-- current #{user} avatar -->
 			 	<div class="user_avatar">
@@ -37,6 +37,7 @@
 			 	</div>
 
 			 	<!-- start user replies -->
+				<div>
 				{% for reply in comment.replies.all %}
 				<li>
 					<!-- current #{user} avatar -->
@@ -73,6 +74,7 @@
 				</li>
 				{% endfor %}
 		 	</ul>
+			<hr style="height:1px;border-width:0;color:#333;background-color:#333;width:50%;margin-left:auto;margin-right:auto;opacity:0.3">
 			{% endfor %}
 
 		 </div>
