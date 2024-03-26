@@ -4,8 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv
-from .forms import SignUpForm, NewPost, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile
+from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours
+from .forms import SignUpForm, NewPost, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
@@ -14,6 +14,8 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 import json ,os
 from django.conf import settings
+import os
+from django.http import JsonResponse
 
 
 # import datetime
@@ -219,7 +221,7 @@ def formProfile(request, id, username):
     if request.method == "POST":
         form = FormClass(request.POST, request.FILES)
         if form.is_valid():
-            user = auth_user.objects.get(username=username)
+            user = User.objects.get(username=username)
             pnp_user = User.objects.get(user_id=user.id)
             cv = Cv.objects.get(user_id=user.id)
             if id == 0:
@@ -452,8 +454,16 @@ def network(request):
 
 #classroom page
 def classroom(request):
+    user_cours = Cours.objects.all()
+    print(user_cours)
     context = {
+        
+        'user_cours': user_cours,
     }
+    if request.user.is_authenticated:
+        context.update({
+            'auth_user': request.user
+        })
     return render(request,'classroom/rooms.html' , context)
 
 
@@ -549,5 +559,48 @@ def time_since(d):
     else:
         return 'just now'
 
+from django.shortcuts import render, redirect
+from .forms import CoursForm
+from .models import Cours
 
+def create_cours(request):
+    print("DEBUG: Vue create_cours appelée.")
+    if request.user.is_authenticated:  # Vérifie si l'utilisateur est connecté
+        print(f"DEBUG: Utilisateur connecté : {request.user}")
+        if request.method == 'POST':
+            form = CoursForm(request.POST)
+            if form.is_valid():
+                new_cours = form.save(commit=False)
+                new_cours.teacher = request.user
+                if not new_cours.code:
+                    new_cours.generate_code()
+                new_cours.save()
+                return redirect('/classroom')  
+        else:
+            form = CoursForm()
+        return render(request, 'classroom/create_cours.html', {'form': form})
+    else:
+        print("DEBUG: Utilisateur non connecté. Redirection vers la page de connexion.")
+        return redirect('login')  # Redirige vers la page de connexion si l'utilisateur n'est pas connecté
+    
+def ouvrir_pdf(request):
+    nom_du_fichier = "Calendrier-universitaire-2023-2024.pdf"
+    chemin_pdf = os.path.join(settings.STATIC_URL, 'pdfs', nom_du_fichier)
+    return JsonResponse({'url': chemin_pdf})
+    
+def rejoindre_cours(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')  # Récupérer le code du cours depuis le formulaire
+        try:
+            cours = Cours.objects.get(code=code)  # Vérifier si un cours avec ce code existe
+            #return redirect('detail_cours', cours_id=cours.id)  # Rediriger vers la page du cours
+            return redirect('/classroom/detail_cours.html')
+        except Cours.DoesNotExist:
+            # Si le cours n'existe pas, renvoyez l'utilisateur à la même page avec un message d'erreur
+            return render(request, 'classroom/rejoindre_cours.html', {'error_message': 'Code de cours invalide'})
+    else:
+        return render(request, 'classroom/rejoindre_cours.html')
 
+    
+def detail_cours(request):
+     return render(request, 'classroom/detail_cours.html')

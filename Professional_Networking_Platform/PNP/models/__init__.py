@@ -10,4 +10,5 @@ from .room import Room
 from .like import Like
 from .Cv import Cv
 from .postMedia import PostMedia
+from .Cours import Cours
 

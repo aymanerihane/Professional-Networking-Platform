@@ -1,7 +1,8 @@
 from django import forms
-from ..models import User, Post, Cv
+from ..models import User, Post, Cv, Cours
 from django.contrib.auth.models import User as auth_user
 from django.forms import SelectDateWidget
+
 
 class MonthYearSelectWidget(SelectDateWidget):
     def __init__(self, *args, **kwargs):
@@ -194,3 +195,9 @@ class AboutForm(forms.ModelForm):
         widgets = {
             'about': forms.Textarea(attrs={'placeholder': 'About'}),
         }
+        
+class CoursForm(forms.ModelForm):
+    class Meta:
+        model = Cours
+        fields = ['name',  'class_name','salle', 'subject']
+        

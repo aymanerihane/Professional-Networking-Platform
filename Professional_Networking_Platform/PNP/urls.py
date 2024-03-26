@@ -1,7 +1,8 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment
+from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 app_name = "PNP"
 
@@ -28,6 +29,11 @@ urlpatterns = [
     path('formProfile/<int:id>/<str:username>/', formProfile , name='formProfile'),
     # clasroom page
     path('classroom/', classroom , name='classroom'),
+     #createcourse
+    path('classroom/create/', create_cours, name='create_cours'),
+   
+    path('rejoindre-cours/', rejoindre_cours, name='rejoindre_cours'),
+    path('detail-cours/<int:cours_id>/', detail_cours, name='detail_cours'),
     # networking
     path('network/', network, name='network'),
 
@@ -40,10 +46,18 @@ urlpatterns = [
     path('showCommentForm/<int:itemid>/<int:type>/', showCommentForm , name='showCommentForm'),
     path('comment/<int:itemid>/', get_comment , name='comment'),
     path('addComment/<int:itemid>/<int:type>/', addComment , name='addComment'),
-
+    
+    #pdf calendrier classroom
+    #path('ouvrir-pdf/', ouvrir_pdf, name='ouvrir-pdf'),
+    
+    path('classroom/rejoindre_cours/', rejoindre_cours, name='rejoindre_cours'),  # Route pour rejoindre un cours
+    path('classroom/detail_cours.html', detail_cours, name='detail_cours'), # Route pour les détails du cours
+    
+   
     #search
     path('search/<str:username>/', search , name='search'),
 ] + static(settings.STATIC_URL)
+
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 print(settings.MEDIA_ROOT)
