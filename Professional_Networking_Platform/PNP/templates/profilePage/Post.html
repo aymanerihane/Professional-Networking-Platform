@@ -1,0 +1,99 @@
+ {% load static %}
+ {% if posts %}
+ {% for post in posts%}
+
+            <div class="post" data-id="{{post.post.id}}">
+                <div class="post-author">
+                    {% if post.post.user.photo_profile %}
+                    <img
+                        src="{{post.post.user.photo_profile.url}}">
+                    {% else %}
+                    <img src="/media/avatar/default.jpg">
+                    {% endif %}
+                    <div class="plus-div" style="width:100%">
+                        <div>
+                            <h1>{{post.post.user.user.username}}
+                                {{post.post.user.introduction}} &middot; <span style="font-weight: lighter;">1st</span></h1>
+                            <small>{{post.post.user.introduction}}</small>
+                            <small>{{post.post.time_since}}</small>
+                        </div>
+                        {% if isMe %}
+                        <i class="fa fa-trash plus-btn" data-id="{{post.post.id}}"></i>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <p>{{post.content}}</p>
+                {% if post.post.media %}
+                    {% for media in post.post.media.all %}
+                        {% if media.type == 1 %}
+                            <img style="width:100%" src="{{media.media.url}}" class="post-media">
+                        {% elif media.type == 2 %}
+                            <video style="width:100%" controls>
+                                <source style="width:100%;" src="{{media.media.url}}" type="video/mp4">
+                            </video>
+                        {% elif media.type == 3 %}
+                            <audio controls>
+                                <source style="width:100%;" src="{{media.media.url}}" type="audio/mpeg">
+                            </audio>
+                        {% elif media.type == 4 %}
+                            <iframe scrolling="no" style="width:100%;height: 400px" src="{{media.media.url}}" class="post-media"></iframe>
+                        {% elif media.type == 5 %}
+                            <p class="post-media">{{media.media.name}}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                <div class="post-stats">
+                    <div>
+                        <img src="{% static 'PNP/img/thumbsup.png' %}">
+                        <span class="liked-users" id="{{post.post.id}}">{{ post.post.num_likes }}  reactions</span>
+                    </div>
+                    <div>
+                        <span>{{ post.numberComments }} comments &middot; {{ post.post.num_shares }} shares</span>
+                    </div>
+                </div>
+                {% if auth_user.is_authenticated %}
+                <div class="post-activity">
+
+                    <div class="post-activity-link" id="like" onclick="toggleLike(this)" style="cursor: pointer;">
+                        {% if post.post.liked == False %}
+                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
+                        {% else %}
+                        <img id="likeImg" src="{% static 'PNP/img/love.png' %}" class="post-activity-user-icon">
+                        {% endif %}
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link commentpost" onclick="openComment(this)">
+                        <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
+                        <span>Comment</span>
+                    </div>
+
+                    <div class="post-activity-link">
+                        <img src="{% static 'PNP/img/send.png' %}" class="post-activity-user-icon">
+                        <span>Send</span>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="post-activity">
+
+                    <div class="post-activity-link" id="like" style="cursor: pointer;">
+                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
+                        <span>Like</span>
+                    </div>
+                    <div class="post-activity-link commentpost" onclick="openComment(this)">
+                        <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
+                        <span>Comment</span>
+                    </div>
+
+                </div>
+                {% endif %}
+            </div>
+
+            {% endfor %}
+{% else %}
+    <div class="post">
+        <h1>No posts found</h1>
+        
+    </div>
+{% endif %}

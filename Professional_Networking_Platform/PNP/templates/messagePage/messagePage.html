@@ -10,42 +10,10 @@
     <link rel="stylesheet" href="{% static 'PNP/css/message.css' %}">
 </head>
 <body>
-    <div class="chat">
-        <div class="sidebar">
-            <div class="search">
-                <input type="text" placeholder="Ara...">
-                <i class="fa fa-search"></i>
-            </div>
-            <div class="contacts">
-                <ul>
-                    <li>
-                        <a href="#">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
-                            <div class="contact">
-                                <div class="name">Yunus Uçar</div>
-                                <div class="message">Merhaba, bu bir test mesajıdır..</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="active">
-                        <a href="#">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
-                            <div class="contact">
-                                <div class="name">Yunus Uçar</div>
-                                <div class="message">Merhaba, bu bir test mesajıdır..</div>
-                            </div>
-                            <div class="notification">2</div>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        {% comment %} <div id="contentMessage"> {% endcomment %}
-            {% comment %} <h1 class="h1message">Messages</h1> {% endcomment %}
-            {% include "./content.html" %}
+    <div class="chat" style="height: 90%;">
+        {% include './message/sideBar/sideBar.html' %}
+        {% include "./message/contentchat/content.html" %}
 
-        {% comment %} </div> {% endcomment %}
     </div>
     <script src="{% static 'PNP/js/messaging.js'%}"></script>
 </body>

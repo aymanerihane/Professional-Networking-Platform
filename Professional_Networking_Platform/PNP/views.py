@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours
+from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours,PostMedia,FriendRequest
 from .forms import SignUpForm, NewPost, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
@@ -16,6 +16,7 @@ import json ,os
 from django.conf import settings
 import os
 from django.http import JsonResponse
+from django.core.files import File
 
 
 # import datetime
@@ -172,33 +173,50 @@ def profile(request, username):
     cv.skills = json.loads(cv.skills)
     cv.languages = json.loads(cv.languages)
     pnp_user = User.objects.get(user_id=the_user.id)
-    posts = Post.objects.filter(user_id=pnp_user.id).all()
+    posts = Post.objects.filter(user_id=pnp_user.id).all().order_by('-created_at')
     context = {}
+
+
+    for post in posts:
+        post.liked = Like.objects.filter(post_id=post.id, user_id=pnp_user.id).exists()
+    posts_with_time_since = [{
+        'post': post,
+        'time_since': time_since(post.created_at),
+        'numberComments': Comment.objects.filter(object_id=post.id).count()
+    } for post in posts]
+    
 
     if request.user.is_authenticated:
         current_user = User.objects.get(user_id=request.user.id)
-        all_requests = current_user.friends_request.all()
-        segg = seggestedFriends(request)
+        #take all request of the current user
 
-        pnp_user.number_of_profile_visits += 1
-        pnp_user.save()
+        all_requests = FriendRequest.objects.filter(receiver=current_user.id)
+        segg = seggestedFriends(request)
+        
+        if current_user != pnp_user:
+            pnp_user.number_of_profile_visits += 1
+            pnp_user.save()
+        
+
+        #get post medias
 
         context.update({
             'auth_user': request.user,
             'user': current_user,
             'request_recieved': all_requests,
-            'requestsend': current_user.friends_request.filter(user_id=the_user.id).exists(),
+            'requestsend': FriendRequest.objects.filter(sender=the_user.id).exists(),
             'isMe': request.user.username == username,
             'isFriend': current_user.friends.filter(user_id=the_user.id).exists(),
             'segguestedFriends': segg,
         })
 
     context.update({
-        'posts': posts,
         'the_user': the_user,
         'cv': cv,
         'is_private': pnp_user.Visibility == 'private',
+        'posts': posts_with_time_since,
     })
+
 
     return render(request, 'profilePage/profile.html', context)
 def formProfile(request, id, username):
@@ -302,12 +320,13 @@ def mettingPage(request):
     userRole = User.objects.get(user_id=request.user.id).role
     if userRole == 1:
         return redirect('PNP:joinMetting')
-    return render(request,'messagePage/mettingPage.html' , {})
+    return render(request,'messagePage/mettingPage.html' )
 
 ##metting create page
 def metting(request):
     context = {
-        'username': request.user.username
+        'username': request.user.username,
+        
     }
     return render(request,'messagePage/createMetting.html' , context)
 
@@ -327,9 +346,10 @@ def joinMetting(request):
 def messaging(request):
     userID = request.user.id
     userInfo = User.objects.get(user_id=userID)
-    rooms = userInfo.rooms.all()
+    rooms = Room.objects.filter(users=userInfo).all()
     context = {
-        'rooms': rooms
+        'rooms': rooms,
+        'auth_user': request.user,
     }
     return render(request,'messagePage/messagePage.html' , context)
 
@@ -359,7 +379,6 @@ def firstPage(request):
         # check if the current user liked the post or not
         for post in posts:
             post.liked = Like.objects.filter(post_id=post.id, user_id=current_user.id).exists()
-
         posts_with_time_since = [{
             'post': post,
             'time_since': time_since(post.created_at),
@@ -382,33 +401,41 @@ def firstPage(request):
 
     return render(request, 'firstPage/fisrtPage.html', context)
 
-# add friend
+
 def addFriend(request, username):
     user = auth_user.objects.get(username=username)  # get User instance from User model
     friend = User.objects.get(user_id=user.id)
     current_user = User.objects.get(user_id=request.user.id)
-    
-    # Check if a friend request is already sent in either direction
-    if not current_user.friends.filter(user_id=user.id).exists() and not friend.friends_request.filter(user_id=current_user.id).exists():
-        if friend.Visibility == "public":
-            current_user.friends.add(friend)
-        else:
-            current_user.friends_request.add(friend)
-    elif current_user.friends_request.filter(user_id=user.id).exists():
-        current_user.friends_request.remove(friend)
-    else:
-        current_user.friends.remove(friend)
-    
-    return redirect('PNP:profile', username=username)
 
+    # Check if they are already friends
+    if current_user.friends.filter(user_id=user.id).exists():
+        # If they are friends, remove the friend
+        current_user.friends.remove(friend)
+    else:
+        # If they are not friends, check if a friend request has been sent in either direction
+        if FriendRequest.objects.filter(sender=current_user, receiver=friend).exists() or FriendRequest.objects.filter(sender=friend, receiver=current_user).exists():
+            # If a friend request has been sent, delete it
+            FriendRequest.objects.filter(sender=current_user, receiver=friend).delete()
+            FriendRequest.objects.filter(sender=friend, receiver=current_user).delete()
+            # And add the friend
+        else:
+            # If no friend request has been sent, send one if the friend's visibility is private
+            if friend.Visibility == "private":
+                FriendRequest.objects.create(sender=current_user, receiver=friend)
+            else:
+                # If the friend's visibility is public, add the friend
+                current_user.friends.add(friend)
+
+    return render(request, 'profilePage/followBtn.html', {'the_user': user, 'isMe': False, 'auth_user': request.user,'requestsend': FriendRequest.objects.filter(sender=current_user.id,receiver=friend).exists(), 'isFriend': current_user.friends.filter(user_id=user.id).exists(),'is_private': friend.Visibility == 'private'})
 def seggestedFriends(request):
     user = User.objects.get(user_id=request.user.id)
     friends = user.friends.all()
-    friends_request = user.friends_request.all()
+    friends_request = FriendRequest.objects.filter(receiver=user.id)
+    sent_request = FriendRequest.objects.filter(sender=user.id)
     all_users = User.objects.all()
     suggested_friends = []
     for u in all_users:
-        if u != user and u not in friends and u not in friends_request:
+        if u != user and u not in friends and u not in sent_request and u not in friends_request:
             suggested_friends.append(u)
     # get just the 7 first suggested friends
     suggested_friends = suggested_friends[:7]
@@ -420,31 +447,76 @@ def accept_request(request, username):
     friend = User.objects.get(user_id=user.id)
     current_user = User.objects.get(user_id=request.user.id)
     current_user.friends.add(friend)
-    current_user.friends_request.remove(friend)
+    FriendRequest.objects.get(sender=user.id, receiver=current_user.id).delete()
     return redirect('PNP:profile', username=current_user.user.username)
 
 def reject_request(request, username):
     user = auth_user.objects.get(username=username)
     friend = User.objects.get(user_id=user.id)
     current_user = User.objects.get(user_id=request.user.id)
-    current_user.friends_request.remove(friend)
+    FriendRequest.objects.get(sender=user.id, receiver=current_user.id).delete()
     return redirect('PNP:profile', username=current_user.user.username)
+
 # create post
-def createPost(request):
+
+def get_posts(request):
+    current_user = User.objects.get(user_id=request.user.id)
+    friends = current_user.friends.all()
+    posts = Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
+
+    # check if the current user liked the post or not
+    for post in posts:
+        post.liked = Like.objects.filter(post_id=post.id, user_id=current_user.id).exists()
+
+    posts_with_time_since = [{
+        'post': post,
+        'time_since': time_since(post.created_at),
+        'numberComments': Comment.objects.filter(object_id=post.id).count()
+    } for post in posts]
+    context = {
+        'posts': posts_with_time_since,
+        'auth_user': request.user,
+    }
+    return render(request, 'firstPage/posts.html', context)
+
+
+def add_post(request):
     if request.method == 'POST':
-        form = NewPost(request.POST)
-        if form.is_valid():
-            content = form.cleaned_data['content']
-            link = form.cleaned_data['link']
-            media = form.cleaned_data['media']
-            user_id = request.user.id
-            Post.create_post(content, user_id, link, media)
-            return redirect('PNP:firstPage')
-    else:
-        form = NewPost()
-    return render(request, 'firstPage/createPost.html', {'form': form})
+        content = request.POST.get('postContent')
+        auth_userid = request.user.id   
+        user_id = User.objects.get(user_id=auth_userid).id
+        post = Post.create_post(content, user_id)
+        
+        # Get list of uploaded files
+        files = request.FILES.getlist('files')
+        types = request.POST.getlist('type')
 
+        # Iterate over each uploaded file
+        for file, type in zip(files, types):
+            # Create a new PostMedia instance for each file
+            post_media = PostMedia.objects.create(media=File(file), type=type)
+            # Associate the PostMedia instance with the Post
+            post.media.add(post_media)
+        
+        print("post added")
 
+    return JsonResponse({'success': True})
+
+def deletePost(request, id):
+    post = Post.objects.get(id=id)
+    post.delete()
+    pnp_user = User.objects.get(user_id=request.user.id)
+    posts = Post.objects.filter(user_id=pnp_user.id).all().order_by('-created_at')
+    for post in posts:
+        post.liked = Like.objects.filter(post_id=post.id, user_id=pnp_user.id).exists()
+    posts_with_time_since = [{
+        'post': post,
+        'time_since': time_since(post.created_at),
+        'numberComments': Comment.objects.filter(object_id=post.id).count()
+    } for post in posts]
+
+    return render(request, 'profilePage/Post.html',{'posts': posts_with_time_since,'isMe': True,'auth_user': request.user})
+    
 #network page
 def network(request):
     context = {
@@ -482,6 +554,7 @@ def like(request, postid):
     
     post.save()
     return JsonResponse({'success': True,'likes': post.num_likes})
+
 
 #post comments
 def get_comment(request, itemid):

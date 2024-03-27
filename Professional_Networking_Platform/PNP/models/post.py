@@ -6,16 +6,14 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
     content = models.TextField()
     num_comments  = models.PositiveIntegerField(default=0)
     num_shares = models.PositiveIntegerField(default=0)
     num_likes  = models.PositiveIntegerField(default=0)
-    link = models.CharField(max_length=100, validators=[URLValidator()])
+    #
     media = models.ManyToManyField('PNP.PostMedia', related_name='posts', blank=True)
     #
     comments= GenericRelation('PNP.Comment')
-    likes= GenericRelation('PNP.Like')
     #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -28,14 +26,11 @@ class Post(models.Model):
     ######## CRUD operations
 
     ## Create operation
-    def create_post(title, description, user_id, location=None, link=None, media=None):
+    def create_post(content, user_id):
         post = Post.objects.create(
-            title=title,
-            description=description,
+            content=content,
             user_id=user_id,
-            location=location,
-            link=link,
-            media=media
+            
         )
         return post
 

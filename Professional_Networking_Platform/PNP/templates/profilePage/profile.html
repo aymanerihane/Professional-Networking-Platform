@@ -59,12 +59,10 @@
                     {% else %}
                     <img class="profile-pic" src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}
-                    {% if isMe %}
                     <div class="plus-div" id="addAbout" data-id="6">
                         <h1>{{the_user.username}}</h1>
                         <i class="fa fa-pencil edit-btn plus-btn" data-id="6"></i>
                     </div>
-                    {% endif %}
                     <b>{{the_user.user.introduction}}</b>
                     <p>{{the_user.user.country}} | {{the_user.user.address}} | {{the_user.user.city}}</p>
                     <p>{{the_user.user.phone}}</p>
@@ -72,21 +70,11 @@
                     
                     {% if not isMe  and auth_user.is_authenticated %}
                     <div class="profile-btn">
-                        {% if requestsend %}
-                            <a style="background-color: #efefef;color:black" href="{% url 'PNP:addFriend' the_user %}"  class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >waitting to be accepted</a>
-                        {% else %}
-                            {% if isFriend %}
-                                <a style="background-color: #efefef;color:black" href="{% url 'PNP:addFriend' the_user %}"  class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >unfollow </a>
-                            {% else %}
-                                {% if is_private %}
-                                    <a href="{% url 'PNP:addFriend' the_user %}" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >send request</a>
-                                {% else %}
-                                        <a href="{% url 'PNP:addFriend' the_user %}" class="primary-btn"><img src="{% static 'PNP/img/connect.png' %}" >Connect</a>
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                        
+                        <div id="followBtn" style="display: inline-flex;">
+                            {% include './followBtn.html' %}
+                        </div>
                         <a href=""><img src="{% static 'PNP/img/message.png' %}" alt="">Chat</a>
+                        
                     </div>
                     {% endif %}
                 </div>
@@ -207,94 +195,28 @@
             {% endif %}
             </div>
 
-        <div class="profile-description">
-             {% for post in posts%}
-
-            <div class="post" data-id="{{post.id}}">
-                <div class="post-author">
-                    {% if post.user.photo_profile %}
-                    <img
-                        src="{{post.user.photo_profile.url}}">
-                    {% else %}
-                    <img src="/media/avatar/default.jpg">
-                    {% endif %}
-                    <div>
-                        <h1>{{post.user.user.username}}
-                            {{post.user.introduction}} &middot; <span style="font-weight: lighter;">1st</span></h1>
-                        <small>{{post.user.introduction}}</small>
-                        <small>{{post.time_since}}</small>
-                    </div>
-                </div>
-                <p>{{post.content}}</p>
-                <img src="{{post.image.url}}" alt="profileImg"
-                    width="100%">
-                <div class="post-stats">
-                    <div>
-                        <img src="{% static 'PNP/img/thumbsup.png' %}">
-                        <span class="liked-users" id="{{post.id}}">{{ post.num_likes }}  reactions</span>
-                    </div>
-                    <div>
-                        <span>{{ post.numberComments }} comments &middot; {{ post.num_shares }} shares</span>
-                    </div>
-                </div>
-                {% if auth_user.is_authenticated %}
-                <div class="post-activity">
-
-                    <div class="post-activity-link" id="like" onclick="toggleLike(this)" style="cursor: pointer;">
-                        {% if post.post.liked == False %}
-                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
-                        {% else %}
-                        <img id="likeImg" src="{% static 'PNP/img/love.png' %}" class="post-activity-user-icon">
-                        {% endif %}
-                        <span>Like</span>
-                    </div>
-                    <div class="post-activity-link commentpost" onclick="openComment(this)">
-                        <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
-                        <span>Comment</span>
-                    </div>
-
-                    <div class="post-activity-link">
-                        <img src="{% static 'PNP/img/send.png' %}" class="post-activity-user-icon">
-                        <span>Send</span>
-                    </div>
-                </div>
-                {% else %}
-                    <div class="post-activity">
-
-                    <div class="post-activity-link" id="like" style="cursor: pointer;">
-                        <img id="likeImg" src="{% static 'PNP/img/like.png' %}" class="post-activity-user-icon">
-                        <span>Like</span>
-                    </div>
-                    <div class="post-activity-link commentpost" onclick="openComment(this)">
-                        <img src="{% static 'PNP/img/comment.png' %}" class="post-activity-user-icon">
-                        <span>Comment</span>
-                    </div>
-
-                </div>
-                {% endif %}
-            </div>
-
-            {% endfor %}
-            </div>
-            
+        <div class="profile-description" id="postDesc">
+        <h2>Posts</h2>
+        {% include './Post.html' %}        
         </div>
         <div id="modifie">
             <div class="overlay"></div>
             <div id="form-container"></div>
         </div>
         {% include "../firstPage/comments.html" %}
+        </div>
         <div class="profile-sidebar">
         {% if isMe %}
             <div class="sidebar-ad">
                 <h1>Request</h1>
                 {% for req in request_recieved %}
                 <div class="sidebar-people-row">
-                    <img src="{{req.user.user.photo_profile}}">
+                    <img src="{{req.sender.photo_profile}}">
                     <div>
-                        <h2>{{req.user.username}}</h2>
-                        <p>{{req.user.user.introduction}}</p>
-                        <a href="{% url 'PNP:accept_request' req.user.username %}">accepted</a>
-                        <a href="{% url 'PNP:reject_request' req.user.username %}">rejected</a>
+                        <h2>{{req.sender.user.username}}</h2>
+                        <p>{{req.sender.introduction}}</p>
+                        <a href="{% url 'PNP:accept_request' req.sender.user.username %}">accepted</a>
+                        <a href="{% url 'PNP:reject_request' req.sender.user.username %}">rejected</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -346,6 +268,33 @@
     </div>
     <script src={% static 'PNP/js/formProfile.js' %}></script>
     <script>
+
+    //delete post
+    document.addEventListener('click',(e)=> {
+        var postContainer = document.getElementById('postDesc');
+        console.log(postContainer)
+        if (e.target.classList.contains('fa-trash')) {
+            var id = e.target.dataset.id;
+            $.ajax({
+                url: '/deletePost/' + id + '/',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    postContainer.innerHTML = response;
+                }
+            });
+        }else if(e.target.classList.contains('addFriend')) {
+            var username = '{{the_user.username}}';
+            var followBtn = document.getElementById('followBtn');
+            $.ajax({
+                url: '/addFriend/' + username ,
+                type: 'GET',
+                success: function (response) {
+                    followBtn.innerHTML = response;
+                }
+            });
+        }
+    });
         var profileMenu = document.getElementById('profileMenu')
         var seeMore = document.getElementById('hidden')
         function toggleMenu() {
@@ -533,5 +482,4 @@ function fetchFormComment(itemId,type) { //type = 1 is a post and type = 2 is a 
             delay: 0.5,
         })
     </script>
-
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours
+from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -41,7 +41,11 @@ urlpatterns = [
     path('addFriend/<str:username>', addFriend, name='addFriend'),
     path('accept_request/<str:username>', accept_request , name='accept_request'),
     path('reject_request/<str:username>', reject_request , name='reject_request'),
-    #post like
+    
+    #post
+    path('posts/', get_posts , name='posts'),
+    path('addPost/', add_post , name='addPost'),
+    path('deletePost/<int:id>/', deletePost , name='deletePost'),
     path('like/<int:postid>/', like , name='like'),
     path('showCommentForm/<int:itemid>/<int:type>/', showCommentForm , name='showCommentForm'),
     path('comment/<int:itemid>/', get_comment , name='comment'),

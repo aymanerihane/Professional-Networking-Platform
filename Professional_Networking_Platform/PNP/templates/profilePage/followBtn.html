@@ -1,0 +1,31 @@
+{% load static %}
+
+<style>
+    .addFriend{
+        cursor: pointer;
+        display: inline-flex;
+  align-items: center;
+  background-color: #e4e6eb;
+  padding: 6px 15px;
+  border-radius: 4px;
+  margin-right: 10px;
+    }
+    .addFriend img{
+        width: 18px;
+  margin-right: 5px;
+    }
+</style>
+{% if requestsend %}
+    <p style="background-color: #efefef;color:black" class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >waitting to be accepted</p>
+{% else %}
+    {% if isFriend %}
+        <p style="background-color: #efefef;color:black"  class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >unfollow </p>
+    {% else %}
+        {% if is_private %}
+            <p class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >send request</p>
+        {% else %}
+                <p class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >Connect</p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+

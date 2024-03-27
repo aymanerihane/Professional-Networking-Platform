@@ -1,0 +1,20 @@
+<div class="contacts">
+
+    <ul>
+    {{ rooms }}
+        {% if rooms%}
+        {% for room in rooms %}
+            <li>
+                <a href="#">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+                    <div class="contact">
+                        <div class="name"></div>
+                        <div class="message">Merhaba, bu bir test mesajıdır..</div>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+        {% endif %}
+    </ul>
+        
+</div>

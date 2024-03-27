@@ -10,5 +10,5 @@ from .room import Room
 from .like import Like
 from .Cv import Cv
 from .postMedia import PostMedia
+from .friendsRequest import FriendRequest
 from .Cours import Cours
-
