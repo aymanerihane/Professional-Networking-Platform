@@ -180,7 +180,7 @@
   $(document).ready(function() {
     $('#ouvrir-pdf').click(function() {
         $.ajax({
-            url: '/ouvrir-pdf/',
+            url: '/ouvrir_pdf/',
             type: 'GET',
             success: function(response) {
               window.open(response.url, '_blank');
