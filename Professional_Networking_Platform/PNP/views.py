@@ -1,11 +1,12 @@
 # Create your views here.
+import random
 from django.shortcuts import render , get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours,PostMedia,FriendRequest
-from .forms import SignUpForm, NewPost, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm
+from .forms import SignUpForm, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm,RoomForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
@@ -54,7 +55,6 @@ def signUp(request,choix):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)  # user is a User object now
-            
             #prendre la partie apres la @ de l'email
             if choix == 1:
                 afterAt = user.email.split('@')[1]
@@ -85,6 +85,7 @@ def signUp2(request):
             pnp_user = form.save(commit=False)
             role = request.session.get('role')
             userid = request.session.get('user_id')
+            print(role)
             if userid is not None:
                 pnp_user.user_id = userid
                 pnp_user.role = role
@@ -109,14 +110,14 @@ def signUp2(request):
                     ice = request.POST.get('ice')
                     if ice is not None:  # Make sure cne is not None
                         user = User.objects.get(id=userid)  # Get the User instance with id=userid
-                        # Entreprise.create_entreprise(user, ice)  # Call create_student on the Student class
+                        Entreprise.create_entreprise(user, ice)  # Call create_student on the Student class
                         return redirect('PNP:signUpEntre')
             else:
                 # Handle missing user id here
                 return HttpResponse("User id is missing")
     else:
         form = SignUpForm()
-    return render(request, 'registration/signUp2.html', {"form": form,"role": 1 if request.session.get('role') == 1 else 2})
+    return render(request, 'registration/signUp2.html', {"form": form,"role": request.session.get('role')})
 
 # student singup (page3)
 def signUpStud(request):
@@ -239,7 +240,7 @@ def formProfile(request, id, username):
     if request.method == "POST":
         form = FormClass(request.POST, request.FILES)
         if form.is_valid():
-            user = User.objects.get(username=username)
+            user = auth_user.objects.get(username=username)
             pnp_user = User.objects.get(user_id=user.id)
             cv = Cv.objects.get(user_id=user.id)
             if id == 0:
@@ -311,7 +312,85 @@ def formProfile(request, id, username):
             form.fields['country'].initial = User.objects.get(user_id=request.user.id).country
             form.fields['Visibility'].initial = User.objects.get(user_id=request.user.id).Visibility
 
-    return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "username": request.user.username})
+
+    return render(request, 'profilePage/formProfile.html', {"form": form, "id": id, "auth_user": request.user})
+
+def formEducation(request, id, username):
+    if request.method == "POST":
+        form = EducationForm(request.POST)
+        if form.is_valid():
+            user = auth_user.objects.get(username=username)
+            cv = Cv.objects.get(user_id=user.id)
+            cv.update_etud(
+                id=id,
+                school=form.cleaned_data['school'],
+                degree=form.cleaned_data['degree'],
+                start_dateE=form.cleaned_data['start_dateE'],
+                end_dateE=form.cleaned_data['end_dateE']
+            )
+            return redirect('PNP:profile', username=request.user.username)
+    else:
+        cv = Cv.objects.get(user_id=request.user.id)
+        education = next((edu for edu in cv.educations if edu['id'] == id), None)
+
+        if education is not None:
+            form = EducationForm()
+            form.fields['school'].initial = education['school']
+            form.fields['degree'].initial = education['degree']
+            form.fields['start_dateE'].initial = education['start_date']
+            form.fields['end_dateE'].initial = education['end_date']
+
+    return render(request, 'profilePage/formeduct.html', {"form": form,"id":id,"auth_user":request.user, "username": username})
+
+def formExperience(request, id, username):
+    if request.method == "POST":
+        form = ExperienceForm(request.POST)
+        if form.is_valid():
+            user = auth_user.objects.get(username=username)
+            cv = Cv.objects.get(user_id=user.id)
+            cv.update_exp(
+                id=id,
+                company=form.cleaned_data['company'],
+                job_title=form.cleaned_data['job_title'],
+                start_date=form.cleaned_data['start_date'],
+                end_date=form.cleaned_data['end_date'],
+                description=form.cleaned_data['description']
+            )
+            return redirect('PNP:profile', username=request.user.username)
+    else:
+        cv = Cv.objects.get(user_id=request.user.id)
+        experience = next((exp for exp in cv.experiences if exp['id'] == id), None)
+
+        if experience is not None:
+            form = ExperienceForm()
+            form.fields['company'].initial = experience['company']
+            form.fields['job_title'].initial = experience['job_title']
+            form.fields['start_date'].initial = experience['start_date']
+            form.fields['end_date'].initial = experience['end_date']
+            form.fields['description'].initial = experience['description']
+
+    return render(request, 'profilePage/formexp.html', {"form": form,"id":id,"auth_user":request.user, "username": username})
+def delete_experience(request, id,username):
+    cv = Cv.objects.get(user_id=request.user.id)
+    cv.delete_experience(id)
+    return render(request, 'profilePage/experience.html', {'isMe': request.user.username == username,'cv': cv})
+
+def delete_education(request, id,username):
+    cv = Cv.objects.get(user_id=request.user.id)
+    cv.delete_education(id)
+    return render(request, 'profilePage/education.html', {'isMe': request.user.username == username,'cv': cv})
+
+def delete_skill(request, id,username):
+    cv = Cv.objects.get(user_id=request.user.id)
+    cv.delete_skills(id)
+    cv.skills = json.loads(cv.skills)
+    return render(request, 'profilePage/skills.html', {'isMe': request.user.username == username,'cv': cv})
+
+def delete_language(request, id,username):
+    cv = Cv.objects.get(user_id=request.user.id)
+    cv.delete_languages(id)
+    cv.languages = json.loads(cv.languages)
+    return render(request, 'profilePage/langs.html', {'isMe': request.user.username == username,'cv': cv})
 
 # metting pages
 
@@ -320,7 +399,8 @@ def mettingPage(request):
     userRole = User.objects.get(user_id=request.user.id).role
     if userRole == 1:
         return redirect('PNP:joinMetting')
-    return render(request,'messagePage/mettingPage.html' )
+    return render(request,'messagePage/mettingPage.html' ,{'ismetting':True})
+
 
 ##metting create page
 def metting(request):
@@ -346,12 +426,46 @@ def joinMetting(request):
 def messaging(request):
     userID = request.user.id
     userInfo = User.objects.get(user_id=userID)
-    rooms = Room.objects.filter(users=userInfo).all()
+    # get all rooms that i am a participents in it
+    rooms = Room.objects.filter(participent=userInfo)
+    for room in rooms:
+        participents = room.participent.all()
+        for participent in participents:
+            if participent.user_id != userInfo.id and participents.count() == 2:
+                room.name = participent.user.username
+                break
     context = {
         'rooms': rooms,
+        'lastmessage': "last message",
         'auth_user': request.user,
+        'ismessaging': True,
     }
     return render(request,'messagePage/messagePage.html' , context)
+
+def roomCreateForm(request):
+    context = {}
+    print(request.method)
+    if request.method == 'POST':
+        form = RoomForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
+            participents = form.cleaned_data['participent']
+            userpnp= User.objects.get(user_id=request.user.id)
+            Room.create_room(userpnp,name, description,participents)
+            print("room created")
+            context.update({
+                'success': True,
+            })
+            return redirect('PNP:messaging')
+    else:
+        form = RoomForm()
+        user = User.objects.get(user_id=request.user.id)  # Get the current user
+        form.fields['participent'].queryset = user.friends.all().exclude(user_id=request.user.id)  # Get all friends of the user
+    context.update({
+        'form': form,
+    })
+    return render(request, 'messagePage/message/sideBar/form.html', context)
 
 def room(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
@@ -397,36 +511,39 @@ def firstPage(request):
 
     context.update({
         'posts': posts_with_time_since,
+        'ishome': True,
     })
 
     return render(request, 'firstPage/fisrtPage.html', context)
 
 
-def addFriend(request, username):
-    user = auth_user.objects.get(username=username)  # get User instance from User model
-    friend = User.objects.get(user_id=user.id)
+def addFriend(request,friend):
+    user = auth_user.objects.get(username=friend)  # get User instance from User model
+    friendpnp= User.objects.get(user_id=user.id)
     current_user = User.objects.get(user_id=request.user.id)
 
     # Check if they are already friends
     if current_user.friends.filter(user_id=user.id).exists():
         # If they are friends, remove the friend
-        current_user.friends.remove(friend)
+        current_user.friends.remove(friendpnp)
     else:
         # If they are not friends, check if a friend request has been sent in either direction
-        if FriendRequest.objects.filter(sender=current_user, receiver=friend).exists() or FriendRequest.objects.filter(sender=friend, receiver=current_user).exists():
+        if FriendRequest.objects.filter(sender=current_user, receiver=friendpnp).exists() or FriendRequest.objects.filter(sender=friendpnp, receiver=current_user).exists():
             # If a friend request has been sent, delete it
-            FriendRequest.objects.filter(sender=current_user, receiver=friend).delete()
-            FriendRequest.objects.filter(sender=friend, receiver=current_user).delete()
+            FriendRequest.objects.filter(sender=current_user, receiver=friendpnp).delete()
+            FriendRequest.objects.filter(sender=friendpnp, receiver=current_user).delete()
             # And add the friend
         else:
             # If no friend request has been sent, send one if the friend's visibility is private
-            if friend.Visibility == "private":
-                FriendRequest.objects.create(sender=current_user, receiver=friend)
+            if friendpnp.Visibility == "private":
+                FriendRequest.objects.create(sender=current_user, receiver=friendpnp)
             else:
                 # If the friend's visibility is public, add the friend
-                current_user.friends.add(friend)
+                current_user.friends.add(friendpnp)
 
-    return render(request, 'profilePage/followBtn.html', {'the_user': user, 'isMe': False, 'auth_user': request.user,'requestsend': FriendRequest.objects.filter(sender=current_user.id,receiver=friend).exists(), 'isFriend': current_user.friends.filter(user_id=user.id).exists(),'is_private': friend.Visibility == 'private'})
+    return render(request, 'profilePage/followBtn.html', {'friend':friend,'the_user': user, 'isMe': False, 'auth_user': request.user,'requestsend': FriendRequest.objects.filter(sender=current_user.id,receiver=friendpnp).exists(), 'isFriend': current_user.friends.filter(user_id=user.id).exists(),'is_private': friendpnp.Visibility == 'private'})
+
+
 def seggestedFriends(request):
     user = User.objects.get(user_id=request.user.id)
     friends = user.friends.all()
@@ -434,11 +551,16 @@ def seggestedFriends(request):
     sent_request = FriendRequest.objects.filter(sender=user.id)
     all_users = User.objects.all()
     suggested_friends = []
+    
     for u in all_users:
         if u != user and u not in friends and u not in sent_request and u not in friends_request:
             suggested_friends.append(u)
-    # get just the 7 first suggested friends
+    # Take 7 random users
+    if len(suggested_friends) > 7:
+        suggested_friends = random.sample(suggested_friends, 7)
+    
     suggested_friends = suggested_friends[:7]
+    
     return suggested_friends
 
 
@@ -520,7 +642,9 @@ def deletePost(request, id):
 #network page
 def network(request):
     context = {
-        'friends' : User.objects.get(user_id=request.user.id).friends.all()
+        'friends' : User.objects.get(user_id=request.user.id).friends.all().exclude(user_id=request.user.id),
+        'auth_user': request.user,
+        'isNetwork': True,
     }
     return render(request,'networkPage/networkPage.html' , context)
 
@@ -534,7 +658,8 @@ def classroom(request):
     }
     if request.user.is_authenticated:
         context.update({
-            'auth_user': request.user
+            'auth_user': request.user,
+            'isClassroom': True,
         })
     return render(request,'classroom/rooms.html' , context)
 
@@ -602,10 +727,14 @@ def search(request, username):
     user = auth_user.objects.filter(username__startswith=username)
     return render(request,'firstPage/search.html' , {'users': user})
 
+#search for rooms
 
-
-
-
+def searchRoom(request, roomname):
+    allrooms = Room.objects.filter(Q(name__startswith=roomname) | Q(participent__in=auth_user.objects.filter(username__startswith=roomname)))
+    rooms = allrooms.filter(participent=request.user)
+    if roomname == '':
+        rooms = Room.objects.filter(participent=request.user)
+    return render(request,'messagePage/message/sideBar/disc.html' , {'rooms': rooms})
 
 
 # time since function
@@ -658,7 +787,7 @@ def create_cours(request):
     
 def ouvrir_pdf(request):
     nom_du_fichier = "Calendrier-universitaire-2023-2024.pdf"
-    chemin_pdf = os.path.join(settings.STATIC_URL, 'pdfs', nom_du_fichier)
+    chemin_pdf = settings.STATIC_URL + 'PNP/pdfs/' + nom_du_fichier
     return JsonResponse({'url': chemin_pdf})
     
 def rejoindre_cours(request):

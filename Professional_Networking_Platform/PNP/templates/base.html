@@ -9,7 +9,7 @@
     
 </head>
 <body>
-    <nav class="navbar" style="z-index: 2;">
+    <nav class="navbar navnav" style="z-index: 2;">
         <div class="navbar-left">
             <a href="{% url 'PNP:firstPage' %}">
                 <img src="{% static 'PNP/img/logo.png' %}" class="logo">
@@ -25,11 +25,11 @@
         <div class="navbar-center">
         {% if auth_user.is_authenticated %}
             <ul>
-                <li><a href="{% url 'PNP:firstPage' %}" class="active-link"><img src="{% static 'PNP/img/home.png' %}"><span>Home</span></a></li>
-                <li><a href="{% url 'PNP:network' %}"><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
-                <li><a href="{% url 'PNP:messaging' %}"><img src="{% static 'PNP/img/message.png' %}"><span>Messaging</span></a></li>
-                <li><a href="{% url 'PNP:mettingPage' %}"><img src="{% static 'PNP/img/notification.png' %}"><span>Metting</span></a></li>
-                <li><a href="{% url 'PNP:classroom' %}"><img src="{% static 'PNP/img/jobs.png' %}"><span>classroom</span></a></li>
+                <li><a href="{% url 'PNP:firstPage' %}" class="{% if ishome %}active-link{% endif %}"><img src="{% static 'PNP/img/home.png' %}"><span>Home</span></a></li>
+                <li><a class="{% if isNetwork %}active-link{% endif %}" href="{% url 'PNP:network' %}"><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
+                <li><a class="{% if ismessaging %}active-link{% endif %}" href="{% url 'PNP:messaging' %}"><img src="{% static 'PNP/img/message.png' %}"><span>Messaging</span></a></li>
+                <li><a class="{% if ismetting %}active-link{% endif %}" href="{% url 'PNP:mettingPage' %}"><img src="{% static 'PNP/img/notification.png' %}"><span>Metting</span></a></li>
+                <li><a class="{% if isClassroom %}active-link{% endif %}" href="{% url 'PNP:classroom' %}"><img src="{% static 'PNP/img/jobs.png' %}"><span>classroom</span></a></li>
             </ul>
         {% else %}
         <h1>Guest Page</h1>
@@ -78,7 +78,7 @@
                 <form class="class="profile-menu-link"" style="display: flex;align-items: center;justify-content: space-between;"  action="{% url 'PNP:logout' %}" method="post" >
                  {% csrf_token %}
                     <img style="width: 35px;" src="{% static 'PNP/img/logout.png' %}">
-                <button type="submit"  class="profile-menu-link" >Logout</button>
+                <button type="submit"  class="profile-menu-link" style="padding: 5px;border-radius: 10px;border:none">Logout</button>
                 </form>
 
 

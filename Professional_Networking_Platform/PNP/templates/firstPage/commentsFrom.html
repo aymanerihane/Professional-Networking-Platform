@@ -67,7 +67,36 @@
 								<li><i class="fa fa-heart love"><span class="love_amt"> {{reply.number_of_likes}}</span></i></li>
 							</ul>
 						</div>
+						{% for reply2 in reply.replies.all %}
+				<li>
+					<!-- current #{user} avatar -->
+					<div class="user_avatar">
+						{% if reply2.user_id.photo_profile %}
+                    		<img style="width: 40px; height: 40px;object-fit: cover;" src="{{reply2.user_id.photo_profile.url}}">
+						{% else %}
+							<img src="/media/avatar/default.jpg">
+						{% endif %}
+					</div><!-- the comment body --><div class="comment_body">
+						<p><div class="replied_to"><p><a href="{% url 'PNP:profile' reply2.user_id.user.username %}"><span class="user">{{reply2.user_id.user.username}}:</span></a>{{reply.comment}}</p></div>{{reply2.comment}}</p>
+					</div>
 
+					<!-- comments toolbar -->
+					<div class="comment_toolbar">
+
+						<!-- inc. date and time -->
+						<div class="comment_details">
+							<ul>
+								<li><i class="fa fa-clock-o"></i> {{reply2.created_at|date:"H:i"}}</li>
+								<li><i class="fa fa-calendar"></i> {{reply2.created_at|date:"d/m/y"}}</li>
+								<li><i class="fa fa-pencil"></i> <span class="user"><a href="{% url 'PNP:profile' reply2.user_id.user.username %}"> <span class="user">{{reply2.user_id.user.username}}</span></a></span></li>
+							</ul>
+						
+
+					</div>
+
+
+				</li>
+				{% endfor %}
 					</div>
 
 

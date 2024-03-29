@@ -52,7 +52,14 @@
                 <li>
                     {{friend.user.username}}
                     <div>
-                        <a href="{% url 'PNP:addFriend' friend.user.username %}" class="btn">Delete</a>
+                        <div id="followBtn" style="display: inline-flex;">
+                        {% if friend.user.user.Visibility == 'private' %}
+                            {% include '../profilePage/followBtn.html' with friend=friend.user.username isFriend=True requestsend=requestsend is_private=True %}
+                        {% else %}
+                            {% include '../profilePage/followBtn.html' with friend=friend.user.username isFriend=True requestsend=requestsend is_private=False %}
+                        {% endif %}
+
+                        </div>
                         <a href="#" class="btn">Send Message</a>
                     </div>
                 </li>
@@ -62,4 +69,20 @@
         <h1>No friends</h1>
     {% endif %}
 </div>
+<script>
+document.addEventListener('click',(e)=> {
+        if(e.target.classList.contains('addFriend')) {
+            var followBtn = e.target.parentElement;
+            var friend = e.target.dataset.username;
+            console.log(friend);
+            $.ajax({
+                url: '/addFriend/'+ friend + '/',
+                type: 'GET',
+                success: function (response) {
+                    followBtn.innerHTML = response;
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

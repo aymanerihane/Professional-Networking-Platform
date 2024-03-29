@@ -9,4 +9,18 @@ class Room(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def create_room(user, name, description,participents):
+        room = Room.objects.create(
+            name=name,
+            description=description            
+        )
+        room.add_participent(user)
+        for participent in participents:
+            room.add_participent(participent)
+        room.save()
+
+    def add_participent(self, user):
+        self.participent.add(user)
+        self.save()
+
     

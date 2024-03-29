@@ -1,0 +1,32 @@
+{% load static %}
+{% if isMe %}
+    <div class="plus-div " id="addEducation" data-id="2">
+    <h2>Education</h2>
+    <i class="fa fa-plus plus-btn" data-id="2"></i>
+    </div>
+{% endif %}
+    {% if cv.educations %}
+    {% for education in cv.educations %} 
+    <div class="profile-desc-row">
+        <img src="{% static 'PNP/img/microsoft.png' %}">
+        <div>
+            <div class="plus-div " id="addEducation" data-id="2">
+            <h3>{{education.school}}</h3>
+            <i class="fa fa-trash deleteeduc plus-btn" data-id="{{education.id}}"></i>
+            </div>
+            <div class="plus-div " id="addEducation" data-id="{{education.id}}">
+            <b>{{education.degree}}</b>
+            <i class="fa fa-pencil editEduc plus-btn" data-id="{{education.id}}"></i>
+            </div>
+            <b>{{education.start_date}}-{{education.end_date}}</b>
+            <hr>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+        <div class="profile-desc-row">
+            <div>
+                <p>No education available</p>
+            </div>
+        </div> 
+    {% endif %}

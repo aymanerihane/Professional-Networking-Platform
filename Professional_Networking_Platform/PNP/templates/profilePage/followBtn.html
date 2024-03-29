@@ -16,15 +16,17 @@
     }
 </style>
 {% if requestsend %}
-    <p style="background-color: #efefef;color:black" class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >waitting to be accepted</p>
+
+    <p style="background-color: #efefef;color:black" data-username="{{friend}}" class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >waitting to be accepted</p>
 {% else %}
     {% if isFriend %}
-        <p style="background-color: #efefef;color:black"  class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >unfollow </p>
+    
+        <p style="background-color: #efefef;color:black" data-username="{{friend}}"  class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >unfollow </p>
     {% else %}
         {% if is_private %}
-            <p class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >send request</p>
+            <p data-username="{{friend}}" class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >send request</p>
         {% else %}
-                <p class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >Connect</p>
+                <p data-username="{{friend}}" class="primary-btn addFriend"><img src="{% static 'PNP/img/connect.png' %}" >Connect</p>
         {% endif %}
     {% endif %}
 {% endif %}

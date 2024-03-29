@@ -18,4 +18,27 @@
     <script src="{% static 'PNP/js/messaging.js'%}"></script>
 </body>
 </html>
+<script>
+document.addEventListener('click',(e)=> {
+    if (e.target.id == 'createRoom') {
+        getForm();
+        document.getElementById('modifie').style.display = 'block';
+    }else if (e.target.classList.contains('overlay')) {
+        document.getElementById('modifie').style.display = 'none';
+    }
+
+});
+
+function getForm(){
+    $.ajax({
+        url: '/roomCreateForm/',
+        type: 'GET',
+        success: function (response) {
+            var form = document.getElementById('form-container');
+            form.innerHTML = response;
+        }
+    });
+}
+
+</script>
 {% endblock %}

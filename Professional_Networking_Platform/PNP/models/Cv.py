@@ -17,6 +17,7 @@ class Cv(models.Model):
         print(company)
         # Add a new experience to the list of experiences
         new_experience = {
+            'id': len(self.experiences)+1,
             'company': company,
             'job_title': job_title,
             'start_date': start_date,
@@ -30,6 +31,7 @@ class Cv(models.Model):
     def add_education(self, school, degree, start_dateE, end_dateE):
         # Add a new education to the list of educations
         new_education = {
+            'id': len(self.educations)+1,
             'school': school,
             'degree': degree,
             'start_date': start_dateE,
@@ -37,6 +39,72 @@ class Cv(models.Model):
         }
         self.educations.append(new_education)
         self.save()
+
+#detete
+        
+    def delete_experience(self, id):
+        # Delete an experience from the list of experiences
+        for experience in self.experiences:
+            if experience['id'] == id:
+                self.experiences.remove(experience)
+                self.save()
+                break
+
+    def delete_education(self, id):
+        # Delete an education from the list of educations
+        for education in self.educations:
+            if education['id'] == id:
+                self.educations.remove(education)
+                self.save()
+                break
+
+    def delete_skills(self,skil):
+        # Load the list of skills from the JSON string
+        skills = json.loads(self.skills)
+
+        # Try to remove the specified skill from the list
+        if skil in skills:
+            skills.remove(skil)
+
+        # Convert the list back to a JSON string and save it
+        self.skills = json.dumps(skills)
+        self.save()
+
+    def delete_languages(self, lang):
+        # Load the list of languages from the JSON string
+        languages = json.loads(self.languages)
+
+        # Try to remove the specified language from the list
+        if lang in languages:
+            languages.remove(lang)
+
+        # Convert the list back to a JSON string and save it
+        self.languages = json.dumps(languages)
+        self.save()
+
+ #update
+    def update_etud(self, id, school, degree, start_dateE, end_dateE):
+        # Update an education in the list of educations
+        for education in self.educations:
+            if education['id'] == id:
+                education['school'] = school
+                education['degree'] = degree
+                education['start_dateE'] = start_dateE
+                education['end_dateE'] = end_dateE
+                self.save()
+                break
+    
+    def update_exp(self, id, company, job_title, start_date, end_date, description):
+        # Update an experience in the list of experiences
+        for experience in self.experiences:
+            if experience['id'] == id:
+                experience['company'] = company
+                experience['job_title'] = job_title
+                experience['start_date'] = start_date
+                experience['end_date'] = end_date
+                experience['description'] = description
+                self.save()
+                break
 
     @classmethod
     def skills_tojson(self, skills):

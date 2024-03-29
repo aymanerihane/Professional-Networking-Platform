@@ -12,7 +12,9 @@
                     <div>
                         <h1>{{post.post.user.user.username}}
                             Developer &middot; <span style="font-weight: lighter;">1st</span></h1>
-                        <small>Web Developer | Free-Lancer</small>
+                        {% if post.post.user.introduction %}
+                            <small>{{post.post.user.introduction}}</small>
+                        {% endif %}
                         <small>{{post.time_since}}</small>
                     </div>
                 </div>

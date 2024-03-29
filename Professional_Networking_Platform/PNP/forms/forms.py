@@ -1,5 +1,6 @@
 from django import forms
-from ..models import User, Post, Cv, Cours
+
+from ..models import User, Cv, Cours,Room
 from django.contrib.auth.models import User as auth_user
 from django.forms import SelectDateWidget
 
@@ -11,6 +12,7 @@ class MonthYearSelectWidget(SelectDateWidget):
 
 # signUp2
 class SignUpForm(forms.ModelForm):
+    introduction = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Introduction'}))
     class Meta:
         model = User
         fields = ['introduction','phone', 'address', 'city', 'country', 'cv', 'photo_profile', 'Visibility']
@@ -21,6 +23,7 @@ class SignUpForm(forms.ModelForm):
         self.fields['address'].widget.attrs['placeholder'] = 'Address'
         self.fields['city'].widget.attrs['placeholder'] = 'City'
         self.fields['country'].widget.attrs['placeholder'] = 'Country'
+
 
 # signUp3
 class CVForm(forms.ModelForm):
@@ -68,21 +71,6 @@ class CVForm(forms.ModelForm):
             'languages': forms.TextInput(attrs={'placeholder': 'Languages(separeted by , ex: English, French, Spanish)'}),
         }
 
-# new post
-class NewPost(forms.ModelForm):
-    pass
-    # content = forms.CharField(label='content')
-    # class Meta:
-    #     model = Post
-    #     fields = ['content','media','link']
-
-    #     widgets = {
-    #         'content': forms.Textarea(attrs={'placeholder': 'content'}),
-    #         'media': forms.ClearableFileInput(attrs={'multiple': True, 'accept': 'image/*,video/*'}),
-    #         'link': forms.TextInput(attrs={'placeholder': 'link'}),
-    #     }
-
-
 
 
 
@@ -108,6 +96,57 @@ class EditProfile(forms.ModelForm):
         'country': forms.TextInput(attrs={'placeholder': 'Country'}),
         'photo_profile': forms.FileInput(attrs={'accept': 'image/*'}),
         }
+    
+#edit education
+class EditEducation(forms.ModelForm):
+    school = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'School'}))
+    degree = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Degree'}))
+    start_dateE = forms.CharField(required=False,
+        widget=forms.SelectDateWidget(years=range(1980, 2025), months={
+            1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
+            5: 'Mai', 6: 'Juin', 7: 'Juillet', 8: 'Août',
+            9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'
+        }, empty_label=("Choisir l'année", "Choisir le mois", "Jour")),
+        )
+    end_dateE = forms.CharField(required=False,
+        widget=forms.SelectDateWidget(years=range(1980, 2025), months={
+            1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
+            5: 'Mai', 6: 'Juin', 7: 'Juillet', 8: 'Août',
+            9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'
+        }, empty_label=("Choisir l'année", "Choisir le mois", "Jour")),
+
+    )
+    class Meta:
+        model = Cv
+        fields = ['school', 'degree', 'start_dateE', 'end_dateE']
+        widgets = {
+            'school': forms.TextInput(attrs={'placeholder': 'School'}),
+            'degree': forms.TextInput(attrs={'placeholder': 'Degree'}),
+        }
+#edit experience
+class EditExperience(forms.ModelForm):
+    company = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Company'}))
+    job_title = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'job_title'}))
+    start_date = forms.CharField(required=False,max_length=100,
+        widget=MonthYearSelectWidget(
+            years=range(1980, 2025),
+            empty_label=("Choose Year", "Choose Month", "Jour"),
+        ),
+    )
+    end_date = forms.CharField(required=False,max_length=100,
+        widget=forms.SelectDateWidget(years=range(1980, 2025), months={
+            1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
+            5: 'Mai', 6: 'Juin', 7: 'Juillet', 8: 'Août',
+            9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'
+        }, empty_label=("Choisir l'année", "Choisir le mois", "Jour")),
+        
+    )
+    description = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Experience description'}))
+    class Meta:
+        model = Cv
+        fields = ['company', 'job_title', 'start_date', 'end_date', 'description']
+
+        
 # edit cv 
 class EditCV(forms.ModelForm):
     # if the cv is already exist show it avec le nom du fichier
@@ -201,3 +240,13 @@ class CoursForm(forms.ModelForm):
         model = Cours
         fields = ['name',  'class_name','salle', 'subject']
         
+
+
+class RoomForm(forms.ModelForm):
+    class Meta:
+        model = Room
+        fields = ['name', 'description', 'participent']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Name'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Description'}),
+        }

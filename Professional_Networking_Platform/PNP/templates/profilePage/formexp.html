@@ -50,7 +50,7 @@
         background-color: #0056b3;
     }
 </style>
-<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post"enctype="multipart/form-data" action="{% url 'PNP:formProfile' id auth_user.username %}">
+<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post"enctype="multipart/form-data" action="{% url 'PNP:formExperience' id auth_user.username %}">
     {% csrf_token %}
     {% for field in form %}
         <div class="fieldWrapper">

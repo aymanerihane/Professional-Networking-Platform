@@ -1,5 +1,38 @@
+        
+        <style>
+        .overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+#form-container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    padding: 20px;
+    background: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+#modifie{
+    display: none;
+
+}
+        </style>
         <div class="sidebar">
             {% include './search.html' %}
             {% include './disc.html' %}
-            
+            <div id="modifie">
+            <div class="overlay" style="visibility: visible;"></div>
+            <div id="form-container"></div>
+        </div>
         </div>

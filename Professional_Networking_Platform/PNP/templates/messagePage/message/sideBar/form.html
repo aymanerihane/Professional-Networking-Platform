@@ -8,6 +8,7 @@
         margin: 0;
         background-color: #f8f9fa;
         font-family: Arial, sans-serif;
+        flex-direction: column;
     }
 
     form {
@@ -23,15 +24,17 @@
     textarea {
         resize: none;
         width: 100%;
+        max-height: 100px;
     }
 
-    input, button, select, textarea {
+    input:not(.profile-menu-link), button:not(.profile-menu-link), select, textarea {
         padding: 10px;
         border: 1px solid #ced4da;
         border-radius: 5px;
         font-size: 16px;
         transition: all 0.3s ease;
         width: 100%;
+        margin: 10px;
     }
 
     input:focus, select:focus, textarea:focus {
@@ -40,7 +43,7 @@
         box-shadow: 0 0 5px #007bff;
     }
 
-    button {
+    button:not(.profile-menu-link) {
         background-color: #007bff;
         color: white;
         border: none;
@@ -50,7 +53,7 @@
         background-color: #0056b3;
     }
 </style>
-<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post"enctype="multipart/form-data" action="{% url 'PNP:formProfile' id auth_user.username %}">
+<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post"  action="{% url 'PNP:roomCreateForm' %}">
     {% csrf_token %}
     {% for field in form %}
         <div class="fieldWrapper">

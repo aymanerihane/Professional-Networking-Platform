@@ -104,7 +104,8 @@ body {
   .card {
     border: 0.0625rem solid #dadce0;
     height: 21.355rem;
-    width: 20rem;
+    min-width: 20rem;
+    flex: 1;
     margin-right: 33px;
     margin-bottom: 20px;
     text-align: left;

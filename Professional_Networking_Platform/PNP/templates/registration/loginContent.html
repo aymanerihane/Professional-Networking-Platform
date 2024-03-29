@@ -31,6 +31,7 @@
         {{form.errors}}
     {% endif %}
       <input class="btn solid" type="submit" value="Login" />
+      <a href="#">forget password?</a>
       
      </form>
      <form action="#" class="sign-up-form">
@@ -48,6 +49,7 @@
        <input type="password" placeholder="Password" />
       </div>
       <input type="submit" class="btn" value="Sign up" />
+      {% comment %}
       <p class="social-text">Or Sign up with social platforms</p>
       <div class="social-media">
        <a href="#" class="social-icon">
@@ -62,7 +64,7 @@
        <a href="#" class="social-icon">
         <i class="fab fa-linkedin-in"></i>
        </a>
-      </div>
+      </div> {% endcomment %}
      </form>
     </div>
    </div>
@@ -73,10 +75,11 @@
       <h3>New here ?</h3>
       <p>
         Online tutor Finder provides students the best way to reach out the best tutor for them. 
-        Know more about us <a href="file:///G:/AGILE%20workshop/Website/Home%20Page/index.html">here</a>.
+        Know more about us.
       </p>
       <a href="{% url 'PNP:signUp' %}" style="padding: 10px 20px;margin-top: 20px;text-decoration: none;" class="btn transparent" id="sign-up-btn">Sign up</a>
      </div>
+      
      <img src="{% static 'PNP/img/loginForm/log.svg' %}" class="image" alt="" />
     </div>
     <div class="panel right-panel">
@@ -84,7 +87,7 @@
       <h3>One of us?</h3>
       <p>
         Online tutor Finder provides students the best way to reach out the best tutor for them. 
-        Know more about us <a href="file:///D:/Agile%20Workshop/Reveal/index1.html">here</a>.
+        Know more about us.
       </p>
       <button class="btn transparent" id="sign-in-btn">Sign in</button>
      </div>

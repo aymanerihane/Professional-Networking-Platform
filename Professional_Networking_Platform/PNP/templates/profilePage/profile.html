@@ -52,7 +52,7 @@
         <div class="profile-main">
             <div class="profile-container">
                 <img src="{% static 'PNP/img/Bgcs/backGround1.jpg' %}"
-                    width="100%" class="cover-img">
+                    width="100%" height="300px" class="cover-img">
                 <div class="profile-container-inner">
                     {% if the_user.user.photo_profile %}
                     <img class="profile-pic" style="object-fit: cover;height: 100px;width: 95px;" src="{{ the_user.user.photo_profile.url }}" alt="">
@@ -60,7 +60,7 @@
                     <img class="profile-pic" src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}
                     <div class="plus-div" id="addAbout" data-id="6">
-                        <h1>{{the_user.username}}</h1>
+                        <h1>{{the_user.username}} · <small style="opacity:0.5;font-weight: 10;font-size:26px">{{the_user.user.Visibility}} account</small></h1>
                         <i class="fa fa-pencil edit-btn plus-btn" data-id="6"></i>
                     </div>
                     <b>{{the_user.user.introduction}}</b>
@@ -71,7 +71,7 @@
                     {% if not isMe  and auth_user.is_authenticated %}
                     <div class="profile-btn">
                         <div id="followBtn" style="display: inline-flex;">
-                            {% include './followBtn.html' %}
+                            {% include './followBtn.html' with friend=the_user.username %}
                         </div>
                         <a href=""><img src="{% static 'PNP/img/message.png' %}" alt="">Chat</a>
                         
@@ -93,92 +93,18 @@
                 {% comment %} <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a> {% endcomment %}
             </div>
             
-            <div class="profile-description">
-            {% if isMe %}
-                <div class="plus-div" id="addExperience" data-id="1">
-                <h2>Experience</h2>
-                <i class="fa fa-plus plus-btn" data-id="1"></i>
-                </div>
-            {% endif %}
-            {% if cv.experiences %}
-                {% for experience in cv.experiences %}
-                <div class="profile-desc-row">
-                    <img src="{% static 'PNP/img/microsoft.png' %}">
-                    <div>
-                        <h3>{{experience.job_title}}</h3>
-                        <b>{{experience.company}}</b>
-                        <b>{{experience.start_date}}-{{experience.end_date}}</b>
-                        <p>{{experience.description}}</p>
-                        <hr>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-            <div class="profile-desc-row">
-                <div>
-                    <p>No experience available</p>
-                </div>
+            <div class="profile-description experienceCont">
+            
+            {% include './experience.html'%}
             </div>
-            {% endif %}
+            <div class="profile-description educationCont">
+            {% include './education.html'%}
             </div>
-            <div class="profile-description">
-            {% if isMe %}
-                <div class="plus-div " id="addEducation" data-id="2">
-                <h2>Education</h2>
-                <i class="fa fa-plus plus-btn" data-id="2"></i>
-                </div>
-            {% endif %}
-                {% if cv.educations %}
-                {% for education in cv.educations %} 
-                <div class="profile-desc-row">
-                    <img src="{% static 'PNP/img/microsoft.png' %}">
-                    <div>
-                        <h3>{{education.school}}</h3>
-                        <b>{{education.degree}}</b>
-                        <b>{{education.start_date}}-{{education.end_date}}</b>
-                        <hr>
-                    </div>
-                </div>
-                {% endfor %}
-                {% else %}
-                    <div class="profile-desc-row">
-                        <div>
-                            <p>No education available</p>
-                        </div>
-                    </div> 
-                {% endif %}
+            <div class="profile-description skillCont">
+            {% include './skills.html'%}
             </div>
-            <div class="profile-description">
-            {% if isMe %}
-                <div class="plus-div" id="addSkills" data-id="3">
-                <h2>Skills</h2>
-                <i class="fa fa-plus plus-btn" data-id="3"></i>
-                </div>
-            {% endif %}
-                {% if cv.skills %}
-               <div> {% for skill in cv.skills %}
-                    <div class="skill-btn">{{skill}}</div>{% if not forloop.last %} {% endif %}
-                    {% endfor %}
-               </div>
-                {% else %}
-            <p>No skills available</p>
-        {% endif %}
-            </div>
-            <div class="profile-description">
-            {% if isMe %}
-                <div class="plus-div" id="addlanguage" data-id="4">
-                <h2>Languages</h2>
-                <i class="fa fa-plus plus-btn" data-id="4"></i>
-                </div>
-            {% endif %}
-                {% if cv.languages %}
-                <div> {% for lang in cv.languages %}
-                    <div class="lang-btn">{{lang}}</div>{% if not forloop.last %} {% endif %}
-                    {% endfor %}
-               </div>
-               {% else %}
-                <p>No languages available</p>
-            {% endif %}
+            <div class="profile-description langCont">
+            {% include './langs.html'%}
             </div>
                 
             <div class="profile-description">
@@ -200,7 +126,7 @@
         {% include './Post.html' %}        
         </div>
         <div id="modifie">
-            <div class="overlay"></div>
+            <div class="overlay" style="visibility: visible;"></div>
             <div id="form-container"></div>
         </div>
         {% include "../firstPage/comments.html" %}
@@ -209,17 +135,21 @@
         {% if isMe %}
             <div class="sidebar-ad">
                 <h1>Request</h1>
-                {% for req in request_recieved %}
-                <div class="sidebar-people-row">
-                    <img src="{{req.sender.photo_profile}}">
-                    <div>
-                        <h2>{{req.sender.user.username}}</h2>
-                        <p>{{req.sender.introduction}}</p>
-                        <a href="{% url 'PNP:accept_request' req.sender.user.username %}">accepted</a>
-                        <a href="{% url 'PNP:reject_request' req.sender.user.username %}">rejected</a>
+                {% if request_recived %}
+                    {% for req in request_recieved %}
+                    <div class="sidebar-people-row">
+                        <img src="{{req.sender.photo_profile}}">
+                        <div>
+                            <h2>{{req.sender.user.username}}</h2>
+                            <p>{{req.sender.introduction}}</p>
+                            <a href="{% url 'PNP:accept_request' req.sender.user.username %}">accepted</a>
+                            <a href="{% url 'PNP:reject_request' req.sender.user.username %}">rejected</a>
+                        </div>
                     </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <p>No request</p>
+                {% endif %}
             </div>
         {% endif %}
                 {% if auth_user.is_authenticated %}
@@ -236,13 +166,13 @@
                             <h2>{{sugg.user.username}}</h2>
                             <p>{{sugg.user.user.introduction}}</p>
                             
-                                <a href="{% url 'PNP:addFriend' sugg.user.username %}">
+                                <div id="followBtn" style="display: inline-flex;">
                                 {% if sugg.user.user.Visibility == 'private' %}
-                                    send request
+                                    {% include './followBtn.html' with friend=sugg.user.username isFriend=isFriend requestsend=requestsend is_private=True %}
                                 {% else %}
-                                    Connect
+                                    {% include './followBtn.html' with friend=sugg.user.username isFriend=isFriend requestsend=requestsend is_private=False %}
                                 {% endif %}
-                                </a>
+                                </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -269,11 +199,62 @@
     <script src={% static 'PNP/js/formProfile.js' %}></script>
     <script>
 
+    //delete experience and education
+    document.addEventListener('click',(e)=> {
+        var expContainer = document.querySelector('.experienceCont');
+        var educContainer = document.querySelector('.educationCont');
+        var skillContainer = document.querySelector('.skillCont');
+        var langContainer = document.querySelector('.langCont');
+        console.log(expContainer)
+        if (e.target.classList.contains('deleteexp')) {
+            var id = e.target.dataset.id;
+            $.ajax({
+                url: '/delete_experience/' + id + '/'+ '{{the_user.username}}' + '/',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    expContainer.innerHTML = response;
+                }
+            });
+        }else if (e.target.classList.contains('deleteeduc')) {
+            var id = e.target.dataset.id;
+            $.ajax({
+                url: '/delete_education/' + id + '/'+ '{{the_user.username}}' + '/',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    educContainer.innerHTML = response;
+                }
+            });
+        }else if (e.target.classList.contains('skilldelete')) {
+            var id = e.target.dataset.id;
+            $.ajax({
+                url: '/delete_skill/' + id + '/'+ '{{the_user.username}}' + '/',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    skillContainer.innerHTML = response;
+                }
+            });
+        }else if (e.target.classList.contains('langdelete')) {
+            var id = e.target.dataset.id;
+            $.ajax({
+                url: '/delete_language/' + id + '/'+ '{{the_user.username}}' + '/',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    langContainer.innerHTML = response;
+                }
+            });
+        }
+    });
+
+
     //delete post
     document.addEventListener('click',(e)=> {
         var postContainer = document.getElementById('postDesc');
         console.log(postContainer)
-        if (e.target.classList.contains('fa-trash')) {
+        if (e.target.classList.contains('deletePost')) {
             var id = e.target.dataset.id;
             $.ajax({
                 url: '/deletePost/' + id + '/',
@@ -284,10 +265,10 @@
                 }
             });
         }else if(e.target.classList.contains('addFriend')) {
-            var username = '{{the_user.username}}';
-            var followBtn = document.getElementById('followBtn');
+            var followBtn = e.target.parentElement;
+            var friend = e.target.dataset.username;
             $.ajax({
-                url: '/addFriend/' + username ,
+                url: '/addFriend/' + friend + '/',
                 type: 'GET',
                 success: function (response) {
                     followBtn.innerHTML = response;
@@ -312,21 +293,48 @@
         }
         document.addEventListener('click',(e)=> {
             console.log(e.target);
-            var username='{{user.username}}';
+            var username='{{auth_user.username}}';
             if ((e.target.classList.contains('fa-plus')) || (e.target.classList.contains('fa-pencil'))) {
                 var id = e.target.dataset.id;
                 document.getElementById('modifie').style.display = 'block';
-                getFormData(id,username);
+                if(e.target.classList.contains('editEduc')){
+                    geteducationForm(id,username);
+                }else if(e.target.classList.contains('editExp')){
+                    getExperienceForm(id,username);
+                
+                }else{
+                    getFormData(id,username);
+                }
             }else if (e.target.classList.contains('overlay')) {
                 document.getElementById('modifie').style.display = 'none';
             }
 
         });
 
-
+        function geteducationForm(id,username){
+            $.ajax({
+                url: '/formEducation/' + id + '/'+username+'/',
+                type: 'GET',
+                success: function (response) {
+                    console.log("secess")
+                    var form = document.getElementById('form-container');
+                    form.innerHTML = response;
+                }
+            });
+        }
+        function getExperienceForm(id,username){
+            $.ajax({
+                url: '/formExperience/' + id + '/'+username+'/',
+                type: 'GET',
+                success: function (response) {
+                    console.log("secess")
+                    var form = document.getElementById('form-container');
+                    form.innerHTML = response;
+                }
+            });
+        }
 
         function getFormData(id,username){
-            console.log("test")
             $.ajax({
                 url: '/formProfile/' + id + '/'+username+'/',
                 type: 'GET',
@@ -447,24 +455,7 @@ function fetchFormComment(itemId,type) { //type = 1 is a post and type = 2 is a 
         // gsap
         var posts = document.querySelectorAll('.post');
         var right_sidebar = document.querySelector('.right-sidebar');
-        var left_sidebar = document.querySelector('.left-sidebar');
-        var create_post = document.querySelector('.create-post');
 
-        gsap.from(create_post, {
-            opacity: 0,
-            y: -100,
-            duration: 1,
-            ease: "power2.Out",
-            delay: 0.5,
-        })
-
-        gsap.from(left_sidebar, {
-            opacity: 0,
-            x: -100,
-            duration: 1,
-            ease: "power2.Out",
-            delay: 0.5,
-        })
 
         gsap.from(right_sidebar, {
             opacity: 0,

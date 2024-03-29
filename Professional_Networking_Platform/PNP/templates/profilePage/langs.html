@@ -1,0 +1,15 @@
+{% load static %}
+{% if isMe %}
+    <div class="plus-div" id="addlanguage" data-id="4">
+    <h2>Languages</h2>
+    <i class="fa fa-plus plus-btn" data-id="4"></i>
+    </div>
+{% endif %}
+    {% if cv.languages %}
+    <div> {% for lang in cv.languages %}
+        <div style="position:relative" class="lang-btn"><i style="position:absolute;transform: translate(50%,-100%);top: 0;right: 0;" class="fa fa-trash langdelete plus-btn" data-id="{{lang}}"></i>{{lang}}</div>{% if not forloop.last %} {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No languages available</p>
+{% endif %}
