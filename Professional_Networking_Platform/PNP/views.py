@@ -666,8 +666,11 @@ def rejoindre_cours(request):
         code = request.POST.get('code')  # Récupérer le code du cours depuis le formulaire
         try:
             cours = Cours.objects.get(code=code)  # Vérifier si un cours avec ce code existe
-            #return redirect('detail_cours', cours_id=cours.id)  # Rediriger vers la page du cours
-            return redirect('/classroom/detail_cours.html')
+            
+            cours.students.add(request.user)
+            cours.save()
+            return redirect('detail_cours', cours_id=cours.id)  # Rediriger vers la page du cours
+            #return redirect('/classroom/detail_cours.html')
         except Cours.DoesNotExist:
             # Si le cours n'existe pas, renvoyez l'utilisateur à la même page avec un message d'erreur
             return render(request, 'classroom/rejoindre_cours.html', {'error_message': 'Code de cours invalide'})
@@ -675,5 +678,34 @@ def rejoindre_cours(request):
         return render(request, 'classroom/rejoindre_cours.html')
 
     
-def detail_cours(request):
-     return render(request, 'classroom/detail_cours.html')
+
+ 
+def detail_cours(request, code):
+    # Obtenir le cours correspondant au code fourni dans l'URL
+    cours = get_object_or_404(Cours, code=code)
+    return render(request, 'classroom/detail_cours.html', {'cours': cours})
+
+def students_page(request, code):
+    # Retrieve the specific course based on the code provided in the URL
+    cours = get_object_or_404(Cours, code=code)
+
+    # Retrieve the students associated with this course
+    students = cours.students.all()
+
+    # Retrieve the teacher associated with this course and their username
+    teacher_username = cours.teacher.username
+
+    context = {
+        'students': students,
+        'teacher_username': teacher_username,
+        'cours': cours
+    }
+
+    # Render the HTML page with the real student and teacher data, along with course data
+    return render(request, 'classroom/students_page.html', context)
+
+def mes_cours(request):
+    # Récupérer les cours créés par l'utilisateur actuellement connecté
+    cours_utilisateur = Cours.objects.filter(teacher=request.user)
+    context = {'cours_utilisateur': cours_utilisateur}
+    return render(request, 'classroom/myCourses.html', context)

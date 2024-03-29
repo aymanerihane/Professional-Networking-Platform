@@ -5,8 +5,8 @@ from .teacher import Teacher
 #################
 # Class model #
 class Class(models.Model):
-    id = models.AutoField(primary_key=True)
-    Name= models.CharField(max_length=100, default='')
+    class_id = models.AutoField(primary_key=True)
+    class_name= models.CharField(max_length=100, default='')
     Degree = models.TextField(max_length=100, default='')
     
     #

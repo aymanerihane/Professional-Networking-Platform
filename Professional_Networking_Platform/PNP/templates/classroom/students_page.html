@@ -14,6 +14,7 @@
       href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   </head>
   <body>
     <nav class="open">
@@ -32,7 +33,7 @@
         <div class="sidebar-content">
           <ul class="lists">
             <li class="list">
-              <a href="/classroom" class="nav-link">
+              <a href="/classroom/" class="nav-link">
                 <i class='bx bx-home-alt'></i>
                 <span class="link">Acceuil</span>
               </a>
@@ -50,7 +51,7 @@
               </a>
             </li>
             <li class="list">
-              <a href="#" class="nav-link">
+              <a href="mes_cours/" class="nav-link">
                 <i class='bx bxs-graduation'></i>
                 <span class="link">A corriger</span>
               </a>
@@ -89,7 +90,7 @@
           <ul>
               <li><a href="">Flux</a></li>
               <li><a href="">Travaux et Devoir</a></li>
-              <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
+              <li><a href="">Etudiant</a></li>
               <li><a href="">Notes</a></li>
           </ul>
       </div>
@@ -97,72 +98,89 @@
 
 
 
-    
-    <div class="containerBase">
-      <div class="container" id="container1">
-           <!-- Vérifiez si le nom du cours existe -->
-           {% if cours.name %}
-           <h2 class="subject-name">{{ cours.name }}</h2>
-           {% else %}
-           <h2 class="subject-name">Nom du cours inconnu</h2>
-           {% endif %}
-           
-           <!-- Vérifiez si la classe du cours existe -->
-           {% if cours.class_name %}
-           <p class="section">{{ cours.class_name }}</p>
-           {% else %}
-           <p class="section">Classe inconnue</p>
-           {% endif %}
-      </div>
-      
-      <div class="container" id="container2">
-          <h4>Code du Cour: </h4>
-          <p>{{cours.code}}</p>
-      </div>
+ <div class="containerBase">   
+  <div class="container1">
+    <div class="container1">
+      <div class="add-person-icon">
+        <i class="fas fa-user-plus"></i>
+    </div>
+    <h2>Enseignants</h2>
+    <hr>
+    <br>
+    <div>
+    <span class="user-icon" style="color: #00838D">{{ cours.teacher.username |slice:":1"}}</span>
+    <span>{{ cours.teacher.username }}</span>
+   </div>
+   <br>
   </div>
-      
-      
-      
-    <script >const navBar = document.querySelector("nav"),
-      menuBtns = document.querySelectorAll(".menu-icon"),
+  <div class="container1">
+    <div class="add-person-icon">
+      <i class="fas fa-user-plus"></i>
+  </div>
+    <h2>Étudiants</h2>
     
-    menuBtns.forEach((menuBtn) => {
-      menuBtn.addEventListener("click", () => {
-        navBar.classList.toggle("open");
-      });
-    });
+    <hr>
+    <br>
+    {% if students %}
+        {% for student in students %}
+            <div>
+                <span class="user-icon" style="color: #00838D">{{ cours.teacher.username |slice:":1"}}</span>
+                <span>{{ student.username }}</span>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <p>Aucun étudiant inscrit pour le moment.</p>
+    {% endif %}
 
    
-    </script>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+</div>
+
+ </div>
+
+<script >
+  const navBar = document.querySelector("nav"),
+  menuBtns = document.querySelectorAll(".menu-icon"),
+
+menuBtns.forEach((menuBtn) => {
+  menuBtn.addEventListener("click", () => {
+    navBar.classList.toggle("open");
+  });
+});
+
+function goBack() {
+  window.history.back();
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-    text-decoration: none;
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
+text-decoration: none;
 }
 
 body{
-    min-height: 100vh;
-    background-color: rgb(255, 255, 255);
-    
+min-height: 100vh;
+background-color: rgb(255, 255, 255);
+
 }
 
 header{
-    position: fixed;
-    top: 25px;
-    
-    right: 0;
-    padding: 0px 7%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 2px solid #00838D;
-    z-index: 999;
-   
+position: fixed;
+top: 25px;
+
+right: 0;
+padding: 0px 7%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 2px solid #00838D;
+z-index: 999;
+
 
 }
 
@@ -170,57 +188,57 @@ header{
 
 
 header .menuHeader ul{
-    list-style: none;
-    
+list-style: none;
+
 }
 
 header .menuHeader ul li{
-    position: relative;
-    float: left;
-    
+position: relative;
+float: left;
+
 }
 
 
 header .menuHeader ul li a{
-    font-size: 20px;
-    padding: 23px 20px;
-    color: #333;
-    display: flex;
-    align-items: center;
-    transition: 0.5s color ease;
-    position: relative;
-    font-weight:400;
+font-size: 20px;
+padding: 23px 20px;
+color: #333;
+display: flex;
+align-items: center;
+transition: 0.5s color ease;
+position: relative;
+font-weight:400;
 }
 
 
 
 
 .material-symbols-outlined{
-    margin-left: 5px;
+margin-left: 5px;
 }
 
 
 
 header .menuHeader ul li a:hover{
-   
-    transition: 0.4s;
-    color: #00838D;
-  }
 
-  header .menuHeader ul li a:after{
-    content: "";
-    position: absolute;
-    background-color: #00838D;
-    height: 4px;
-    width: 0%;
-    border-radius: 10px;
-    right: 0;
-    bottom: 0;
-    transition: 0.4s;
+transition: 0.4s;
+color: #00838D;
+}
+
+header .menuHeader ul li a:after{
+content: "";
+position: absolute;
+background-color: #00838D;
+height: 4px;
+width: 0%;
+border-radius: 10px;
+right: 0;
+bottom: 0;
+transition: 0.4s;
 }
 
 header .menuHeader ul li a:hover:after{
-    width:98%;
+width:98%;
 }
 
 
@@ -241,22 +259,22 @@ z-index: -4;
 }
 
 header .menuHeader ul li ul li ul{
-    left: 240px;
-    top: 0;
+left: 240px;
+top: 0;
 }
 
 header .menuHeader ul li ul li{
-    width: 100%;
-   
-    padding: 10px auto;
-    
+width: 100%;
+
+padding: 10px auto;
+
 }
 
 
 
 
 #menu-bar{
-    display: none;
+display: none;
 }
 
 
@@ -266,86 +284,80 @@ header .menuHeader ul li ul li{
 /* Media Sorguları */
 
 @media(max-width: 1170px) {
-  
+
 header{
-    padding: 20px;
-   
+padding: 20px;
+
 }
 
 
 
 header .menuHeader{
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: #ffffff;
-   border-top: 1px solid black;
-   display: none;
+position: absolute;
+top: 100%;
+left: 0;
+right: 0;
+background-color: #ffffff;
+border-top: 1px solid black;
+display: none;
 }
 
 header .menuHeader ul li{
-    width: 100%;
-    background-color: rgb(255, 255, 255);
-    
+width: 100%;
+background-color: rgb(255, 255, 255);
+
 }
 
 header .menuHeader ul li ul{
-   position:static;
-   width: 100%;
-   
+position:static;
+width: 100%;
+
 }
 header .menuHeader ul li ul li{
-    background-color: rgba(232, 232, 232, 0.437);
-    backdrop-filter: blur(5px);
-    
- }
+background-color: rgba(232, 232, 232, 0.437);
+backdrop-filter: blur(5px);
 
- header .menuHeader ul li ul li ul li{
-    background-color: rgba(214, 214, 214, 0.886);
-    backdrop-filter: blur(5px);
-    
- }
+}
 
- #menu-bar:checked ~ .menuHeader{
-    display: initial ;
- }
+header .menuHeader ul li ul li ul li{
+background-color: rgba(214, 214, 214, 0.886);
+backdrop-filter: blur(5px);
 
- #menuicon{
-    padding-top: 10px;
-    font-size: 50px;
-    color:#00838D;
+}
+
+#menu-bar:checked ~ .menuHeader{
+display: initial ;
+}
+
+#menuicon{
+padding-top: 10px;
+font-size: 50px;
+color:#00838D;
 }
 
 }
-      .containerBase{
-        margin-top: 200px;
-        margin-left:400px;
-        
-        
-    }
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-        border-radius: 10px;
-        
-    }
-    #container1 {
-        background-color: #d9d9d9;
-        height: 150px;
-        width: 900px;
-        text-align: center;
-        
-    }
-    #container2 {
-        width: 20%;
-        height:200px;
-       
-        border: 1px solid black;
-    }
-    </style>
-  </body>
-</html>
+  .containerBase{
+    margin-top: 200px;
+    margin-left:400px;
+    
+    
+}
+
+.add-person-icon {
+  width: 29px;
+  height: 30px;
+  background-color: #00838D; /* Change the background color as needed */
+  border-radius: 50%; /* Makes the div a circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float:right;
+}
+
+.add-person-icon i {
+  color: #fff; /* Change the icon color as needed */
+  font-size: 16px; /* Change the icon size as needed */
+  
+}
+</style>
+</body>

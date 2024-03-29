@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost
+from .views import loginRed,signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, room, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -55,9 +55,10 @@ urlpatterns = [
     #path('ouvrir-pdf/', ouvrir_pdf, name='ouvrir-pdf'),
     
     path('classroom/rejoindre_cours/', rejoindre_cours, name='rejoindre_cours'),  # Route pour rejoindre un cours
-    path('classroom/detail_cours.html', detail_cours, name='detail_cours'), # Route pour les détails du cours
-    
+    path('classroom/detail_cours/<str:code>/', detail_cours, name='detail_cours'),
+    path('classroom/detail_cours/<str:code>/students/', students_page, name='students_page'),
    
+   path('mes_cours/', mes_cours, name='mes_cours'),
     #search
     path('search/<str:username>/', search , name='search'),
 ] + static(settings.STATIC_URL)

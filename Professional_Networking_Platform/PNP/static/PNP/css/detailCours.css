@@ -69,6 +69,7 @@ nav.open .sidebar {
   padding: 14px 12px;
   border-radius: 8px;
   text-decoration: none;
+  
 }
 .lists .nav-link:hover {
   background-color: #00838D;
@@ -78,6 +79,7 @@ nav.open .sidebar {
   font-size: 20px;
   color: #707070;
 }
+
 .nav-link .link {
   font-size: 16px;
   color: #707070;
@@ -87,22 +89,8 @@ nav.open .sidebar {
 .lists .nav-link:hover .link {
   color: #fff;
 }
-.overlay {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  height: 1000vh;
-  width: 200%;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.4s ease;
-  background: rgba(0, 0, 0, 0.3);
-}
-nav.open ~ .overlay {
-  opacity: 1;
-  left: 260px;
-  pointer-events: auto;
-}
+
+
 /* styles.css */
 .user-icon {
   width: 20px;
@@ -114,14 +102,16 @@ nav.open ~ .overlay {
   align-items: center;
   font-size: 15px;
   font-weight: bold; /* Optionnel : pour mettre en gras la lettre */
+  
 }
 
 .user-icon-letter {
   color: #fff;
+  
 }
 i{
   font-size: 21px;
   margin-right: 5px;
   vertical-align: unset; 
-  color: #00838D
+  color: #00838D;
 }

@@ -13,8 +13,14 @@ class Cours(models.Model):
     salle = models.CharField(max_length=50, default='')
     subject = models.CharField(max_length=100, default='')
     code = models.CharField(max_length=10, unique=True, blank=True, editable=False)
-    
-   
+    #student=models.ForeignKey(User, on_delete=models.CASCADE, related_name='student', editable=False)
+    students = models.ManyToManyField(User, related_name='student', blank=True, editable=False)
+
+    def get_teacher_username(self):
+        return self.teacher.username
+
+    def get_students_usernames(self):
+        return [student.username for student in self.students]
     
 
     def generate_code(self):
