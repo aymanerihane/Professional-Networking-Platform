@@ -1,83 +1,11 @@
-{% extends "base.html" %}
+{% extends "sidebar.html" %}
 {% load static %}
 
 
 
-{% block content %}
-
-<link
-      href="{% static 'PNP/css/rooms.css' %}"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="{% static 'PNP/css/detailCours.css' %}"/>
-    <nav style="top: 100px; z-index: 9999;">
-        <div class="logo">
-          <i class="bx bx-menu menu-icon" style="color:black">ici</i>
-          <i class='bx bxs-graduation' ></i>
-          <span class="logo-name">classroom</span>
-        </div>
-        <div class="sidebar">
-          <div class="logo">
-            <i class="bx bx-menu menu-icon"></i>
-            <i class='bx bxs-graduation' ></i>
-            <span class="logo-name">classroom</span>
-          </div>
+{% block classroomContent %}
   
-          <div class="sidebar-content">
-            <ul class="lists">
-              <li class="list">
-                <a href="/classroom/" class="nav-link">
-                  <i class='bx bx-home-alt'></i>
-                  <span class="link">Acceuil</span>
-                </a>
-              </li>
-              <li class="list">
-                <a href="#" class="nav-link">
-                  <i class='bx bxs-calendar'></i>
-                  <span class="link">Agenda</span>
-                </a>
-              </li>
-              <li class="list">
-                <a href="/mes_cours" class="nav-link">
-                  <i class='bx bxs-graduation'></i>
-                  <span class="link">Cours enseignés</span>
-                </a>
-              </li>
-              <li class="list">
-                <a href="#" class="nav-link">
-                  <i class='bx bxs-graduation'></i>
-                  <span class="link">A corriger</span>
-                </a>
-              </li>
-              <li class="list">
-                <a href="/classroom/detail_cours/{{cours.code}}" class="nav-link">
-                  <div id="userIcon" class="user-icon" style="color: #00838D">{{ cours.name|slice:":1" }}</div>
-                  <span class="link">{{ cours.name }}</span>
-                </a>
-              </li>
-              
-             
-            </ul>
-  
-            <div class="bottom-cotent">
-              <li class="list">
-                <a href="" class="nav-link" onclick="goBack()">
-                  <i class='bx bxs-caret-left-circle' ></i>
-                  <span class="link"> Retour</span>
-                </a>
-              </li>
-              <li class="list">
-                <a href="/login" class="nav-link">
-                  <i class="bx bx-log-out icon"></i>
-                  <span class="link">Logout</span>
-                </a>
-              </li>
-            </div>
-          </div>
-        </div>
-      </nav>
-  
-    <main class="main">
+    <main class="main" >
       <section class="secondary-header">
         <div class="secondary-icon-container">
           <span class="material-icons-outlined">
@@ -220,8 +148,6 @@
 }
 
   </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
   function toggleDropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
@@ -241,7 +167,7 @@
     }
   }
   
-  const navBar = document.querySelector("nav"),
+  const navBar = document.querySelector("#sidenav"),
     menuBtns = document.querySelectorAll(".menu-icon"),
   
   menuBtns.forEach((menuBtn) => {

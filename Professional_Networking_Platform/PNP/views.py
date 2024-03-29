@@ -812,7 +812,7 @@ def rejoindre_cours(request):
 def detail_cours(request, code):
     # Obtenir le cours correspondant au code fourni dans l'URL
     cours = get_object_or_404(Cours, code=code)
-    return render(request, 'classroom/detail_cours.html', {'cours': cours})
+    return render(request, 'classroom/detail_cours.html', {'cours': cours,"auth_user": request.user})
 
 def students_page(request, code):
     # Retrieve the specific course based on the code provided in the URL

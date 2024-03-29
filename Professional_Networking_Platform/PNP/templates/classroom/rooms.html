@@ -1,14 +1,10 @@
-{% extends "base.html" %}
+{% extends "./sidebar.html" %}
 {% load static %}
 
 
 
-{% block content %}
+{% block classroomContent %}
 
-<link
-      href="{% static 'PNP/css/rooms.css' %}"
-      rel="stylesheet"
-    />
     <main class="main" style="overflow-x:hidden">
       <section class="secondary-header">
         <div class="secondary-icon-container">
@@ -90,20 +86,6 @@
     </span>
   
   <style>
-  .navnav{
-    display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.93);
-  backdrop-filter: blur(8px);
-  padding: 6px 6%;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.09);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.04);
-  height: 60px;
-  }
 
   a.card-link{
     min-width: 20rem;

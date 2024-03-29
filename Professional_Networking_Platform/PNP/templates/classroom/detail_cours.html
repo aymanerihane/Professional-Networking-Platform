@@ -1,4 +1,9 @@
+{% extends "./sidebar.html" %}
 {% load static %}
+
+
+
+{% block classroomContent %}
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
@@ -16,7 +21,7 @@
     />
   </head>
   <body>
-    <nav class="open">
+    {% comment %} <nav class="open">
       <div class="logo">
         <i class="bx bx-menu menu-icon"></i>
         <i class='bx bxs-graduation' ></i>
@@ -81,11 +86,11 @@
           </div>
         </div>
       </div>
-    </nav>
+    </nav> {% endcomment %}
 
 
-    <header>
-      <div class="menuHeader">
+    <header style="position:absolute;top:100px;right:250px">
+      <div class="menuHeader" style="display:block;">
           <ul>
               <li><a href="">Flux</a></li>
               <li><a href="">Travaux et Devoir</a></li>
@@ -98,7 +103,8 @@
 
 
     
-    <div class="containerBase">
+    <div class="containerBase" style="margin-left: auto;
+  margin-right: auto;">
       <div class="container" id="container1">
            <!-- Vérifiez si le nom du cours existe -->
            {% if cours.name %}
@@ -164,6 +170,9 @@ header{
     z-index: 999;
    
 
+}
+.logo i{
+  display: none !important;
 }
 
 
@@ -349,3 +358,4 @@ header .menuHeader ul li ul li{
     </style>
   </body>
 </html>
+{% endblock %}
