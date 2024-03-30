@@ -1,4 +1,4 @@
-{% extends "sidebar.html" %}
+{% extends "./sidebar.html" %}
 {% load static %}
 
 
@@ -33,13 +33,14 @@
       
       
     </section>
+    
       <section class="card-section">
               
     {% for cours in cours_utilisateur %}
           <!-- First Card -->
+          <a href="/classroom/detail_cours/{{ cours.code }}/" class="card-link">
           <div class="card">
               <div class="card-header">
-                <a href="/classroom/detail_cours/{{ cours.code }}/" class="card-link">
                   <!-- Vérifiez si le nom du cours existe -->
                   {% if cours.name %}
                   <h1 class="subject-name">{{ cours.name }}</h1>
@@ -75,9 +76,10 @@
                   </span>
               </div>
           </div>
+          </a>
           {% endfor %}
       </section> 
-      
+      </main>
     </main>
     <span class="material-icons help-icon"> 
         <img src="{% static 'PNP/img/question.png' %}" alt="">

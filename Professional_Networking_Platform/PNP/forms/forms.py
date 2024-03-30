@@ -1,6 +1,6 @@
 from django import forms
 
-from ..models import User, Cv, Cours,Room
+from ..models import User, Cv, Cours,Room,Devoir,Documentation
 from django.contrib.auth.models import User as auth_user
 from django.forms import SelectDateWidget
 
@@ -260,3 +260,15 @@ class DuscForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = ['participent']
+
+class DevoirForm(forms.ModelForm):
+    class Meta:
+        model = Devoir
+        fields = ['titre', 'description', 'fichier_joint', 'date_limite']
+        widgets = {
+            'date_limite': forms.DateTimeInput(attrs={'type': 'datetime-local'})
+        }
+class DocumentationForm(forms.ModelForm):
+    class Meta:
+        model = Documentation
+        fields = ['titre', 'description', 'fichier_joint']

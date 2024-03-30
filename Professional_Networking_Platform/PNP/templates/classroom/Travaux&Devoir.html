@@ -1,0 +1,352 @@
+{% extends "./sidebar.html" %}
+{% load static %}
+<html>
+
+    <body>
+        {% block content %}
+        <header style="position:absolute;top:100px;right:250px">
+            <div class="menuHeader" style="display:block;">
+                <ul>
+                    <li><a href="">Flux</a></li>
+                    <li><a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/">Travaux et Devoir</a></li>
+                    <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
+                    <li><a href="">Notes</a></li>
+                </ul>
+            </div>
+        </header>
+<div class="dropdown">
+    <button onclick="toggleDropdown()" class="dropbtn icon-plus"> + Créer
+
+    </button>
+    <div id="myDropdown" class="dropdown-content">
+      <a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/creer/devoir/">Devoir</a>
+
+
+       <a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/creer/documentation/">Documentation</a>
+    </div>
+</div>
+<div class="devoir-container">
+    <!-- Boucle sur les devoirs pour les afficher -->
+
+    {% if devoirs %}
+    {% for devoir in devoirs %}
+        <div class="devoir">
+            <p><p>
+            <h3>{{ devoir.titre }}</h3>
+            <p>{{ devoir.description }}</p>
+
+        </div>
+
+    {% endfor %}
+{% else %}
+<div class="devoir">
+    <p>Aucun devoir n'a été trouvé.</p>
+</div>
+{% endif %}
+
+</div>
+<br>
+<br>
+<style>*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: none;
+}
+
+body{
+    min-height: 100vh;
+    background-color: rgb(255, 255, 255);
+
+}
+
+header{
+    position: fixed;
+    top: 25px;
+
+    right: 0;
+    padding: 0px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #00838D;
+    z-index: 999;
+
+
+}
+.logo i{
+  display: none !important;
+}
+
+
+
+
+header .menuHeader ul{
+    list-style: none;
+
+}
+
+header .menuHeader ul li{
+    position: relative;
+    float: left;
+
+}
+
+
+header .menuHeader ul li a{
+    font-size: 20px;
+    padding: 23px 20px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    transition: 0.5s color ease;
+    position: relative;
+    font-weight:400;
+}
+
+
+
+
+.material-symbols-outlined{
+    margin-left: 5px;
+}
+
+
+
+header .menuHeader ul li a:hover{
+
+    transition: 0.4s;
+    color: #00838D;
+  }
+
+  header .menuHeader ul li a:after{
+    content: "";
+    position: absolute;
+    background-color: #00838D;
+    height: 4px;
+    width: 0%;
+    border-radius: 10px;
+    right: 0;
+    bottom: 0;
+    transition: 0.4s;
+}
+
+header .menuHeader ul li a:hover:after{
+    width:98%;
+}
+
+
+
+
+header .menuHeader ul li ul{
+
+position: absolute;
+top: 90px;
+left: 0;
+width: 230px;
+background-color: rgba(220, 220, 220, 0.173);
+backdrop-filter: blur(5px);
+box-shadow: 0px 0px 10px #00838D;
+border-radius: 10px 10px 10px 10px;
+z-index: -4;
+
+}
+
+header .menuHeader ul li ul li ul{
+    left: 240px;
+    top: 0;
+}
+
+header .menuHeader ul li ul li{
+    width: 100%;
+
+    padding: 10px auto;
+
+}
+
+
+
+
+#menu-bar{
+    display: none;
+}
+
+
+
+
+
+/* Media Sorguları */
+
+@media(max-width: 1170px) {
+
+header{
+    padding: 20px;
+
+}
+
+
+
+header .menuHeader{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+   border-top: 1px solid black;
+   display: none;
+}
+
+header .menuHeader ul li{
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+
+}
+
+header .menuHeader ul li ul{
+   position:static;
+   width: 100%;
+
+}
+header .menuHeader ul li ul li{
+    background-color: rgba(232, 232, 232, 0.437);
+    backdrop-filter: blur(5px);
+
+ }
+
+ header .menuHeader ul li ul li ul li{
+    background-color: rgba(214, 214, 214, 0.886);
+    backdrop-filter: blur(5px);
+
+ }
+
+ #menu-bar:checked ~ .menuHeader{
+    display: initial ;
+ }
+
+ #menuicon{
+    padding-top: 10px;
+    font-size: 50px;
+    color:#00838D;
+}
+}
+/* Style the dropdown button */
+.dropbtn {
+  background-color: transparent;
+  color: black;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+  position: absolute;
+  right:50%;
+  top:25%;
+
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #f9f9f9;
+
+
+}
+.icon-plus {
+  position: absolute;
+  width: 200px;
+  height: 40px;
+  background-color: #00838D; /* Couleur de fond */
+  color: white; /* Couleur de l'icône */
+  border-radius: 40%; /* Pour rendre le cercle */
+  text-align: center;
+  line-height: 30px; /* Pour centrer le texte verticalement */
+  font-size: 24px;
+  cursor: pointer; /* Curseur pointer au survol */
+
+  right:50%;
+  top:25%;
+}
+.devoir-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centrer horizontalement */
+    align-items: flex-start; /* Aligner les éléments en haut */
+    gap: 20px; /* Espacement entre les devoirs */
+    margin-top: 200px; /* Ajouter une marge en haut pour le décalage */
+
+}
+
+.devoir {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 0px 200px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre */
+    width: calc(33.33% - 20px); 
+
+}
+</style>
+<script>
+    <script>
+        function toggleDropdown() {
+          document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+          if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+
+        $(document).ready(function() {
+          $('#ouvrir-pdf').click(function() {
+              $.ajax({
+                  url: '/ouvrir_pdf/',
+                  type: 'GET',
+                  success: function(response) {
+                    window.open(response.url, '_blank');
+                  },
+                  error: function(xhr, errmsg, err) {
+                      console.log(errmsg);
+                  }
+              });
+          });
+      });
+      </script>
+</script>
+</body>
+{% endblock %}
