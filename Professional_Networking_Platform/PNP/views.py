@@ -5,8 +5,8 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours,PostMedia,FriendRequest
-from .forms import SignUpForm, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm,RoomForm
+from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours,PostMedia,FriendRequest,Devoir,Documentation
+from .forms import SignUpForm, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm,RoomForm,DevoirForm, DocumentationForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
@@ -18,6 +18,7 @@ from django.conf import settings
 import os
 from django.http import JsonResponse
 from django.core.files import File
+
 
 
 # import datetime
@@ -812,7 +813,18 @@ def rejoindre_cours(request):
 def detail_cours(request, code):
     # Obtenir le cours correspondant au code fourni dans l'URL
     cours = get_object_or_404(Cours, code=code)
-    return render(request, 'classroom/detail_cours.html', {'cours': cours,"auth_user": request.user})
+    
+    # Obtenir la documentation associée à ce cours s'il y en a
+    documentation = Documentation.objects.filter(cours=cours)
+    
+    # Passer les données à votre modèle de page HTML
+    context = {
+        'cours': cours,
+        'documentation': documentation,
+        'auth_user': request.user
+    }
+    
+    return render(request, 'classroom/detail_cours.html', context)
 
 def students_page(request, code):
     # Retrieve the specific course based on the code provided in the URL
@@ -837,4 +849,53 @@ def mes_cours(request):
     # Récupérer les cours créés par l'utilisateur actuellement connecté
     cours_utilisateur = Cours.objects.filter(teacher=request.user)
     context = {'cours_utilisateur': cours_utilisateur}
-    return render(request, 'classroom/myCourses.html', context)
+    return render(request, 'classroom/myCourses.html', context,)
+
+def travaux_et_devoir(request, code):
+    cours = get_object_or_404(Cours, code=code)
+    
+    devoirs = Devoir.objects.filter(cours=cours)
+    # Vous pouvez passer ces données à votre modèle de page HTML
+    context = {
+        'devoirs': devoirs,  # Utilisation de la variable devoirs plutôt que travaux_et_devoir_list
+        'cours': cours,
+        'auth_user': request.user  # Ajout de l'utilisateur actuel à context
+    }
+
+    # Renvoyez une réponse HTTP avec le modèle rendu contenant les travaux et devoirs
+    return render(request, 'classroom/Travaux&Devoir.html', context)
+
+
+
+
+def creer_devoir(request, code):
+    cours = get_object_or_404(Cours, code=code)  # Récupérer l'instance de Cours correspondant au code passé dans l'URL
+    form = DevoirForm(request.POST, request.FILES)
+    if form.is_valid():
+            devoir = form.save(commit=False)
+            devoir.cours = cours
+            devoir.save()
+            return redirect('/classroom/detail_cours/{}/travaux_et_devoir/'.format(code))
+            
+
+    else:
+        # Si la requête est GET, afficher le formulaire vide
+        form = DevoirForm()
+        
+    return render(request, 'classroom/creer_devoir.html', {'form': form})
+
+def creer_documentation(request, code):
+    cours = get_object_or_404(Cours, code=code)  # Récupérer l'instance de Cours correspondant au code passé dans l'URL
+    form = DocumentationForm(request.POST, request.FILES)
+    if form.is_valid():
+            documentation = form.save(commit=False)
+            documentation.cours = cours
+            documentation.save()
+            return redirect('/classroom/detail_cours/{}/travaux_et_devoir/'.format(code))
+            
+
+    else:
+        # Si la requête est GET, afficher le formulaire vide
+        form = DocumentationForm()
+    return render(request, 'classroom/creer_documentation.html', {'form': form})
+

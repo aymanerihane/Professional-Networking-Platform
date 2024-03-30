@@ -12,3 +12,5 @@ from .Cv import Cv
 from .postMedia import PostMedia
 from .friendsRequest import FriendRequest
 from .Cours import Cours
+from .devoir import Devoir
+from .documentation import Documentation

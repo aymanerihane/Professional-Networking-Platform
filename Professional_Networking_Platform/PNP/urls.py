@@ -2,7 +2,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours
+from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,travaux_et_devoir,creer_devoir,creer_documentation
 
 
 app_name = "PNP"
@@ -70,6 +70,10 @@ urlpatterns = [
     path('classroom/detail_cours/<str:code>/students/', students_page, name='students_page'),
    
    path('mes_cours/', mes_cours, name='mes_cours'),
+   
+   path('classroom/detail_cours/<str:code>/travaux_et_devoir/', travaux_et_devoir, name='travaux_et_devoir'),
+   path('classroom/detail_cours/<str:code>/travaux_et_devoir/creer/devoir/', creer_devoir, name='creer_devoir'),
+   path('classroom/detail_cours/<str:code>/travaux_et_devoir/creer/documentation/', creer_documentation, name='creer_documentation'),
     #search
     path('search/<str:username>/', search , name='search'),
 ] + static(settings.STATIC_URL)

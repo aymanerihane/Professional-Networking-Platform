@@ -93,7 +93,7 @@
       <div class="menuHeader" style="display:block;">
           <ul>
               <li><a href="">Flux</a></li>
-              <li><a href="">Travaux et Devoir</a></li>
+              <li><a href="/classroom/detail_cours/{{ cours.code }}/travaux_et_devoir/">Travaux et Devoir</a></li>
               <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
               <li><a href="">Notes</a></li>
           </ul>
@@ -112,9 +112,10 @@
            {% else %}
            <h2 class="subject-name">Nom du cours inconnu</h2>
            {% endif %}
-           
+          
            <!-- Vérifiez si la classe du cours existe -->
            {% if cours.class_name %}
+           <br>
            <p class="section">{{ cours.class_name }}</p>
            {% else %}
            <p class="section">Classe inconnue</p>
@@ -125,10 +126,29 @@
           <h4>Code du Cour: </h4>
           <p>{{cours.code}}</p>
       </div>
+      
   </div>
       
-      
-      
+  <div class=".documentationContainer">
+  
+    {% if documentation %}
+    
+    <div class="document">
+    <ul>
+        {% for doc in documentation %}
+        <li>
+            <h3>{{ doc.titre }}</h3>
+            <p>{{ doc.description }}</p>
+        </li>
+        {% endfor %}
+        
+    </ul>
+    {% else %}
+    <p>Aucune documentation n'est disponible pour ce cours pour le moment.</p>
+    {% endif %}
+  </div>
+  </div>
+
     <script >const navBar = document.querySelector("nav"),
       menuBtns = document.querySelectorAll(".menu-icon"),
     
@@ -333,28 +353,65 @@ header .menuHeader ul li ul li{
         
         
     }
+    
+    
+    
+    
     .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-        border-radius: 10px;
-        
-    }
-    #container1 {
-        background-color: #d9d9d9;
-        height: 150px;
-        width: 900px;
-        text-align: center;
-        
-    }
-    #container2 {
-        width: 20%;
-        height:200px;
-       
-        border: 1px solid black;
-    }
+      
+      display: flex;
+      
+      /*justify-content: center; /* Centrer horizontalement */
+      align-items: flex-start; /* Aligner les éléments en haut */
+    
+      margin-top: 200px; /* Ajouter une marge en haut pour le décalage */
+  
+  }
+  #container1{
+    height:200px;
+    width:800px;
+    background-color: #00838D;
+    color:#fff;
+  }
+  #container2{
+    background-color: #ffffff;
+    height:100px;
+    width:150px;
+    
+  }
+  
+  #container1 ,#container2{
+      
+      padding: 20px;
+      margin: 20px 200px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre */
+     
+      
+  }
+  .documentationContainer {
+   
+    display: block;
+    flex-wrap: wrap;
+    justify-content: center; /* Centrer horizontalement */
+    align-items: flex-end; /* Aligner les éléments en haut */
+    gap: 20px; /* Espacement entre les devoirs */
+    right:30px;
+
+}
+
+.document {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 600px 0px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre */
+    width:400px;
+    height:95px;
+   
+
+    
+}
     </style>
   </body>
 </html>
