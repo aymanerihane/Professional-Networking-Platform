@@ -3,11 +3,15 @@ import json
 from django.db import models
 
 class Message(models.Model):
-    messages = models.TextField(default="[]")
-    media = models.TextField(default="[]")
+    message = models.TextField(default="[]")
+    media = models.ManyToManyField('PNP.MessageMedia', related_name='message', blank=True)
+    #
+    room = models.ForeignKey('PNP.Room', on_delete=models.CASCADE)
+    user = models.ForeignKey('PNP.User', on_delete=models.CASCADE)
+    #
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # participent = models.ManyToManyField('PNP.User')
+    
 
     def send_message(self, new_message):
         current_messages = self.get_messages_list()

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'PNP/css/message.css' %}">
 </head>
 <body>
-    <div class="chat" style="height: 90%;">
+    <div class="chat" style="height: 88%;overflow: hidden;">
         {% include './message/sideBar/sideBar.html' %}
         {% include "./message/contentchat/content.html" %}
 
@@ -19,19 +19,224 @@
 </body>
 </html>
 <script>
-document.addEventListener('click',(e)=> {
-    if (e.target.id == 'createRoom') {
-        getForm();
-        document.getElementById('modifie').style.display = 'block';
-    }else if (e.target.classList.contains('overlay')) {
-        document.getElementById('modifie').style.display = 'none';
+
+    function previewFiles() {
+    var preview = document.querySelector('#preview');
+    var files   = document.querySelector('input[type=file]').files;
+
+    function readAndPreview(file) {
+        var removeButton = document.createElement('p');
+        removeButton.textContent = 'x';
+        removeButton.style.cursor = 'pointer';
+        removeButton.style.color = 'red';
+        removeButton.style.position = 'absolute';
+        removeButton.style.top = '0';
+        removeButton.style.right = '0';
+        var container = document.createElement('div');
+        container.style.position = 'relative';
+
+        if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
+            var reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                var image = new Image();
+                image.height = 100;
+                image.style.position= 'relative';
+                image.title = file.name;
+                image.src = this.result;
+
+                
+                container.appendChild(image);
+                container.appendChild(removeButton);
+                preview.appendChild(container);
+            }, false);
+
+            reader.readAsDataURL(file);
+
+        } else if( /\.(mp4|avi)$/i.test(file.name) ) {
+            var video = document.createElement('video');
+            video.src = URL.createObjectURL(file);
+            video.height = 100;
+            video.controls = true;
+
+            container.appendChild(video);
+            container.appendChild(removeButton);
+            preview.appendChild(container);
+
+        } else if( /\.(mp3)$/i.test(file.name) ) {
+            var audio = document.createElement('audio');
+            audio.src = URL.createObjectURL(file);
+            audio.height = 100;
+            audio.controls = true;
+
+            container.appendChild(audio);
+            container.appendChild(removeButton);
+            preview.appendChild(container);
+
+        } else if( /\.(pdf)$/i.test(file.name) ) {
+            var pdf = document.createElement('iframe');
+            pdf.src = URL.createObjectURL(file);
+            pdf.height = 500;
+            pdf.controls = true;
+
+            container.appendChild(pdf);
+            container.appendChild(removeButton);
+            preview.appendChild(container);
+
+        } else {
+            var doc = document.createElement('p');
+            doc.innerHTML = file.name;
+
+            container.appendChild(doc);
+            container.appendChild(removeButton);
+            preview.appendChild(container);
+        }
+
+        removeButton.addEventListener('click', (event)=> {
+        preview.removeChild(container);
+
+        // Create a new DataTransfer object
+        var dt = new DataTransfer();
+
+        // Loop over the files in the file input
+        for (var i = 0; i < inputElement.files.length; i++) {
+            // If the file at the current index is not the file to be removed, add it to the DataTransfer object
+            if (inputElement.files[i] !== file) {
+                dt.items.add(inputElement.files[i]);
+            }
+        }
+
+        // Set the files property of the file input to the files property of the DataTransfer object
+        inputElement.files = dt.files;
+    });
+    }
+    var inputElement = document.querySelector('input[type=file]');
+    if (files) {
+        [].forEach.call(files, readAndPreview);
+    }
+}
+
+function getTypeFile(file){
+    var type=file.type.split('/')[0];
+    if ( type = /\.(jpe?g|png|gif|)$/i.test(file.name) ) {
+        return 1;
+    }else if( /\.(mp4|avi|)$/i.test(file.name) ){
+        return 2;
+    }else if( /\.(mp3|)$/i.test(file.name) ){
+        return 3;
+    }else if( /\.(pdf|)$/i.test(file.name) ){
+        return 4;
+    }else{
+        return 5;
     }
 
+     
+}
+document.addEventListener('click', async (e) => { // make the event handler async
+    if(e.target.id == 'createRoom'){
+        type=e.target.dataset.type;
+        getForm(type);
+
+    }else if(e.target.classList.contains('sendmessage')){
+        let id = e.target.dataset.id;
+        let input = document.querySelector('.message-form input[name=message]');
+        let message = input.value;
+        var files = document.querySelector('input[name=media]').files;
+        var formData = new FormData();
+        
+        formData.append('message', message );
+        formData.append('id', id );
+        for (var i = 0; i < files.length; i++) {
+            var type = await getTypeFile(files[i]); // await the result of getTypeFile
+            formData.append('files', files[i]);
+            formData.append('type', type);
+        }
+        if(message.trim() == '' && files.length == 0){
+            return;
+        }
+        
+        $.ajax({
+            url:'/messageForm/'+id+'/',
+            type:'POST',
+            data:formData,
+            processData: false, // add this line to prevent jQuery from converting the FormData into a string
+            contentType: false, // add this line to prevent jQuery from setting a default content type
+            beforeSend: function(xhr, settings) {
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = jQuery.trim(cookies[i]);
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            },
+            success: function(response){
+                getMessages(id);
+                var input = document.querySelector('input[type="file"]');
+                var preview = document.querySelector('#preview');
+                var message = document.querySelector('.message-form input[name=message]');
+                preview.innerHTML = '';
+                message.value = '';
+                input.value = '';
+            }
+        })
+    }
 });
 
-function getForm(){
+
+
+var dusc = document.querySelectorAll('.contacts ul li:not(#createRoom)');
+
+dusc.forEach((dus) => {
+    dus.addEventListener('click', () => {
+        dusc.forEach((duss) => {
+            duss.classList.remove('active');
+        });
+        dus.classList.add('active');
+        var room_ID = dus.dataset.id;
+        getMessages(room_ID);
+        getFormMessage(room_ID);
+        
+    });
+});
+
+function getFormMessage(room_ID){
     $.ajax({
-        url: '/roomCreateForm/',
+        url: '/messageForm/'+ room_ID +'/',
+        type: 'GET',
+        success: function (response) {
+            var form = document.getElementById('messageForm');
+            form.innerHTML = response;
+        }
+    });
+}
+
+function getMessages(room_ID){
+    $.ajax({
+        url: '/getMessages/'+ room_ID +'/',
+        type: 'GET',
+        success: function (response) {
+            var messages = document.getElementById('messageCont');
+            messages.innerHTML = response;
+        }
+    });
+}
+
+
+
+function getForm(type){
+    $.ajax({
+        url: '/roomCreateForm/'+ type+'/',
         type: 'GET',
         success: function (response) {
             var form = document.getElementById('form-container');

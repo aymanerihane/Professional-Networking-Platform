@@ -1,29 +1,43 @@
+{% load static %}
 <div class="contacts" id="disc">
 
     <ul>
-            <li style="box-shadow: -1px 25px 37px -17px rgba(0,0,0,0.11);"  id="createRoom">
-                <a href="#"  id="createRoom">
-                    <div class="contact"  id="createRoom">
-                        <div class="message" style="text-align:center;left: 50%;position: relative;"  id="createRoom">+ Create Discussion</div>
+            <li style="box-shadow: -1px 25px 37px -17px rgba(0,0,0,0.11);"  id="createRoom" data-type="1">
+                <a href="#"  id="createRoom" data-type="1">
+                    <div class="contact"  id="createRoom" data-type="1">
+                        <div data-type="1" class="message" style="text-align:center;left: 50%;position: relative;"  id="createRoom">+ Create Discussion</div>
+                    </div>
+                </a>
+            </li>
+            <li style="box-shadow: -1px 25px 37px -17px rgba(0,0,0,0.11);"  id="createRoom" data-type="2">
+                <a href="#"  id="createRoom" data-type="2">
+                    <div class="contact"  id="createRoom" data-type="2">
+                        <div data-type="2" class="message" style="text-align:center;left: 50%;position: relative;"  id="createRoom">+ Create Group</div>
                     </div>
                 </a>
             </li>
             {% for room in rooms %}
-            <li>
+            <li class="roomdusc" data-id="{{ room.room.room_ID }}">
                 <a href="#">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
-                    <div class="contact">
-                        <div class="name">
-                            {% if room.name %}
-                                {{ room.name }}
+                    
+                        
+                            {% if room.room.name %}
+                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+                            <div class="contact">
+                                <div class="name">
+                                {{ room.room.name }} · groupe
                             {% else %}
                                 {% for particip in room.participent.all %}
                                     {% if particip.user.username != user.username %}
-                                    {{particip.user.username}} 
-                                        {% if not forloop.last%}
-                                        ·
+                                        {% if particip.user.user.photo_profile %}
+                                        <img src="{{particip.user.user.photo_profile.url}}" alt="">
+                                        {% else %}
+                                        <img src="{% static 'PNP/media/avatar/default.jpg'%}" alt="">
                                         {% endif %}
                                     {% endif %}
+                                    <div class="contact">
+                                        <div class="name">
+                                        {{particip.user.username}}
                                 {% endfor %}
                             {% endif %}
                         </div>

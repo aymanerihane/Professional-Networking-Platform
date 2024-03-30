@@ -250,3 +250,11 @@ class RoomForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'placeholder': 'Name'}),
             'description': forms.Textarea(attrs={'placeholder': 'Description'}),
         }
+
+
+class DuscForm(forms.ModelForm):
+    participent = forms.ModelChoiceField(queryset=User.objects.all(),required=True)
+
+    class Meta:
+        model = Room
+        fields = ['participent']

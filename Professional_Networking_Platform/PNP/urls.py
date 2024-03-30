@@ -2,13 +2,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours
+from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,getMessages,messageForm
 
 
 app_name = "PNP"
 
 urlpatterns = [
     path("", firstPage , name='firstPage'),
+
     # registration
     path("", include("django.contrib.auth.urls")),
     path('signUp/', signUp1, name='signUp'),
@@ -17,16 +18,22 @@ urlpatterns = [
     path('signUp1/<int:choix>', signUp, name='signUp1'),
     path('signUp2/', signUp2, name='signUp2'),
     path('logincheck/', logincheck, name='logincheck'),
+
     # first page after login
     path('firstPage/', firstPage , name='firstPage'),
+
     # messaging page
     path('messaging/', messaging , name='messaging'),
-    path('roomCreateForm/', roomCreateForm , name='roomCreateForm'),
+    path('roomCreateForm/<int:type>/', roomCreateForm , name='roomCreateForm'),
     path('searchRoom/<str:roomname>/', searchRoom , name='searchRoom'),
+    path('getMessages/<int:id>/', getMessages , name='getMessages'),
+    path('messageForm/<int:id>/', messageForm , name='messageForm'),
+    
     # metting pages
     path('mettingPage/', mettingPage , name='mettingPage'), # metting choix page
     path('metting/', metting , name='metting'), # metting create page
     path('joinMetting/', joinMetting , name='joinMetting'), # metting join page
+
     # profile page
     path('profile/<str:username>/', profile , name='profile'),
     path('formProfile/<int:id>/<str:username>/', formProfile , name='formProfile'),
@@ -36,8 +43,10 @@ urlpatterns = [
     path('delete_language/<str:id>/<str:username>/', delete_language , name='delete_language'),
     path('formEducation/<int:id>/<str:username>/', formEducation , name='formEducation'),
     path('formExperience/<int:id>/<str:username>/', formExperience , name='formExperience'),
+
     # clasroom page
     path('classroom/', classroom , name='classroom'),
+
      #createcourse
     path('classroom/create/', create_cours, name='create_cours'),
     path('ouvrir_pdf/', ouvrir_pdf, name='ouvrir_pdf'),

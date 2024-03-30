@@ -8,9 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var searchRoom = document.getElementById('searchRoom');
     var contacts = document.getElementById('disc');
    searchRoom.addEventListener('keyup',()=>{
-            
+        if(searchRoom.value.length == 0)
+            url ='/searchRoom/x212x/';
+        else
+            url = '/searchRoom/'+searchRoom.value+'/';
         $.ajax({
-        url: '/searchRoom/' + searchRoom.value + '/',
+        url: url,
         type: 'GET',
         success: function (response) {
             contacts.innerHTML = response;

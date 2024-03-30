@@ -1,20 +1,29 @@
 
 
-            <div class="message-form">
+            <div class="message-form" style="position:absolute;bottom:0;width:100%">
+             <div style="max-height: 401px;overflow: scroll;display: flex;width: 100%;" id="preview"></div>
                 <ul>
-
                     <li class="input">
-                        <input type="text" placeholder="Message...">
+                        <input type="text" name="message" placeholder="Message...">
                     </li>
                     {% comment %} <li class="sound-btn">
                         <a href="#">
                             <i class="fa fa-microphone"></i>
                         </a>
                     </li> {% endcomment %}
-                    <li class="image-btn">
-                        <a href="#">
-                            <i class="fa fa-file"></i>
-                        </a>
+                   
+                    <div class="create-post-links" >
+                        <li data-id="{{id}}" class="image-btn" style="cursor:pointer;padding: 10px;background-color: #00838D;border-radius: 50%;">
+                            <input type="file" id="file-upload" name="media" style="display: none;width:100%;heigth:100%" onchange="previewFiles()" multiple>
+                            <label style="cursor:pointer;font-size: 20px;" for="file-upload" class="custom-file-upload">
+                                <i style="color: #fff" class="fa fa-file"></i>
+                            </label>
+                        </li>
+                    </div>
+                    <li data-id="{{id}}" class="image-btn  sendmessage" style="cursor:pointer;padding: 10px;background-color: #00838D;border-radius: 50%;">
+                    <i style="color: #fff" class="fa fa-paper-plane sendmessage"></i>
+                        
                     </li>
+                    
                 </ul>
             </div>

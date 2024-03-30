@@ -53,7 +53,7 @@
         background-color: #0056b3;
     }
 </style>
-<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post"  action="{% url 'PNP:roomCreateForm' %}">
+<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post"  action="{% url 'PNP:roomCreateForm' type %}">
     {% csrf_token %}
     {% for field in form %}
         <div class="fieldWrapper">

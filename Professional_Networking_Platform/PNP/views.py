@@ -5,8 +5,8 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours,PostMedia,FriendRequest
-from .forms import SignUpForm, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm,RoomForm
+from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours,PostMedia,FriendRequest,Message,MessageMedia
+from .forms import SignUpForm, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm,RoomForm,DuscForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
@@ -428,49 +428,133 @@ def messaging(request):
     userInfo = User.objects.get(user_id=userID)
     # get all rooms that i am a participents in it
     rooms = Room.objects.filter(participent=userInfo)
-    for room in rooms:
-        participents = room.participent.all()
-        for participent in participents:
-            if participent.user_id != userInfo.id and participents.count() == 2:
-                room.name = participent.user.username
-                break
+    room_with_participent=[{
+        'room': room,
+        'participent': room.participent.all().exclude(user_id=userID),
+        'lastmessage': "last message",
+    } for room in rooms]
+    part = []
+
     context = {
-        'rooms': rooms,
+        'rooms': room_with_participent,
         'lastmessage': "last message",
         'auth_user': request.user,
         'ismessaging': True,
     }
     return render(request,'messagePage/messagePage.html' , context)
 
-def roomCreateForm(request):
+def roomCreateForm(request,type):
     context = {}
     print(request.method)
     if request.method == 'POST':
-        form = RoomForm(request.POST)
+        if(type == 2):
+            form = RoomForm(request.POST)
+        else:
+            form = DuscForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            description = form.cleaned_data['description']
+            if type == 2:
+                name = form.cleaned_data['name']
+                description = form.cleaned_data['description']
             participents = form.cleaned_data['participent']
             userpnp= User.objects.get(user_id=request.user.id)
-            Room.create_room(userpnp,name, description,participents)
-            print("room created")
+            if type == 2:
+                Room.create_room(userpnp,name, description,participents)
+            else:
+                Room.create_discussion(userpnp,participents)
             context.update({
                 'success': True,
             })
             return redirect('PNP:messaging')
     else:
-        form = RoomForm()
+        participents = []
         user = User.objects.get(user_id=request.user.id)  # Get the current user
-        form.fields['participent'].queryset = user.friends.all().exclude(user_id=request.user.id)  # Get all friends of the user
+        part = user.friends.all().exclude(user_id=request.user.id)  # Get all friends of the user
+        rooms = Room.objects.filter(participent=user.id)  # Get all rooms where the user is a participant
+        for p in part:
+            if not rooms.filter(participent=p).exists():  # Check if the friend is a participant in any of these rooms
+                participents.append(p)
+        participent_ids = [p.id for p in participents]
+
+        if type == 1:
+            form = DuscForm()
+            form.fields['participent'].queryset = User.objects.filter(id__in=participent_ids)
+        elif type == 2:
+            form = RoomForm()
+            participents = user.friends.all().exclude(user_id=request.user.id)  # Get all friends of the user
+            form.fields['participent'].queryset = User.objects.filter(id__in=[p.id for p in participents])
+        else:
+            form = None  # Or initialize a default form
+
     context.update({
         'form': form,
+        'type': type,
     })
     return render(request, 'messagePage/message/sideBar/form.html', context)
 
-def room(request, room_id):
-    room = get_object_or_404(Room, pk=room_id)
-    print(room)
-    return render(request, 'messagePage/room.html', {'room': room})
+def getMessages(request, id):   
+    room = Room.objects.get(pk=id)
+    particepent = []
+    part = room.participent.all()
+    for p in part:
+        if p.user_id != request.user.id:
+            particepent.append(p)
+    messages = Message.objects.filter(room=room).order_by('created_at')
+    message_with_time_since = [{
+        'message': message,
+        'time_since': time_since(message.created_at),
+    } for message in messages]
+    context = {
+        'messages': message_with_time_since,
+        'id': id,
+        'notFirst': True,
+        'participents': particepent,
+        'room':room,
+        'user': User.objects.get(user_id=request.user.id),
+    }
+    return render(request, 'messagePage/message/contentchat/messages.html', context)
+
+def messageForm(request, id):
+    if request.method == 'POST':
+        room = Room.objects.get(pk=id)
+        message = request.POST.get('message')
+        user = User.objects.get(user_id=request.user.id)
+        message = Message.objects.create(room=room, message=message, user=user)
+        
+        # Get list of uploaded files
+        files = request.FILES.getlist('files')
+        types = request.POST.getlist('type')
+
+        # Iterate over each uploaded file
+        for file, type in zip(files, types):
+            # Create a new PostMedia instance for each file
+            message_media = MessageMedia.objects.create(media=File(file), type=type)
+            # Associate the PostMedia instance with the Post
+            message.media.add(message_media)
+    return render(request, 'messagePage/message/contentchat/formchat.html', {'id': id})
+#search for rooms
+
+def searchRoom(request, roomname):
+    userID = request.user.id
+    userInfo = User.objects.get(user_id=userID)
+    users = auth_user.objects.filter(username__startswith=roomname)
+    pnpusers = User.objects.filter(user_id__in=users).all()
+    rooms = Room.objects.filter(participent__in=pnpusers.values_list('id', flat=True))
+    print(rooms)
+    if roomname == 'x212x':
+        
+        # get all rooms that i am a participents in it
+        rooms= Room.objects.filter(participent=userInfo)
+        print(rooms)
+    
+    rooms_with_participent=[{
+        'room': room,
+        'participent': room.participent.all().exclude(user_id=userID),
+        'lastmessage': "last message",
+    } for room in rooms]
+
+
+    return render(request,'messagePage/message/sideBar/disc.html' , {'rooms': rooms_with_participent})
+
 
 # first page after login
 
@@ -726,15 +810,6 @@ def addComment(request, itemid,type):
 def search(request, username):
     user = auth_user.objects.filter(username__startswith=username)
     return render(request,'firstPage/search.html' , {'users': user})
-
-#search for rooms
-
-def searchRoom(request, roomname):
-    allrooms = Room.objects.filter(Q(name__startswith=roomname) | Q(participent__in=auth_user.objects.filter(username__startswith=roomname)))
-    rooms = allrooms.filter(participent=request.user)
-    if roomname == '':
-        rooms = Room.objects.filter(participent=request.user)
-    return render(request,'messagePage/message/sideBar/disc.html' , {'rooms': rooms})
 
 
 # time since function
