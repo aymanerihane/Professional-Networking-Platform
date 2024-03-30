@@ -1,22 +1,77 @@
-            <div class="message-content">
-                <div class="empty"></div>
-                <div class="message me">
-                    <div class="bubble">
-                        Merhaba dostum
-                    </div>
-                    <div class="time">1 dk önce</div>
-                </div>
-                <div class="message">
-                    <div class="bubble">
-                        Merhaba dostum
-                    </div>
-                    <div class="time">1 dk önce</div>
-                </div>
-                <div class="message me">
-                    <div class="bubble">
-                        Merhaba dostum
-                    </div>
-                    <div class="time">1 dk önce</div>
-                </div>
+ {% load static%}   
+     
+    <div class="menu">
+        {% if participents|length > 2  %} 
+            <p>quiter groupe</p>
+            <p>Gerer Menbre</p>
 
+        {% else %}
+            <p>quiter duscission</p>
+
+        {% endif %}
+    </div>
+<div class="message-header">
+    <div class="user-info">
+        
+                {% if participents|length > 2  %} 
+                    {% if room.image %}
+                                <img src="{{room.image.url}}" alt="">
+                            {% else %}
+                                <img src="{% static 'PNP/media/avatar/default.jpg'%}" alt="">
+                            {% endif %}
+                    <div class="user">
+                    {{room.name}} · groupe
+                {% else %}
+                    {% for participent in participents%}
+                        {% if participent.user.user.photo_profile %}
+                        <img src="{{participent.user.user.photo_profile.url}}" alt="">
+                        {% else %}
+                            <img src="{% static 'PNP/media/avatar/default.jpg'%}" alt="">
+                        {% endif %}
+                        <div class="user">
+                        {{participent.user.username}} 
+                    {% endfor%}
+                {% endif %}
+        </div>
+    </div>
+    <div class="actions">
+        <ul>
+            <li>
+                <a href="#">
+                    <i class="fa fa-info-circle"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-ellipsis-v"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="message-content" style="overflow: scroll;height: 100%;margin-bottom:100px">
+{% for message in messages %}   
+
+        <div class="message {% if message.message.user == user %}me {% endif %}">
+        {% ifchanged message.message.user %}
+            {% if message.message.user == user %}Me {% else %} {{message.message.user}} {% endif %}
+        {% endifchanged %}
+            {% if message.message.message %}
+            <div class="bubble">
+                {{message.message.message}}
+                
             </div>
+            {% endif %}
+
+            {% for media in message.message.media.all %}
+                <div class="bubble" style="width: 300px;height:auto;position:relative">
+                    <img style="width: 90%;margin-left:auto;margin-right:auto" src="{{media.media.url}}" alt="">
+                </div>
+            {% endfor %}
+            
+            <div class="time">{{message.time_since}}</div>
+        </div>
+
+{% endfor %}	
+
+    </div>

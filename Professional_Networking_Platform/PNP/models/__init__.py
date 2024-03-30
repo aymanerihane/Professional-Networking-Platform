@@ -14,3 +14,5 @@ from .friendsRequest import FriendRequest
 from .Cours import Cours
 from .devoir import Devoir
 from .documentation import Documentation
+from .messageMedia import MessageMedia
+

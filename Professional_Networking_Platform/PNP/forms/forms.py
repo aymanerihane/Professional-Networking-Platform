@@ -243,13 +243,16 @@ class CoursForm(forms.ModelForm):
 
 
 class RoomForm(forms.ModelForm):
+    image = forms.ImageField(required=False)
+    name= forms.CharField(max_length=100, required=True)
     class Meta:
         model = Room
-        fields = ['name', 'description', 'participent']
+        fields = ['image','name', 'description', 'participent']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name'}),
             'description': forms.Textarea(attrs={'placeholder': 'Description'}),
         }
+
         
 class DevoirForm(forms.ModelForm):
     class Meta:
@@ -263,3 +266,13 @@ class DocumentationForm(forms.ModelForm):
     class Meta:
         model = Documentation
         fields = ['titre', 'description', 'fichier_joint']
+
+
+
+class DuscForm(forms.ModelForm):
+    participent = forms.ModelChoiceField(queryset=User.objects.all(),required=True)
+
+    class Meta:
+        model = Room
+        fields = ['participent']
+
