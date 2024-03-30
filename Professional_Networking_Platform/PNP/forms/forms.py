@@ -261,6 +261,13 @@ class DuscForm(forms.ModelForm):
         model = Room
         fields = ['participent']
 
+class AddMember(forms.ModelForm):
+    # participent = forms.ModelChoiceField(queryset=User.objects.all(),required=True)
+
+    class Meta:
+        model = Room
+        fields = ['participent']
+
 class DevoirForm(forms.ModelForm):
     class Meta:
         model = Devoir

@@ -33,7 +33,14 @@ class Room(models.Model):
     def add_participent(self, user):
         self.participent.add(user)
         self.save()
+    
 
+    def remove_participent(self, user):
+        print(self.participent.all())  # Print out the participants before
+        self.participent.remove(user)
+        self.save()
+        print(self.participent.all())  # Print out the participants after
+            
     def __str__(self) -> str:
         if self.name == None:
             return "Room "+str(self.room_ID)

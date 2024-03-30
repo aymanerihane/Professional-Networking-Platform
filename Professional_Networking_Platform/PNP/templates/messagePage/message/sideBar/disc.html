@@ -18,7 +18,7 @@
             </li>
             {% for room in rooms %}
             <li class="roomdusc" data-id="{{ room.room.room_ID }}">
-                <a href="#">
+                <a class="roomdusc" data-id="{{ room.room.room_ID }}" href="#">
                     
                         
                             {% if room.room.name %}
@@ -27,8 +27,8 @@
                             {% else %}
                                 <img src="{% static 'PNP/media/avatar/default.jpg'%}" alt="">
                             {% endif %}
-                            <div class="contact">
-                                <div class="name">
+                            <div class="contact roomdusc"  data-id="{{ room.room.room_ID }}">
+                                <div class="name roomdusc" data-id="{{ room.room.room_ID }}">
                                 {{ room.room.name }} · groupe
                             {% else %}
                                 {% for particip in room.participent.all %}
@@ -39,8 +39,8 @@
                                         <img src="{% static 'PNP/media/avatar/default.jpg'%}" alt="">
                                         {% endif %}
                                     {% endif %}
-                                    <div class="contact">
-                                        <div class="name">
+                                    <div class="contact roomdusc" data-id="{{ room.room.room_ID }}">
+                                        <div class="name roomdusc"data-id="{{ room.room.room_ID }}">
                                         {{particip.user.username}}
                                 {% endfor %}
                             {% endif %}

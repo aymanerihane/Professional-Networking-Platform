@@ -2,7 +2,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,getMessages,messageForm,travaux_et_devoir,creer_devoir,creer_documentation
+from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,getMessages,messageForm,travaux_et_devoir,creer_devoir,creer_documentation,quitterRoom,members
 
 
 app_name = "PNP"
@@ -24,10 +24,12 @@ urlpatterns = [
 
     # messaging page
     path('messaging/', messaging , name='messaging'),
-    path('roomCreateForm/<int:type>/', roomCreateForm , name='roomCreateForm'),
+    path('roomCreateForm/<int:type>/<int:id>/', roomCreateForm , name='roomCreateForm'),
     path('searchRoom/<str:roomname>/', searchRoom , name='searchRoom'),
     path('getMessages/<int:id>/', getMessages , name='getMessages'),
     path('messageForm/<int:id>/', messageForm , name='messageForm'),
+    path('quitterRoom/<int:id>/', quitterRoom , name='quitterRoom'),
+    path('members/<int:id>/', members , name='members'),
     
     # metting pages
     path('mettingPage/', mettingPage , name='mettingPage'), # metting choix page

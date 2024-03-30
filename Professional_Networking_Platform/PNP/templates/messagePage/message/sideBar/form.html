@@ -11,7 +11,7 @@
         flex-direction: column;
     }
 
-    form {
+    form:not(.profile-menu-link) {
         display: flex;
         flex-direction: column;
         width: 400px;
@@ -27,7 +27,7 @@
         max-height: 100px;
     }
 
-    input:not(.profile-menu-link), button:not(.profile-menu-link), select, textarea {
+    input:not(.profile-menu-link):not(#search):not(#searchRoom), button:not(.profile-menu-link), select, textarea {
         padding: 10px;
         border: 1px solid #ced4da;
         border-radius: 5px;
@@ -53,7 +53,7 @@
         background-color: #0056b3;
     }
 </style>
-<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post" enctype="multipart/form-data"  action="{% url 'PNP:roomCreateForm' type %}">
+<form id="formProfile" style="overflow: scroll;max-height: 629px;" method="post" enctype="multipart/form-data"  action="{% url 'PNP:roomCreateForm' type id %}">
     {% csrf_token %}
     {% for field in form %}
         <div class="fieldWrapper">

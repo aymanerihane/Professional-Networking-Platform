@@ -6,11 +6,11 @@ from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import User, Post, Room, Like,Comment, Student, Teacher,Entreprise, Cv, Cours,PostMedia,FriendRequest,Message,MessageMedia,Devoir,Documentation
-from .forms import SignUpForm, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm,RoomForm,DuscForm,DevoirForm, DocumentationForm
+from .forms import SignUpForm, CVForm,ExperienceForm,EducationForm,SkillsForm,LanguagesForm,AboutForm,EditCV,EditProfile, CoursForm,RoomForm,DuscForm,DevoirForm, DocumentationForm,AddMember
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.db.models import Q,Count
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 import json ,os
@@ -204,7 +204,7 @@ def profile(request, username):
         context.update({
             'auth_user': request.user,
             'user': current_user,
-            'request_recieved': all_requests,
+            'request_recived': all_requests,
             'requestsend': FriendRequest.objects.filter(sender=the_user.id).exists(),
             'isMe': request.user.username == username,
             'isFriend': current_user.friends.filter(user_id=the_user.id).exists(),
@@ -443,12 +443,14 @@ def messaging(request):
     }
     return render(request,'messagePage/messagePage.html' , context)
 
-def roomCreateForm(request,type):
+def roomCreateForm(request,type,id):
     context = {}
     print(request.method)
     if request.method == 'POST':
         if(type == 2):
             form = RoomForm(request.POST,request.FILES)
+        elif(type == 3):
+            form = AddMember(request.POST)
         else:
             form = DuscForm(request.POST)
         if form.is_valid():
@@ -463,6 +465,10 @@ def roomCreateForm(request,type):
             userpnp= User.objects.get(user_id=request.user.id)
             if type == 2:
                 Room.create_room(userpnp,name, description,participents,image)
+            elif type == 3:
+                room = Room.objects.get(pk=id)
+                for participent in participents:
+                    room.add_participent(participent)
             else:
                 Room.create_discussion(userpnp,participents)
             context.update({
@@ -473,25 +479,33 @@ def roomCreateForm(request,type):
         participents = []
         user = User.objects.get(user_id=request.user.id)  # Get the current user
         part = user.friends.all().exclude(user_id=request.user.id)  # Get all friends of the user
-        rooms = Room.objects.filter(participent=user.id)  # Get all rooms where the user is a participant
+        rooms = Room.objects.annotate(participent_count=Count('participent')).filter(participent_count__lt=2)
+        i = 0
         for p in part:
-            if not rooms.filter(participent=p).exists():  # Check if the friend is a participant in any of these rooms
+            if rooms.filter(participent=p).exists():  # Check if the friend is a participant in any of these rooms
                 participents.append(p)
         participent_ids = [p.id for p in participents]
+        
 
         if type == 1:
             form = DuscForm()
             form.fields['participent'].queryset = User.objects.filter(id__in=participent_ids)
         elif type == 2:
             form = RoomForm()
+            # get all rooms that participents is under 2 users 
             participents = user.friends.all().exclude(user_id=request.user.id)  # Get all friends of the user
             form.fields['participent'].queryset = User.objects.filter(id__in=[p.id for p in participents])
         else:
-            form = None  # Or initialize a default form
+            form = AddMember()
+            room = Room.objects.get(pk=id)
+            paricipents_not_in_room = user.friends.all().exclude(id__in=room.participent.all())
+            form.fields['participent'].queryset = User.objects.filter(id__in=paricipents_not_in_room)
+
 
     context.update({
         'form': form,
         'type': type,
+        'id':id,
     })
     return render(request, 'messagePage/message/sideBar/form.html', context)
 
@@ -514,6 +528,8 @@ def getMessages(request, id):
         'participents': particepent,
         'room':room,
         'user': User.objects.get(user_id=request.user.id),
+        'isgroup': True if room.name is not None else False,
+        'Menbers': room.participent.all(),
     }
     return render(request, 'messagePage/message/contentchat/messages.html', context)
 
@@ -535,6 +551,36 @@ def messageForm(request, id):
             # Associate the PostMedia instance with the Post
             message.media.add(message_media)
     return render(request, 'messagePage/message/contentchat/formchat.html', {'id': id})
+
+def quitterRoom(request, id):
+    room = Room.objects.get(pk=id)
+    user = User.objects.get(user_id=request.user.id)
+    room.remove_participent(user)
+    if room.participent.count() == 0:
+        room.delete()
+    return JsonResponse({'success': True})
+
+def members(request, id):
+    room = Room.objects.get(pk=id)
+    particepent = []
+    part = room.participent.all()
+    for p in part:
+        if p.user_id != request.user.id:
+            particepent.append(p)
+    context = {
+        'room': room,
+        'members':particepent
+    }
+    return render(request, 'messagePage/members.html', context)
+
+# def addParticipent(request, id):
+#     room = Room.objects.get(pk=id)
+#     user = User.objects.get(user_id=request.user.id)
+#     participents = request.POST.getlist('participent')
+#     for participent in participents:
+#         userpnp= User.objects.get(user_id=participent)
+#         room.add_participent(userpnp)
+#     return JsonResponse({'success': True})
 #search for rooms
 
 def searchRoom(request, roomname):
@@ -659,14 +705,14 @@ def accept_request(request, username):
     friend = User.objects.get(user_id=user.id)
     current_user = User.objects.get(user_id=request.user.id)
     current_user.friends.add(friend)
-    FriendRequest.objects.get(sender=user.id, receiver=current_user.id).delete()
+    FriendRequest.objects.get(sender=friend.id, receiver=current_user.id).delete()
     return redirect('PNP:profile', username=current_user.user.username)
 
 def reject_request(request, username):
     user = auth_user.objects.get(username=username)
     friend = User.objects.get(user_id=user.id)
     current_user = User.objects.get(user_id=request.user.id)
-    FriendRequest.objects.get(sender=user.id, receiver=current_user.id).delete()
+    FriendRequest.objects.get(sender=friend.id, receiver=current_user.id).delete()
     return redirect('PNP:profile', username=current_user.user.username)
 
 # create post

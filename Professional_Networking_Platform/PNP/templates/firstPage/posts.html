@@ -22,19 +22,54 @@
                 {% if post.post.media %}
                     {% for media in post.post.media.all %}
                         {% if media.type == 1 %}
-                            <img style="width:100%" src="{{media.media.url}}" class="post-media">
+                            <a href="{{media.media.url}}" target=_"blank">
+                            <img style="width:100%" src="{{media.media.url}}" class="post-media"></a>
                         {% elif media.type == 2 %}
                             <video style="width:100%;" controls>
                                 <source  src="{{media.media.url}}" type="video/mp4">
                             </video>
                         {% elif media.type == 3 %}
-                            <audio controls>
-                                <source style="width:100%;" src="{{media.media.url}}" type="audio/mpeg">
-                            </audio>
+                            <div class="bubble" style="width: 400px;height:auto;position:relative;display:flex">
+                    <audio controls style="width: 100%; border-radius: 5px; background-color: #fff;border-radius: 40px">
+                        <source style="width:100%;" src="{{media.media.url}}" type="audio/mpeg">
+                    </audio>
+                    <a download style="color:#fff;text-decoration:underline" target="_blank" href="{{media.media.url}}" class="post-media">
+                        <button class="Btn">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 384 512"
+                                class="svgIcon"
+                            >
+                                <path
+                                d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                                ></path>
+                            </svg>
+                            <span class="icon2"></span>
+                        </button>
+                    </a>
+                </div>
                         {% elif media.type == 4 %}
                             <iframe scrolling="no" style="width:100%;height: 400px" src="{{media.media.url}}" class="post-media"></iframe>
                         {% elif media.type == 5 %}
-                            <p class="post-media">{{media.media.name}}</p>
+                            <div style="display:flex;align-items:center;margin-left:30px">
+                            <span>download: {{media.media.name}}</span>
+                            <a style="color:#fff;text-decoration:underline" target="_blank" href="{{media.media.url}}" class="post-media">
+                                <button class="Btn">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="1em"
+                                        viewBox="0 0 384 512"
+                                        class="svgIcon"
+                                    >
+                                        <path
+                                        d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                                        ></path>
+                                    </svg>
+                                    <span class="icon2"></span>
+                                </button>
+                            </a>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 {% endif %}

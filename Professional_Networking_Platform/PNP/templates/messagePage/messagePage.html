@@ -20,7 +20,8 @@
 </html>
 <script>
 
-    function previewFiles() {
+    
+function previewFiles() {
     var preview = document.querySelector('#preview');
     var files   = document.querySelector('input[type=file]').files;
 
@@ -132,15 +133,34 @@ function getTypeFile(file){
 
      
 }
-document.addEventListener('click', async (e) => { // make the event handler async
-    if(e.target.id == 'createRoom'){
+document.addEventListener('click', async (e) => { 
+    if( e.target.id == "MenbersShow"){
+    document.getElementById('modifie').style.display = 'block';
+    var form = document.getElementById('form-container');
+    $.ajax({
+        url: '/members/'+ e.target.dataset.id +'/',
+        type: 'GET',
+        success: function (response) {
+            form.innerHTML = response;
+        }
+    });
+    }else if(e.target.id == 'createRoom'){ // create room
         type=e.target.dataset.type;
         document.getElementById('modifie').style.display = 'block';
-        getForm(type);
+        if(type == 3){
+            var id = e.target.dataset.id;
+            console.log(id);
+            getForm(type,id);
+        }else{
+            getForm(type,0);
+        }
 
-    }else if (e.target.classList.contains('overlay')) {
+    }else if (e.target.classList.contains('overlay')) { // close form
         document.getElementById('modifie').style.display = 'none';
-    }else if(e.target.classList.contains('sendmessage')){
+    }else if(e.target.id == "quitterDusc"){ // quitter room
+        let id = e.target.dataset.id;
+        quitterRoom(id);
+    }else if(e.target.classList.contains('sendmessage')){ // send message
         let id = e.target.dataset.id;
         let input = document.querySelector('.message-form input[name=message]');
         let message = input.value;
@@ -196,24 +216,52 @@ document.addEventListener('click', async (e) => { // make the event handler asyn
     }
 });
 
+function quitterRoom(id){ // quitter room
+        var url = '/quitterRoom/'+id+'/';
+        var messagediv= document.getElementById('messagediv');
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(data){
+                refresh_dusc();
+                messagediv.innerHTML = `<div id="messageCont" style="height: 70vh;">
+                <div class="content" style="position:relative; display: flex; justify-content: center; align-items: center; height: 100vh;">
+                    <img style="width: 100px;" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+                    <p style="text-align: center;">You should choose a room</p>
+                </div>
+            </div>
+            <div id="messageForm">
+            </div>`;
+            }
+        })
+    }
+function refresh_dusc(){ // refresh rooms
+    $.ajax({
+        url: '/searchRoom/x212x/',
+        type: 'GET',
+        success: function (response) {
+            var dusc = document.getElementById('disc');
+            dusc.innerHTML = response;
+        }
+    });
+}
 
-
-var dusc = document.querySelectorAll('.contacts ul li:not(#createRoom)');
-
-dusc.forEach((dus) => {
-    dus.addEventListener('click', () => {
-        dusc.forEach((duss) => {
-            duss.classList.remove('active');
-        });
-        dus.classList.add('active');
-        var room_ID = dus.dataset.id;
+document.addEventListener('click', (e) => { // get room messages and toogle active class
+    if(e.target.classList.contains('roomdusc')){
+        var dusc = document.querySelectorAll('.contacts ul li:not(#createRoom)');
+        var room_ID = e.target.dataset.id;
         getMessages(room_ID);
         getFormMessage(room_ID);
-        
-    });
+        dusc.forEach((dus) => {
+            dus.classList.remove('active');
+        });
+        e.target.classList.add('active');
+    }
 });
 
-function getFormMessage(room_ID){
+
+
+function getFormMessage(room_ID){ // get form message
     $.ajax({
         url: '/messageForm/'+ room_ID +'/',
         type: 'GET',
@@ -224,7 +272,7 @@ function getFormMessage(room_ID){
     });
 }
 
-function getMessages(room_ID){
+function getMessages(room_ID){ // get messages
     $.ajax({
         url: '/getMessages/'+ room_ID +'/',
         type: 'GET',
@@ -236,10 +284,9 @@ function getMessages(room_ID){
 }
 
 
-
-function getForm(type){
+function getForm(type,id){ // get form of create dusc or group
     $.ajax({
-        url: '/roomCreateForm/'+ type+'/',
+        url: '/roomCreateForm/'+ type+'/'+ id +'/',
         type: 'GET',
         success: function (response) {
             var form = document.getElementById('form-container');

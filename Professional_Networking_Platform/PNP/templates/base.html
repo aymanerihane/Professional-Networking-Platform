@@ -75,7 +75,7 @@
                     <p>My Requests</p>
                     <span>></span>
                 </a>
-                <form class="class="profile-menu-link"" style="display: flex;align-items: center;justify-content: space-between;"  action="{% url 'PNP:logout' %}" method="post" >
+                <form class="profile-menu-link" style="display: flex;align-items: center;justify-content: space-between;"  action="{% url 'PNP:logout' %}" method="post" >
                  {% csrf_token %}
                     <img style="width: 35px;" src="{% static 'PNP/img/logout.png' %}">
                 <button type="submit"  class="profile-menu-link" style="padding: 5px;border-radius: 10px;border:none">Logout</button>
