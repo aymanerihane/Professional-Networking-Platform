@@ -1,9 +1,24 @@
- {% load static%}          
+ {% load static%}   
+     
+    <div class="menu">
+        {% if participents|length > 2  %} 
+            <p>quiter groupe</p>
+            <p>Gerer Menbre</p>
+
+        {% else %}
+            <p>quiter duscission</p>
+
+        {% endif %}
+    </div>
 <div class="message-header">
     <div class="user-info">
         
                 {% if participents|length > 2  %} 
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+                    {% if room.image %}
+                                <img src="{{room.image.url}}" alt="">
+                            {% else %}
+                                <img src="{% static 'PNP/media/avatar/default.jpg'%}" alt="">
+                            {% endif %}
                     <div class="user">
                     {{room.name}} · groupe
                 {% else %}
@@ -34,18 +49,29 @@
         </ul>
     </div>
 </div>
-<div class="message-content" style="overflow: scroll;height: 60%;">
+<div class="message-content" style="overflow: scroll;height: 100%;margin-bottom:100px">
 {% for message in messages %}   
 
         <div class="message {% if message.message.user == user %}me {% endif %}">
         {% ifchanged message.message.user %}
             {% if message.message.user == user %}Me {% else %} {{message.message.user}} {% endif %}
         {% endifchanged %}
+            {% if message.message.message %}
             <div class="bubble">
                 {{message.message.message}}
+                
             </div>
+            {% endif %}
+
+            {% for media in message.message.media.all %}
+                <div class="bubble" style="width: 300px;height:auto;position:relative">
+                    <img style="width: 90%;margin-left:auto;margin-right:auto" src="{{media.media.url}}" alt="">
+                </div>
+            {% endfor %}
+            
             <div class="time">{{message.time_since}}</div>
         </div>
+
 {% endfor %}	
 
     </div>

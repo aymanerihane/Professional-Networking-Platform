@@ -2,6 +2,7 @@ from django.db import models
 
 class Room(models.Model):
     room_ID = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to='groups/', blank=True, null=True)
     name = models.CharField(max_length=100, unique=True, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     participent = models.ManyToManyField('PNP.User')
@@ -9,10 +10,11 @@ class Room(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def create_room(user, name, description,participents):
+    def create_room(user, name, description,participents,image):
         room = Room.objects.create(
             name=name,
-            description=description            
+            description=description,   
+            image=image   
         )
         room.add_participent(user)
         for participent in participents:

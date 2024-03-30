@@ -428,16 +428,16 @@ def messaging(request):
     userInfo = User.objects.get(user_id=userID)
     # get all rooms that i am a participents in it
     rooms = Room.objects.filter(participent=userInfo)
+
     room_with_participent=[{
         'room': room,
         'participent': room.participent.all().exclude(user_id=userID),
-        'lastmessage': "last message",
+        'lastmessage': Message.objects.filter(room=room).last(),
     } for room in rooms]
     part = []
 
     context = {
         'rooms': room_with_participent,
-        'lastmessage': "last message",
         'auth_user': request.user,
         'ismessaging': True,
     }
@@ -448,17 +448,21 @@ def roomCreateForm(request,type):
     print(request.method)
     if request.method == 'POST':
         if(type == 2):
-            form = RoomForm(request.POST)
+            form = RoomForm(request.POST,request.FILES)
         else:
             form = DuscForm(request.POST)
         if form.is_valid():
             if type == 2:
                 name = form.cleaned_data['name']
+                if 'image' in form.files:
+                    image = form.files['image']
+                else:
+                    image = None
                 description = form.cleaned_data['description']
             participents = form.cleaned_data['participent']
             userpnp= User.objects.get(user_id=request.user.id)
             if type == 2:
-                Room.create_room(userpnp,name, description,participents)
+                Room.create_room(userpnp,name, description,participents,image)
             else:
                 Room.create_discussion(userpnp,participents)
             context.update({
@@ -549,7 +553,7 @@ def searchRoom(request, roomname):
     rooms_with_participent=[{
         'room': room,
         'participent': room.participent.all().exclude(user_id=userID),
-        'lastmessage': "last message",
+        'lastmessage': Message.objects.filter(room=room).last(),
     } for room in rooms]
 
 
@@ -583,7 +587,9 @@ def firstPage(request):
             'numberComments': Comment.objects.filter(object_id=post.id).count()
         } for post in posts]
 
+        rooms = Room.objects.filter(participent=current_user)
         context.update({
+            'rooms': rooms,
             'segguestedFriends': segg,
             'user': current_user,
             'auth_user': request.user,

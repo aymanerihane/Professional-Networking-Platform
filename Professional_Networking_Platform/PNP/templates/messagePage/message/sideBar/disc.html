@@ -22,7 +22,11 @@
                     
                         
                             {% if room.room.name %}
-                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+                            {% if room.room.image %}
+                                <img src="{{room.room.image.url}}" alt="">
+                            {% else %}
+                                <img src="{% static 'PNP/media/avatar/default.jpg'%}" alt="">
+                            {% endif %}
                             <div class="contact">
                                 <div class="name">
                                 {{ room.room.name }} · groupe
@@ -41,7 +45,15 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
-                        <div class="message">{{lastmessage}}</div>
+                        <div class="message">
+                        {% if room.lastmessage.message %}
+                            {{ room.lastmessage.message }}
+                        {% elif room.lastmessage.image %}
+                            file:{{ room.lastmessage.image }}
+                        {% else %}
+                            No message
+                        {% endif %}
+                        </div>
                     </div>
                 </a>
             </li>
