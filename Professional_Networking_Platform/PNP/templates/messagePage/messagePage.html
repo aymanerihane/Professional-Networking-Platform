@@ -135,8 +135,11 @@ function getTypeFile(file){
 document.addEventListener('click', async (e) => { // make the event handler async
     if(e.target.id == 'createRoom'){
         type=e.target.dataset.type;
+        document.getElementById('modifie').style.display = 'block';
         getForm(type);
 
+    }else if (e.target.classList.contains('overlay')) {
+        document.getElementById('modifie').style.display = 'none';
     }else if(e.target.classList.contains('sendmessage')){
         let id = e.target.dataset.id;
         let input = document.querySelector('.message-form input[name=message]');
