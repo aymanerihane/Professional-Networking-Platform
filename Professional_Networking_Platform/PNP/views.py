@@ -85,7 +85,6 @@ def signUp2(request):
             pnp_user = form.save(commit=False)
             role = request.session.get('role')
             userid = request.session.get('user_id')
-            print(role)
             if userid is not None:
                 pnp_user.user_id = userid
                 pnp_user.role = role
@@ -100,10 +99,11 @@ def signUp2(request):
                         return HttpResponse("CNE is missing")
                 elif role == 2:
                     matricule = request.POST.get('matricule')
+                    description = request.POST.get('introduction')
                     if matricule is not None:  # Make sure cne is not None
                         user = User.objects.get(id=userid)  # Get the User instance with id=userid
-                        Teacher.create_teacher(user, matricule)  # Call create_student on the Student class
-                        return redirect('PNP:signUpTeach')
+                        Teacher.create_teacher(user, matricule,description)  # Call create_student on the Student class
+                        return redirect('PNP:signUpStud')
                     else :
                         return HttpResponse("Matricule is missing")
                 else:
@@ -111,7 +111,7 @@ def signUp2(request):
                     if ice is not None:  # Make sure cne is not None
                         user = User.objects.get(id=userid)  # Get the User instance with id=userid
                         Entreprise.create_entreprise(user, ice)  # Call create_student on the Student class
-                        return redirect('PNP:signUpEntre')
+                        return redirect('PNP:signUpStud')
             else:
                 # Handle missing user id here
                 return HttpResponse("User id is missing")
