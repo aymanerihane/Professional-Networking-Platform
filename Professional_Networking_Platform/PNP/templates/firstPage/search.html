@@ -23,14 +23,37 @@
         font-family: Arial, sans-serif;
         color: #999;
     }
+    .filter-buttons {
+        margin-bottom: 10px;
+    }
+    .filter-buttons button {
+        background-color: #00838D; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-right: 2px;
+        cursor: pointer;
+    }
+    .filter-buttons button:hover {
+        background-color: #017078;
+    }
 </style>
+
+
 
 {% if users %}
     <ul class="user-list">
         {% for user in users %}
             <li>
-                <a href="{% url 'PNP:profile' user.username %}">
-                    {{ user.username }}
+                <a href="{% url 'PNP:profile' user.user.username %}">
+                    {{ user.user.username }}
+                    {% if user.role == 1 %} · Student {% endif %}
+                    {% if user.role == 2 %} · Teacher {% endif %}
+                    {% if user.role == 3 %} · Companies {% endif %}
                 </a>
             </li>
         {% endfor %}
@@ -38,3 +61,5 @@
 {% else %}
     <p class="no-users">No users found</p>
 {% endif %}
+
+

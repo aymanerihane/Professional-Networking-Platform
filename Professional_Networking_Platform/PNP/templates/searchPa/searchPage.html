@@ -1,0 +1,107 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .user-list {
+        font-family: Arial, sans-serif;
+        padding: 0;
+        margin: 0;
+    }
+    .user-list li {
+        list-style-type: none;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        padding: 10px;
+        transition: background-color 0.3s ease;
+    }
+    .user-list li:hover {
+        background-color: #e0e0e0;
+    }
+    .user-list a {
+        text-decoration: none;
+        color: #333;
+    }
+    .no-users {
+        font-family: Arial, sans-serif;
+        color: #999;
+    }
+    .filter-buttons {
+        margin-bottom: 10px;
+    }
+    .filter-buttons button {
+        background-color: #00838D; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-right: 2px;
+        cursor: pointer;
+    }
+    .filter-buttons button:hover {
+        background-color: #017078;
+    }
+</style>
+<div class="filter-buttons" style="display:flex;width:100%;margin-top:20px;padding:10px">    
+    <input type="text" id="filterPage" placeholder="Search" style="flex:1">
+    <button onclick="filterUsers(0)">all</button>
+    <button onclick="filterUsers(1)">Students</button>
+    <button onclick="filterUsers(2)">Teachers</button>
+    <button onclick="filterUsers(3)">companies</button>
+</div>
+<div id="sss">
+    <p class="no-users">Search for a User Or a companies</p>
+</div>
+
+    <script>
+    var ss = document.getElementById('filterPage');
+    var box = document.getElementById('sss');
+
+    ss.addEventListener('keyup',()=>{
+        if (ss.value == ''){
+            var value = 'x212x';
+        }else{
+            var value = ss.value;
+        }
+        box.innerHTML = '';
+        $.ajax({
+        url: '/search/' + value + '/0/',
+        type: 'GET',
+        success: function (response) {
+            box.innerHTML = response;
+        }
+    });
+    })
+    function filterUsers(type) {
+        if (ss.value == ''){
+            var value = 'x212x';
+        }else{
+            var value = ss.value;
+        }
+        box.innerHTML = '';
+        $.ajax({
+        url: '/search/' + value + '/'+type+'/',
+        type: 'GET',
+        success: function (response) {
+            box.innerHTML = response;
+        }
+    });
+    }
+    function fetchProfiles(){
+        fetch('/fetchFriends')
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data);
+        })
+    }
+    </script>
+
+{% endblock %}
+
+
+

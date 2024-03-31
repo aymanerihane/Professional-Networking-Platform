@@ -198,6 +198,12 @@ def profile(request, username):
             pnp_user.number_of_profile_visits += 1
             pnp_user.save()
         
+        room = Room.objects.filter(participent__user__username=username).annotate(participent_count=Count('participent')).filter(participent_count__lt=2).first()
+
+        if room is not None:
+            room_id = room.room_ID
+        else:
+            room_id = None  # or set a default value, or handle this situation differently
 
         #get post medias
 
@@ -209,6 +215,7 @@ def profile(request, username):
             'isMe': request.user.username == username,
             'isFriend': current_user.friends.filter(user_id=the_user.id).exists(),
             'segguestedFriends': segg,
+            'id': room_id,
         })
 
     context.update({
@@ -392,6 +399,21 @@ def delete_language(request, id,username):
     cv.languages = json.loads(cv.languages)
     return render(request, 'profilePage/langs.html', {'isMe': request.user.username == username,'cv': cv})
 
+
+def chat(request, username):
+    # get id of room that have <2 members and username in it
+    room = Room.objects.filter(participent__user__username=username).annotate(participent_count=Count('participent')).filter(participent_count__lt=2).first()
+    print(room)
+    if room is None:
+        # create a new room with the current user and the user with username
+        user = auth_user.objects.get(username=username)
+        userpnp= User.objects.get(user_id=user.id)
+        current_user = User.objects.get(user_id=request.user.id)
+        room = Room.create_discussion(current_user,userpnp.id)
+    context = {
+        'id': room.room_ID,
+    }
+    return render(request, 'messagePage/message/contentchat/content.html', context)
 # metting pages
 
 ##metting choix page
@@ -819,6 +841,8 @@ def like(request, postid):
 
 #post comments
 def get_comment(request, itemid):
+    #clear session
+    request.session['postId'] = None
     # type =1 for post and 2 for comment
     request.session['postId'] = itemid
     post = Post.objects.get(pk=itemid)
@@ -834,16 +858,16 @@ def get_comment(request, itemid):
 def showCommentForm(request, itemid,type):
     if(type == 1):
         item = Post.objects.get(pk=itemid)
+        postId=itemid
     else:
         item = Comment.objects.get(pk=itemid)
-    postId=request.session.get('postId')
+        postId=request.session.get('postId')
     return render(request, 'firstPage/addComment.html', {'postId':postId,'itemId': itemid,'comment':item, 'type': type,'is_reply': False if type == 1 else True})
 
 def addComment(request, itemid,type):
     if request.method == 'POST':
         content = request.POST.get('commentContent')
         user = User.objects.get(user_id=request.user.id)
-        print(type)
         if type == 1:
             object = Post.objects.get(id=itemid)
         else:
@@ -855,13 +879,35 @@ def addComment(request, itemid,type):
         else:
             object.create_reply(user, itemid , content,contentType)
         return redirect(request.path_info)
+    request.session['postId'] = None
     return redirect('PNP:firstPage')
 
 
 #seach
-def search(request, username):
-    user = auth_user.objects.filter(username__startswith=username)
-    return render(request,'firstPage/search.html' , {'users': user})
+def search(request, username,type):
+    # 0 for all 1 for students 2 for teachers 3 for companies
+    if type == 0:
+        authuser = auth_user.objects.filter(username__startswith=username)
+        user = User.objects.filter(user_id__in=authuser)
+        return render(request,'firstPage/search.html' , {'users': user})
+    elif type == 1:
+        authuser = auth_user.objects.filter(username__startswith=username)
+        user = User.objects.filter(user_id__in=authuser).filter(role = 1)
+        if username == 'x212x':
+            user = User.objects.filter(role=1)
+        return render(request,'firstPage/search.html' , {'users': user})
+    elif type == 2:
+        authuser = auth_user.objects.filter(username__startswith=username)
+        user = User.objects.filter(user_id__in=authuser).filter(role = 2)
+        if username == 'x212x':
+            user = User.objects.filter(role=2)
+        return render(request,'firstPage/search.html' , {'users': user})
+    else:
+        authuser = auth_user.objects.filter(username__startswith=username)
+        user = User.objects.filter(user_id__in=authuser).filter(role = 3)
+        if username == 'x212x':
+            user = User.objects.filter(role=3)
+        return render(request,'firstPage/search.html' , {'users': user})
 
 
 # time since function
@@ -1024,3 +1070,7 @@ def creer_documentation(request, code):
         # Si la requête est GET, afficher le formulaire vide
         form = DocumentationForm()
     return render(request, 'classroom/creer_documentation.html', {'form': form})
+
+#search Page
+def searchPage(request):
+    return render(request, 'searchPa/searchPage.html', {'auth_user': request.user,'isSearch': True})

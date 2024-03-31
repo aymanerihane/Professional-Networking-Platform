@@ -2,7 +2,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,getMessages,messageForm,travaux_et_devoir,creer_devoir,creer_documentation,quitterRoom,members
+from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,getMessages,messageForm,travaux_et_devoir,creer_devoir,creer_documentation,quitterRoom,members,chat,searchPage
 
 
 app_name = "PNP"
@@ -45,6 +45,7 @@ urlpatterns = [
     path('delete_language/<str:id>/<str:username>/', delete_language , name='delete_language'),
     path('formEducation/<int:id>/<str:username>/', formEducation , name='formEducation'),
     path('formExperience/<int:id>/<str:username>/', formExperience , name='formExperience'),
+    path('chat/<str:username>/', chat , name='chat'),
 
     # clasroom page
     path('classroom/', classroom , name='classroom'),
@@ -86,7 +87,10 @@ urlpatterns = [
    path('classroom/detail_cours/<str:code>/travaux_et_devoir/creer/devoir/', creer_devoir, name='creer_devoir'),
    path('classroom/detail_cours/<str:code>/travaux_et_devoir/creer/documentation/', creer_documentation, name='creer_documentation'),
     #search
-    path('search/<str:username>/', search , name='search'),
+    path('search/<str:username>/<int:type>/', search , name='search'),
+
+    #search Page
+    path('searchPage/', searchPage , name='searchPage'),
 ] + static(settings.STATIC_URL)
 
 

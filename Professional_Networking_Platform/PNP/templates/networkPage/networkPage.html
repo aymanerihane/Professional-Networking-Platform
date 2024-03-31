@@ -44,7 +44,7 @@
     }
 </style>
 
-<div class="friends-list">
+<div class="friends-list" style="overflow: scroll">
     {% if friends %}
         <h1>Friends</h1>
         <ul>
@@ -60,7 +60,6 @@
                         {% endif %}
 
                         </div>
-                        <a href="#" class="btn">Send Message</a>
                     </div>
                 </li>
             {% endfor %}

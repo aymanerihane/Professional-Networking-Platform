@@ -220,15 +220,15 @@ iframe #viewer{
                 <h3>My Network</h3>
                 {% for friend in friends %}
                 <a href="{% url 'PNP:profile' friend.user.username %}">{{friend.user.username}}</a>
-                <span style="display:flex;justify-content: space-around">
-                <div style="margin-top:10px">
+                <span style="display:flex;justify-content: space-around;float:right;margin-top:-30px">
+                <div >
                 {% if friend.user.user.Visibility == 'private' %}
                     {% include '../profilePage/followBtn.html' with friend=friend.user.username isFriend=True requestsend=requestsend is_private=True %}
                 {% else %}
                     {% include '../profilePage/followBtn.html' with friend=friend.user.username isFriend=True requestsend=requestsend is_private=False %}
                 {% endif %}
                 </div>
-                 <a style="font-size: 10px;font-weight: 100;">send message</a></span>
+                 </span>
                 {% endfor %}
         
             </div>
@@ -424,7 +424,8 @@ function getTypeFile(file){
             formData.append('files', files[i]);
             formData.append('type', type);
         }
-        $.ajax({
+        if(postContent || files.length > 0){
+            $.ajax({
             url: '/addPost/',
             type: 'POST',
             headers: { 'X-CSRFToken': '{{ csrf_token }}' },
@@ -442,7 +443,10 @@ function getTypeFile(file){
                 preview.innerHTML = '';
 
             }
-        });
+            });
+        }else{
+            alert('Please write something or add a file');
+        }
     }
 
     function refresh_posts(){
@@ -489,6 +493,9 @@ function fetchComments(postId) {
 
             
 function addComment(itemId, type,postId) {
+    console.log(itemId);
+    console.log(type);
+    console.log(postId);
     var commentContent=document.getElementById('commentContent').value;
         $.ajax({
             url: '/addComment/' + itemId + '/'+ type + '/',
