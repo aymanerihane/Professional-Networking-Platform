@@ -2,7 +2,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,getMessages,messageForm,travaux_et_devoir,creer_devoir,creer_documentation,quitterRoom,members,chat,searchPage
+from .views import signUp,signUpEntre,signUp1,signUp2, firstPage,profile, messaging, metting, joinMetting, mettingPage, network, logincheck, like,classroom,get_comment,addFriend,signUpStud,search,formProfile,accept_request,reject_request, showCommentForm, addComment,create_cours,ouvrir_pdf, rejoindre_cours, detail_cours,get_posts,add_post,deletePost,ouvrir_pdf,delete_experience,delete_education,delete_skill,delete_language,formEducation,formExperience,roomCreateForm,searchRoom,rejoindre_cours, detail_cours,get_posts,add_post,deletePost,students_page,mes_cours,create_cours,getMessages,messageForm,travaux_et_devoir,creer_devoir,creer_documentation,quitterRoom,members,chat,searchPage,accueil
 
 
 app_name = "PNP"
@@ -49,7 +49,7 @@ urlpatterns = [
 
     # clasroom page
     path('classroom/', classroom , name='classroom'),
-
+    path('classroom/accueil/', accueil, name='accueil'),
      #createcourse
     path('classroom/create/', create_cours, name='create_cours'),
     path('ouvrir_pdf/', ouvrir_pdf, name='ouvrir_pdf'),

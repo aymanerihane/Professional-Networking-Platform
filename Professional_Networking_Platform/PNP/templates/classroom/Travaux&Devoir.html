@@ -1,19 +1,22 @@
+
+
+   
 {% extends "./sidebar.html" %}
 {% load static %}
-<html>
 
-    <body>
         {% block content %}
         <header style="position:absolute;top:100px;right:250px">
             <div class="menuHeader" style="display:block;">
                 <ul>
-                    <li><a href="">Flux</a></li>
+                    <li><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
                     <li><a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/">Travaux et Devoir</a></li>
                     <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
-                    <li><a href="">Notes</a></li>
+                   
                 </ul>
             </div>
+            
         </header>
+{% if user.is_teacher %}
 <div class="dropdown">
     <button onclick="toggleDropdown()" class="dropbtn icon-plus"> + Créer
 
@@ -25,24 +28,33 @@
        <a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/creer/documentation/">Documentation</a>
     </div>
 </div>
-<div class="devoir-container">
-    <!-- Boucle sur les devoirs pour les afficher -->
-
-    {% if devoirs %}
-    {% for devoir in devoirs %}
-        <div class="devoir">
-            <p><p>
-            <h3>{{ devoir.titre }}</h3>
-            <p>{{ devoir.description }}</p>
-
-        </div>
-
-    {% endfor %}
-{% else %}
-<div class="devoir">
-    <p>Aucun devoir n'a été trouvé.</p>
-</div>
 {% endif %}
+<div class="devoir-container">
+  <!-- Boucle sur les devoirs pour les afficher -->
+
+  {% if devoirs %}
+  <ul>
+      {% for devoir in devoirs %}
+      <div class="devoir">
+          <li>
+              <h3>{{ devoir.titre }}</h3>
+              <p>{{ devoir.description }}</p>
+              <p>Date limite: {{ devoir.date_limite }}</p>
+              {% if devoir.fichier_joint %}
+              <p>Fichier joint: <a href="{{ devoir.fichier_joint.url }}">{{ devoir.fichier_joint.name }}</a></p>
+              {% else %}
+              <p>Aucun fichier joint</p>
+              {% endif %}
+          </li>
+      </div>
+      {% endfor %}
+  </ul>
+  {% else %}
+  <div class="devoir">
+      <p>Aucun devoir n'a été trouvé.</p>
+  </div>
+  {% endif %}
+</div>
 
 </div>
 <br>

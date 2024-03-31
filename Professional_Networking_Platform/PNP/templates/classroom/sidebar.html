@@ -53,7 +53,7 @@
           <div class="sidebar-content" style="height: 93%;position: sticky;">
             <ul class="lists">
               <li class="list">
-                <a href="/classroom/" class="nav-link">
+                <a href="accueil/" class="nav-link">
                   <i class='bx bx-home-alt'></i>
                   <span class="link">Acceuil</span>
                 </a>
@@ -64,18 +64,14 @@
                   <span class="link">Agenda</span>
                 </a>
               </li>
+              {% if user.is_teacher %}
               <li class="list">
                 <a href="/mes_cours" class="nav-link">
                   <i class='bx bxs-graduation'></i>
                   <span class="link">Cours enseignés</span>
                 </a>
               </li>
-              <li class="list">
-                <a href="#" class="nav-link">
-                  <i class='bx bxs-graduation'></i>
-                  <span class="link">A corriger</span>
-                </a>
-              </li>
+              {% endif %}
               <li class="list">
                 <a href="/classroom/detail_cours/{{cours.code}}" class="nav-link">
                   <div id="userIcon" class="user-icon" style="color: #00838D">{{ cours.name|slice:":1" }}</div>

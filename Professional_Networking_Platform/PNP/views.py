@@ -808,11 +808,22 @@ def network(request):
 
 #classroom page
 def classroom(request):
-    user_cours = Cours.objects.all()
-    print(user_cours)
+    
+   
+    ordre_classes = ['Deust', 'Licence', 'Cycle', 'Master']
+
+    # Créez un dictionnaire pour stocker les cours regroupés par classe
+    cours_par_classe = {}
+
+    # Parcourez chaque classe et récupérez les cours associés
+    for classe in ordre_classes:
+        # Utilisez le premier mot de chaque nom de classe pour filtrer les cours
+        cours_par_classe[classe] = Cours.objects.filter(class_name__startswith=classe)
+
+
     context = {
         
-        'user_cours': user_cours,
+        'cours_par_classe': cours_par_classe
     }
     if request.user.is_authenticated:
         context.update({
@@ -1019,7 +1030,10 @@ def students_page(request, code):
 def mes_cours(request):
     # Récupérer les cours créés par l'utilisateur actuellement connecté
     cours_utilisateur = Cours.objects.filter(teacher=request.user)
-    context = {'cours_utilisateur': cours_utilisateur}
+    
+               
+    context = {'cours_utilisateur': cours_utilisateur,
+               'auth_user': request.user}
     return render(request, 'classroom/myCourses.html', context)
 
 
@@ -1074,3 +1088,15 @@ def creer_documentation(request, code):
 #search Page
 def searchPage(request):
     return render(request, 'searchPa/searchPage.html', {'auth_user': request.user,'isSearch': True})
+def accueil(request):
+    if request.user.is_authenticated:
+        # Récupérer les cours que l'utilisateur a rejoints
+        cours_rejoint = Cours.objects.filter(students=request.user)
+        context = {
+            'cours_rejoint': cours_rejoint
+        }
+        return render(request, 'classroom/accueil.html', context)
+    else:
+        # Si l'utilisateur n'est pas connecté, afficher la page d'accueil normalement
+        return render(request, 'classroom/accueil.html')
+

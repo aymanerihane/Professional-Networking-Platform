@@ -3,195 +3,184 @@
 
 
 
-{% block classroomContent %}
 
-    <main class="main" style="overflow-x:hidden">
-      <section class="secondary-header">
-        <div class="secondary-icon-container">
-          <span class="material-icons-outlined">
-            <img src="{% static 'PNP/img/verifier.png' %}" alt="">
-          </span>
-          <span class="secondary-icon-text">To do</span>
-        </div>
-        <div id="ouvrir-pdf" class="secondary-icon-container">
-          <span class="material-icons calender-icon">
-            <img src="{% static 'PNP/img/calendrier.png' %}" alt="">
-          </span>
-          <span   class="secondary-icon-text">Calender</span>
-        </div>
+
+  {% block classroomContent %}
+    <main class="main" >
+     
+        
         <div class="dropdown">
           <button onclick="toggleDropdown()" class="dropbtn icon-plus">+
           
           </button>
           <div id="myDropdown" class="dropdown-content">
+            {% if user.is_teacher %}
             <a href="/classroom/create/">créer un cour</a>
-
+            {% endif %}
              <a href="/classroom/rejoindre_cours">Rejoindre un cour</a>
           </div>
       </div>
-      
-      
-      
-    </section>
-      <section class="card-section" style="width:100%;display:flex;flex-wrap: wrap;">
-              
-    {% for cours in user_cours %}
-          <!-- First Card -->
-          <a href="/classroom/detail_cours/{{ cours.code }}/" class="card-link">
-          <div class="card">
-              <div class="card-header">
-                
-                  <!-- Vérifiez si le nom du cours existe -->
-                  {% if cours.name %}
-                  <h1 class="subject-name">{{ cours.name }}</h1>
-                  {% else %}
-                  <h1 class="subject-name">Nom du cours inconnu</h1>
-                  {% endif %}
-                  
-                  <!-- Vérifiez si la classe du cours existe -->
-                  {% if cours.class_name %}
-                  <h2 class="section">{{ cours.class_name }}</h2>
-                  {% else %}
-                  <h2 class="section">Classe inconnue</h2>
-                  {% endif %}
-                  
-                  <!-- Vérifiez si le nom de l'enseignant existe -->
-                  
-                  <h3 class="teacher-name">{{the_user.username}}</h3>
-                  
-                 <!--<h3 class="teacher-name">Enseignant inconnu</h3>--> 
-                
-                  
-                  <span class="material-icons teacher-icon">
-                      <img src="{% static 'PNP/img/network.png' %}" alt="">
-                  </span>
-              </div>
-              <div class="card-body"></div>
-              <div class="card-footer">
-                  <span class="material-icons-outlined assignment-icon">
-                      <img src="{% static 'PNP/img/personne.png' %}" alt="">
-                  </span>
-                  <span class="material-icons-outlined folder-icon">
-                      <img src="{% static 'PNP/img/folder.png' %}" alt="">
-                  </span>
-              </div>
-          </div>
-          </a>
+
+   
+      <!-- rooms.html -->
+      {% for classe, cours in cours_par_classe.items %}
+      <h2>{{ classe|upper }}</h2>
+      {% if cours %}
+          {% for cours_item in cours %}
+              <a href="#" class="card-link" onclick="sendRequest('{{ cours_item.teacher.username }}', '{{ cours_item.name }}')">  
+                  <div class="card">
+                      <div class="card-header">
+                          <!-- Afficher les détails du cours -->
+                          {% if cours_item.name %}
+                              <h1 class="subject-name">{{ cours_item.name }}</h1>
+                          {% else %}
+                              <h1 class="subject-name">Nom du cours inconnu</h1>
+                          {% endif %}
+                          <!-- Afficher le nom de l'enseignant -->
+                          <h3 class="teacher-name">{{ cours_item.teacher.username }}</h3>
+                          <!-- Ajouter d'autres détails si nécessaire -->
+                          <span class="material-icons teacher-icon">
+                              <img src="{% static 'PNP/img/network.png' %}" alt="">
+                          </span>
+                      </div>
+                      <div class="card-body"></div>
+                      <div class="card-footer">
+                          <span class="material-icons-outlined assignment-icon">
+                              <img src="{% static 'PNP/img/personne.png' %}" alt="">
+                          </span>
+                          <span class="material-icons-outlined folder-icon">
+                              <img src="{% static 'PNP/img/folder.png' %}" alt="">
+                          </span>
+                      </div>
+                  </div>
+              </a>
           {% endfor %}
-      </section> 
-      
+      {% else %}
+          <p>Aucun cours trouvé pour cette classe.</p>
+      {% endif %}
+  {% endfor %}
+</section>
+
     </main>
     <span class="material-icons help-icon"> 
         <img src="{% static 'PNP/img/question.png' %}" alt="">
     </span>
-  
-  <style>
+    <style>
 
-  a.card-link{
-    min-width: 20rem;
-    flex: 1;
-    max-width: 23rem;
-  }
-    .secondary-header{
-      position:relative;
+      a.card-link{
+        min-width: 20rem;
+        flex: 1;
+        max-width: 23rem;
+      }
+        
+        /* Style the dropdown button */
+    .dropbtn {
+      background-color: transparent;
+      color: black;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
     }
-    /* Style the dropdown button */
-.dropbtn {
-  background-color: transparent;
-  color: black;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-/* Dropdown content (hidden by default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
-  position: absolute;
-  right:0;
-}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-  background-color: #f9f9f9;
-  
-  
-}
-.icon-plus {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  background-color: #00838D; /* Couleur de fond */
-  color: white; /* Couleur de l'icône */
-  border-radius: 50%; /* Pour rendre le cercle */
-  text-align: center;
-  line-height: 30px; /* Pour centrer le texte verticalement */
-  font-size: 35px;
-  cursor: pointer; /* Curseur pointer au survol */
-  right:0;
-  
-}
-
-  </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-  function toggleDropdown() {
-    document.getElementById("myDropdown").classList.toggle("show");
-  }
-  
-  // Close the dropdown menu if the user clicks outside of it
-  window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
+    
+    /* Dropdown content (hidden by default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+    
+    /* Links inside the dropdown */
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+      display: block;
+      position: absolute;
+      right:0;
+    }
+    
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {
+      background-color: #f9f9f9;
+      
+      
+    }
+    .icon-plus {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: #00838D; /* Couleur de fond */
+      color: white; /* Couleur de l'icône */
+      border-radius: 50%; /* Pour rendre le cercle */
+      text-align: center;
+      line-height: 30px; /* Pour centrer le texte verticalement */
+      font-size: 35px;
+      cursor: pointer; /* Curseur pointer au survol */
+      right:0;
+      
+    }
+    
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+      function toggleDropdown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+      }
+      
+      // Close the dropdown menu if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
         }
       }
-    }
-  }
-  
-  $(document).ready(function() {
-    $('#ouvrir-pdf').click(function() {
-        $.ajax({
-            url: '/ouvrir_pdf/',
-            type: 'GET',
-            success: function(response) {
-              window.open(response.url, '_blank');
-            },
-            error: function(xhr, errmsg, err) {
-                console.log(errmsg);
-            }
+      
+      $(document).ready(function() {
+        $('#ouvrir-pdf').click(function() {
+            $.ajax({
+                url: '/ouvrir_pdf/',
+                type: 'GET',
+                success: function(response) {
+                  window.open(response.url, '_blank');
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(errmsg);
+                }
+            });
         });
     });
-});
-</script>
-
-</body>
-{% endblock %}
+    function sendRequest(teacher, cours) {
+      var message = prompt("Veuillez envoyer un message à " + teacher + " pour obtenir le code du cours " + cours + ":");
+      if (message !== null && message !== "") {
+          // Ici, vous pouvez envoyer le message au professeur via une requête AJAX ou autre méthode
+          alert("Message envoyé avec succès à " + teacher + ".");
+      } else {
+          alert("Le message n'a pas été envoyé.");
+      }
+    }
+    </script>
+    
+    
+    
+  {% endblock %}
+  
