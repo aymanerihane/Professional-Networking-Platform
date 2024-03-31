@@ -44,18 +44,14 @@
                 <span class="link">Agenda</span>
               </a>
             </li>
+            {% if user.is_teacher %}
             <li class="list">
               <a href="/mes_cours" class="nav-link">
                 <i class='bx bxs-graduation'></i>
                 <span class="link">Cours enseignés</span>
               </a>
             </li>
-            <li class="list">
-              <a href="mes_cours/" class="nav-link">
-                <i class='bx bxs-graduation'></i>
-                <span class="link">A corriger</span>
-              </a>
-            </li>
+           {% endif %}
             <li class="list">
               <a href="/classroom/detail_cours/{{cours.code}}" class="nav-link">
                 <div id="userIcon" class="user-icon" style="color: #00838D">{{ cours.name|slice:":1" }}</div>
@@ -88,10 +84,10 @@
     <header>
       <div class="menuHeader">
           <ul>
-              <li><a href="">Flux</a></li>
+              <li><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
               <li><a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/">Travaux et Devoir</a></li>
               <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Etudiant</a></li>
-              <li><a href="">Notes</a></li>
+              
           </ul>
       </div>
   </header>
@@ -171,9 +167,9 @@ background-color: rgb(255, 255, 255);
 
 header{
 position: fixed;
-top: 25px;
+top: 30px;
 
-right: 0;
+right: 150px;
 padding: 0px 7%;
 display: flex;
 align-items: center;
@@ -341,6 +337,9 @@ color:#00838D;
     margin-left:400px;
     
     
+}
+.container1{
+  width:600px;
 }
 
 .add-person-icon {

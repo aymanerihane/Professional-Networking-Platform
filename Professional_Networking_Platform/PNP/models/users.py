@@ -54,4 +54,5 @@ class User(models.Model):
     def __str__(self):
         return self.user.username
 
-
+    def is_teacher(self):
+        return self.role == 2

@@ -7,25 +7,14 @@
   
     <main class="main" >
       <section class="secondary-header">
-        <div class="secondary-icon-container">
-          <span class="material-icons-outlined">
-            <img src="{% static 'PNP/img/verifier.png' %}" alt="">
-          </span>
-          <span class="secondary-icon-text">To do</span>
-        </div>
-        <div id="ouvrir-pdf" class="secondary-icon-container">
-          <span class="material-icons calender-icon">
-            <img src="{% static 'PNP/img/calendrier.png' %}" alt="">
-          </span>
-          <span   class="secondary-icon-text">Calender</span>
-        </div>
+        <br><br>
         <div class="dropdown">
           <button onclick="toggleDropdown()" class="dropbtn icon-plus">+
-          
+            {% if user.is_teacher %}
           </button>
           <div id="myDropdown" class="dropdown-content">
             <a href="/classroom/create/">créer un cour</a>
-
+{% endif %}
              <a href="/classroom/rejoindre_cours">Rejoindre un cour</a>
           </div>
       </div>
@@ -34,7 +23,7 @@
       
     </section>
     
-      <section class="card-section">
+      <section class="card-section"style="width:80%;display:flex;flex-wrap: wrap; right:0;">
               
     {% for cours in cours_utilisateur %}
           <!-- First Card -->
