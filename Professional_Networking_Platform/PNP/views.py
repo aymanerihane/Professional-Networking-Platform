@@ -22,7 +22,18 @@ from django.core.files import File
 
 # import datetime
 # @login_required
-
+ 
+def get_datapoints(request):
+    default_query_params = { "xstart": 0, "ystart": 0, "length": 1 }
+    query_params = { **default_query_params, **request.GET.dict() };
+    y = int(query_params["ystart"]);
+    datapoints = []
+ 
+    for i in range(int(query_params["length"])):
+        y += round(5 + random.random() * (-5-5))
+        datapoints.append({ "x": (int(query_params["xstart"]) + i), "y": y})
+    
+    return HttpResponse(json.dumps(datapoints), content_type="application/json")   
 # sign up and login
 def loginRed(request):
     return redirect('PNP:login')
