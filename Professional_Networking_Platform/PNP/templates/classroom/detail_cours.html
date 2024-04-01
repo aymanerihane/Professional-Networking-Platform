@@ -91,24 +91,27 @@
     </nav> {% endcomment %}
 
 
-    <header style="position:absolute;top:100px;right:250px">
+    <header style="position:absolute;top:100px;right:0px">
       <div class="menuHeader" style="display:block;">
-          <ul>
-              <li><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
+          <ul style="">
+              <li style="margin-left: 400px;"><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
               <li><a href="/classroom/detail_cours/{{ cours.code }}/travaux_et_devoir/">Travaux et Devoir</a></li>
               <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
-              <div class="update_delete">
                 {% if is_teacher %}
                 {% if cours.teacher.username == request.user.username %}
+              <li >
                <a href="/classroom/detail_cours/{{ cours.code }}/delete_course/"> <i class="fa fa-trash" aria-hidden="true"></i></a>
+              </li>
+              <li>
                <a href="/classroom/detail_cours/{{ cours.code }}/update_course">  <i class="fas fa-edit"></i></a>
-              </div>
+               </li>
+               {% endif %}
+              {% endif %}
               
           </ul>
       </div>
   </header>
-  {% endif %}
-  {% endif %}
+  
 
 
     
@@ -130,19 +133,19 @@
            <p class="section">Classe inconnue</p>
            {% endif %}
       </div>
-      
+      <div style="display: flex;align-items: start;">
       <div class="container" id="container2">
           <h4>Code du Cour: </h4>
           <p>{{cours.code}}</p>
       </div>
-  </div>
-    <div class=".documentationContainer">
+  
+    <div class="documentationContainer" style="flex:1">
 
     {% if documentation %}
 
+        {% for doc in documentation %}
     <div class="document">
     <ul>
-        {% for doc in documentation %}
         <li>
             <h3>{{ doc.titre }}</h3>
             <p>{{ doc.description }}</p>
@@ -152,12 +155,22 @@
               <p></p>
               {% endif %}
         </li>
-        {% endfor %}
 
     </ul>
+  </div>
+        {% endfor %}
     {% else %}
-    <p>Aucune documentation n'est disponible pour ce cours pour le moment.</p>
+    <div class="document">
+    <ul style="list-style:none">
+        <li>
+            <p>Aucune documentation n'est disponible pour ce cours pour le moment.</p>
+        </li>
+
+    </ul>
+  </div>
+    
     {% endif %}
+  </div>
   </div>
   </div>
       
@@ -366,6 +379,7 @@ header .menuHeader ul li ul li{
         margin-left:400px;
         
         
+        
     }
     .container {
 
@@ -384,11 +398,13 @@ header .menuHeader ul li ul li{
     width:800px;
     background-color: #00838D;
     color:#fff;
+    width: 1000px;
   }
   #container2{
     background-color: #ffffff;
     height:100px;
     width:150px;
+    
 
   }
 
@@ -398,6 +414,7 @@ header .menuHeader ul li ul li{
       margin: 20px 200px;
       border-radius: 8px;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre */
+      margin-right: 50px;
 
 
   }
@@ -415,10 +432,10 @@ header .menuHeader ul li ul li{
 .document {
     background-color: #ffffff;
     padding: 20px;
-    margin: 600px 0px;
+    margin: 20px 0px;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre */
-    width:400px;
+    width: 789px;
     height:95px;
 
 

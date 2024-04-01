@@ -81,12 +81,14 @@
     </nav>
 
 
-    <header>
-      <div class="menuHeader">
-          <ul>
-              <li><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
-              <li><a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/">Travaux et Devoir</a></li>
-              <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Etudiant</a></li>
+
+    <header style="position:absolute;top:100px;right:0px">
+      <div class="menuHeader" style="display:block;">
+          <ul style="">
+              <li style="margin-left: 400px;"><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
+              <li><a href="/classroom/detail_cours/{{ cours.code }}/travaux_et_devoir/">Travaux et Devoir</a></li>
+              <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
+
               
           </ul>
       </div>
@@ -115,7 +117,7 @@
   </div>
     <h2>Étudiants</h2>
     
-    <hr>
+    <hr style="width: 57%;">
     <br>
     {% if students %}
         {% for student in students %}
@@ -334,7 +336,7 @@ color:#00838D;
 }
   .containerBase{
     margin-top: 200px;
-    margin-left:400px;
+    margin-left: 629px;
     
     
 }

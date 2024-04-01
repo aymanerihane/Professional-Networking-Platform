@@ -5,17 +5,17 @@
 {% load static %}
 <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-R7xWeZxrR4Wc3dUpJ4BmqxObZBfqbphvx6noIQaiIUqbz4tX+uAgBmIkCZVSZU+E" crossorigin="anonymous"></head>
         {% block classroomContent %}
-        <header style="position:absolute;top:100px;right:250px">
-            <div class="menuHeader" style="display:block;">
-                <ul>
-                    <li><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
-                    <li><a href="/classroom/detail_cours/{{cours.code}}/travaux_et_devoir/">Travaux et Devoir</a></li>
-                    <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
-                   
-                </ul>
-            </div>
-              
-        </header>
+        
+    <header style="position:absolute;top:100px;right:0px">
+      <div class="menuHeader" style="display:block;">
+          <ul style="">
+              <li style="margin-left: 400px;"><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
+              <li><a href="/classroom/detail_cours/{{ cours.code }}/travaux_et_devoir/">Travaux et Devoir</a></li>
+              <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
+
+          </ul>
+      </div>
+  </header>
         {% if is_teacher %}
         
         {% if cours.teacher.username == request.user.username %}
@@ -39,9 +39,9 @@
   <!-- Boucle sur les devoirs pour les afficher -->
 
   {% if devoirs %}
-  <ul>
+  <ul >
       {% for devoir in devoirs %}
-      <div class="devoir">
+      <div class="devoir"  style="width: 800px;">
           <li>
               <h3>{{ devoir.titre }}</h3>
               <p>{{ devoir.description }}</p>
@@ -56,7 +56,7 @@
       {% endfor %}
   </ul>
   {% else %}
-  <div class="devoir">
+  <div class="devoir" style="width: 800px;">
       <p>Aucun devoir n'a été trouvé.</p>
   </div>
   {% endif %}
@@ -297,11 +297,11 @@ header .menuHeader ul li ul li{
 }
 .icon-plus {
   position: absolute;
-  width: 200px;
-  height: 40px;
+  width: 131px;
+  height: 42px;
   background-color: #00838D; /* Couleur de fond */
   color: white; /* Couleur de l'icône */
-  border-radius: 40%; /* Pour rendre le cercle */
+  border-radius: 20px; /* Pour rendre le cercle */
   text-align: center;
   line-height: 30px; /* Pour centrer le texte verticalement */
   font-size: 24px;

@@ -85,7 +85,7 @@
   
             <div class="bottom-cotent">
               <li class="list">
-                <a href="" class="nav-link" onclick="goBack()">
+                <a href="" class="nav-link back-link" >
                   <i class='bx bxs-caret-left-circle' ></i>
                   <span class="back-link"> Retour</span>
                 </a>
@@ -120,7 +120,10 @@
     function goBack() {
       window.history.back();
     }
-    backlink.addEventListener("click", goBack);
+    backlink.addEventListener("click", function(event) {
+    event.preventDefault();
+    goBack();
+});
     
   function toggleDropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
