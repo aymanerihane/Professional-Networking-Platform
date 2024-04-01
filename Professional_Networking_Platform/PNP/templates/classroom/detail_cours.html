@@ -19,6 +19,8 @@
       href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
       rel="stylesheet"
     />
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-R7xWeZxrR4Wc3dUpJ4BmqxObZBfqbphvx6noIQaiIUqbz4tX+uAgBmIkCZVSZU+E" crossorigin="anonymous">
   </head>
   <body>
     {% comment %} <nav class="open">
@@ -95,11 +97,18 @@
               <li><a href="/classroom/detail_cours/{{ cours.code }}/">Flux</a></li>
               <li><a href="/classroom/detail_cours/{{ cours.code }}/travaux_et_devoir/">Travaux et Devoir</a></li>
               <li><a href="/classroom/detail_cours/{{ cours.code }}/students/">Étudiants</a></li>
+              <div class="update_delete">
+                {% if is_teacher %}
+                {% if cours.teacher.username == request.user.username %}
+               <a href="/classroom/detail_cours/{{ cours.code }}/delete_course/"> <i class="fa fa-trash" aria-hidden="true"></i></a>
+               <a href="/classroom/detail_cours/{{ cours.code }}/update_course">  <i class="fas fa-edit"></i></a>
+              </div>
               
           </ul>
       </div>
   </header>
-
+  {% endif %}
+  {% endif %}
 
 
     
@@ -137,6 +146,11 @@
         <li>
             <h3>{{ doc.titre }}</h3>
             <p>{{ doc.description }}</p>
+            {% if doc.fichier_joint %}
+              <p>Fichier joint: <a href="{{ doc.fichier_joint.url }}" download><i class="fas fa-download"></i> </a></p>
+              {% else %}
+              <p></p>
+              {% endif %}
         </li>
         {% endfor %}
 

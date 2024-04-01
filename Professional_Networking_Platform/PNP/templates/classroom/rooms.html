@@ -6,6 +6,8 @@
 
 
   {% block classroomContent %}
+  <head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script></head>
     <main class="main" >
      
         
@@ -28,7 +30,7 @@
    <section class="card-section" style="width:80%;display:flex;flex-wrap: wrap; right:0;">
       {% if cours %}
           {% for cours_item in cours %}
-              <a href="#" class="card-link" onclick="sendRequest('{{ cours_item.teacher.username }}', '{{ cours_item.name }}')">  
+              <a href="#" class="card-link" onclick="sendRequest('{{ cours_item.teacher.username }}', '{{ cours_item.name }}')"> 
                   <div class="card">
                       <div class="card-header">
                           <!-- Afficher les détails du cours -->
@@ -171,7 +173,8 @@
             });
         });
     });
-    function sendRequest(teacher, cours) {
+    
+    {% comment %}function sendRequest(teacher, cours) {
       var message = prompt("Veuillez envoyer un message à " + teacher + " pour obtenir le code du cours " + cours + ":");
       if (message !== null && message !== "") {
           // Ici, vous pouvez envoyer le message au professeur via une requête AJAX ou autre méthode
@@ -179,6 +182,39 @@
       } else {
           alert("Le message n'a pas été envoyé.");
       }
+    }{% endcomment %}
+    function sendRequest(teacher, cours) {
+      // Utilisation de SweetAlert pour afficher une boîte de dialogue
+      Swal.fire({
+        title: "Envoyer un message au Professeur " + teacher +" pour avoir  le code du cour "+cours,
+        input: "text",
+        inputPlaceholder: "Saisissez votre message ici...",
+        showCancelButton: true,
+        confirmButtonText: "Envoyer",
+        cancelButtonText: "Annuler",
+        allowOutsideClick: false,
+        inputValidator: (value) => {
+          if (!value) {
+            return "Vous devez saisir un message!";
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var message = result.value;
+          // Ici, vous pouvez envoyer le message au professeur via une requête AJAX ou autre méthode
+          Swal.fire({
+            title: "Message envoyé avec succès à " + teacher,
+            text: "Message: " + message,
+            icon: "success"
+          });
+        } else {
+          Swal.fire({
+            title: "Annulé",
+            text: "Le message n'a pas été envoyé.",
+            icon: "error"
+          });
+        }
+      });
     }
     </script>
     

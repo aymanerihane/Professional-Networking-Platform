@@ -849,7 +849,12 @@ def classroom(request):
     
    
     ordre_classes = ['Deust', 'Licence', 'Cycle', 'Master']
-
+    cours_rejoint = Cours.objects.filter(students=request.user)
+    cours_utilisateur = Cours.objects.filter(teacher=request.user)
+    
+               
+     
+            
     # Créez un dictionnaire pour stocker les cours regroupés par classe
     cours_par_classe = {}
 
@@ -860,8 +865,9 @@ def classroom(request):
 
 
     context = {
-        
-        'cours_par_classe': cours_par_classe
+        'cours_rejoint': cours_rejoint,
+        'cours_par_classe': cours_par_classe,
+        'cours_utilisateur': cours_utilisateur, 
     }
     if request.user.is_authenticated:
         context.update({
@@ -1007,10 +1013,11 @@ def create_cours(request):
     else:
         print("DEBUG: Utilisateur non connecté. Redirection vers la page de connexion.")
         return redirect('login')  # Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-    
+   
 def ouvrir_pdf(request):
     nom_du_fichier = "Calendrier-universitaire-2023-2024.pdf"
     chemin_pdf = settings.STATIC_URL + 'PNP/pdfs/' + nom_du_fichier
+    #chemin_pdf = request.build_absolute_uri('/static/PNP/pdfs/' + nom_du_fichier)
     return JsonResponse({'url': chemin_pdf})
     
 def rejoindre_cours(request):
@@ -1021,7 +1028,7 @@ def rejoindre_cours(request):
             
             cours.students.add(request.user)
             cours.save()
-            return redirect('detail_cours', cours_id=cours.id)  # Rediriger vers la page du cours
+            return redirect('/classroom/detail_cours/' + code) # Rediriger vers la page du cours
             #return redirect('/classroom/detail_cours.html')
         except Cours.DoesNotExist:
             # Si le cours n'existe pas, renvoyez l'utilisateur à la même page avec un message d'erreur
@@ -1037,12 +1044,15 @@ def detail_cours(request, code):
     cours = get_object_or_404(Cours, code=code)
     # Obtenir la documentation associée à ce cours s'il y en a
     documentation = Documentation.objects.filter(cours=cours)
+    cours_rejoint = Cours.objects.filter(students=request.user)
 
     # Passer les données à votre modèle de page HTML
     context = {
         'cours': cours,
         'documentation': documentation,
-        'auth_user': request.user
+        'auth_user': request.user,
+        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
+        'cours_rejoint': cours_rejoint
     }
 
     return render(request, 'classroom/detail_cours.html', context)
@@ -1056,11 +1066,16 @@ def students_page(request, code):
 
     # Retrieve the teacher associated with this course and their username
     teacher_username = cours.teacher.username
+    cours_rejoint = Cours.objects.filter(students=request.user)
+       
+           
 
     context = {
         'students': students,
         'teacher_username': teacher_username,
-        'cours': cours
+        'cours': cours,
+        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
+        'cours_rejoint': cours_rejoint
     }
 
     # Render the HTML page with the real student and teacher data, along with course data
@@ -1069,22 +1084,31 @@ def students_page(request, code):
 def mes_cours(request):
     # Récupérer les cours créés par l'utilisateur actuellement connecté
     cours_utilisateur = Cours.objects.filter(teacher=request.user)
-    
+    cours_rejoint = Cours.objects.filter(students=request.user)
                
     context = {'cours_utilisateur': cours_utilisateur,
-               'auth_user': request.user}
+               'auth_user': request.user,
+               'cours_rejoint':cours_rejoint,
+               'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False
+               }
+
     return render(request, 'classroom/myCourses.html', context)
 
 
 def travaux_et_devoir(request, code):
     cours = get_object_or_404(Cours, code=code)
+    cours_utilisateur = Cours.objects.filter(teacher=request.user)
+    cours_rejoint = Cours.objects.filter(students=request.user)
 
     devoirs = Devoir.objects.filter(cours=cours)
     # Vous pouvez passer ces données à votre modèle de page HTML
     context = {
         'devoirs': devoirs,  # Utilisation de la variable devoirs plutôt que travaux_et_devoir_list
         'cours': cours,
-        'auth_user': request.user  # Ajout de l'utilisateur actuel à context
+        'cours_rejoint':cours_rejoint,
+        'auth_user': request.user, # Ajout de l'utilisateur actuel à context
+        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
+        'cours_utilisateur':cours_utilisateur
     }
 
     # Renvoyez une réponse HTTP avec le modèle rendu contenant les travaux et devoirs
@@ -1134,10 +1158,39 @@ def accueil(request):
         # Récupérer les cours que l'utilisateur a rejoints
         cours_rejoint = Cours.objects.filter(students=request.user)
         context = {
-            'cours_rejoint': cours_rejoint
+            'cours_rejoint': cours_rejoint,
+            'auth_user': request.user,
+            'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
         }
         return render(request, 'classroom/accueil.html', context)
     else:
         # Si l'utilisateur n'est pas connecté, afficher la page d'accueil normalement
         return render(request, 'classroom/accueil.html')
 
+def update_course_view(request, code):
+    # Retrieve the course object
+    cours = get_object_or_404(Cours, code=code)
+    
+    if request.method == 'POST':
+        # If the form is submitted, update the course details
+        cours.name = request.POST.get('name')
+        cours.class_name = request.POST.get('class_name')
+        cours.salle = request.POST.get('salle')
+        cours.subject = request.POST.get('subject')
+        cours.save()
+        return redirect('/classroom/detail_cours/{}'.format(code)) # Redirect to a success page
+    
+    # If it's a GET request, render the update course form template
+    return render(request, 'classroom/update_course_form.html', {'cours': cours})
+
+def delete_course_view(request, code):
+    # Retrieve the course object
+    cours = get_object_or_404(Cours, code=code)
+    
+    if request.method == 'POST':
+        # If the delete button is clicked, delete the course
+        cours.delete()
+        return redirect('/mes_cours')  # Redirect to a success page
+    
+    # Render the confirmation template if it's a GET request
+    return render(request, 'classroom/confirm_delete_course.html', {'cours': cours})

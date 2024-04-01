@@ -53,7 +53,7 @@
           <div class="sidebar-content" style="height: 93%;position: sticky;">
             <ul class="lists">
               <li class="list">
-                <a href="accueil/" class="nav-link">
+                <a href="/classroom/accueil/" class="nav-link">
                   <i class='bx bx-home-alt'></i>
                   <span class="link">Acceuil</span>
                 </a>
@@ -72,13 +72,14 @@
                 </a>
               </li>
               {% endif %}
+              {% for cours in cours_rejoint %}
               <li class="list">
                 <a href="/classroom/detail_cours/{{cours.code}}" class="nav-link">
                   <div id="userIcon" class="user-icon" style="color: #00838D">{{ cours.name|slice:":1" }}</div>
                   <span class="link">{{ cours.name }}</span>
                 </a>
               </li>
-              
+              {% endfor %}
              
             </ul>
   
@@ -120,6 +121,7 @@
       window.history.back();
     }
     backlink.addEventListener("click", goBack);
+    
   function toggleDropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
   }
@@ -149,7 +151,20 @@
     });
   });
 
- 
+  $(document).ready(function() {
+    $('#ouvrir-pdf').click(function() {
+        $.ajax({
+            url: '/ouvrir_pdf/',
+            type: 'GET',
+            success: function(response) {
+              window.open(response.url, '_blank');
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+            }
+        });
+    });
+});
   
 </script>
 
