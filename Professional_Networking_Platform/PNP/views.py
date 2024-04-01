@@ -835,7 +835,12 @@ def classroom(request):
     
    
     ordre_classes = ['Deust', 'Licence', 'Cycle', 'Master']
-
+    cours_rejoint = Cours.objects.filter(students=request.user)
+    cours_utilisateur = Cours.objects.filter(teacher=request.user)
+    
+               
+     
+            
     # Créez un dictionnaire pour stocker les cours regroupés par classe
     cours_par_classe = {}
 
@@ -846,8 +851,9 @@ def classroom(request):
 
 
     context = {
-        
-        'cours_par_classe': cours_par_classe
+        'cours_rejoint': cours_rejoint,
+        'cours_par_classe': cours_par_classe,
+        'cours_utilisateur': cours_utilisateur, 
     }
     if request.user.is_authenticated:
         context.update({
@@ -1007,7 +1013,7 @@ def rejoindre_cours(request):
             
             cours.students.add(request.user)
             cours.save()
-            return redirect('detail_cours', cours_id=cours.id)  # Rediriger vers la page du cours
+            return redirect('/classroom/detail_cours/' + code) # Rediriger vers la page du cours
             #return redirect('/classroom/detail_cours.html')
         except Cours.DoesNotExist:
             # Si le cours n'existe pas, renvoyez l'utilisateur à la même page avec un message d'erreur
@@ -1055,10 +1061,11 @@ def students_page(request, code):
 def mes_cours(request):
     # Récupérer les cours créés par l'utilisateur actuellement connecté
     cours_utilisateur = Cours.objects.filter(teacher=request.user)
-    
+    cours_rejoint = Cours.objects.filter(students=request.user)
                
     context = {'cours_utilisateur': cours_utilisateur,
-               'auth_user': request.user}
+               'auth_user': request.user,
+               'cours_rejoint':cours_rejoint}
     return render(request, 'classroom/myCourses.html', context)
 
 
@@ -1120,7 +1127,8 @@ def accueil(request):
         # Récupérer les cours que l'utilisateur a rejoints
         cours_rejoint = Cours.objects.filter(students=request.user)
         context = {
-            'cours_rejoint': cours_rejoint
+            'cours_rejoint': cours_rejoint,
+            'auth_user': request.user
         }
         return render(request, 'classroom/accueil.html', context)
     else:
