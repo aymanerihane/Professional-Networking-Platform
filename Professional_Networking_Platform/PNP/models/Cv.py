@@ -11,6 +11,14 @@ class Cv(models.Model):
     experiences = models.JSONField(blank=True, default=list)  # Use a list to store multiple experiences
     educations = models.JSONField(blank=True, default=list)  # Use a list to store multiple educations
 
+    @classmethod
+    def create_cv(self, user):
+        # Create a new CV for the specified user
+        cv = Cv.objects.create(
+            user=user
+        )
+        return cv
+    
     def add_experience(self, company, job_title, start_date, end_date, description):
         print("###################")
         print("add experience")

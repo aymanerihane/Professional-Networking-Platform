@@ -118,7 +118,7 @@
                     <img class="profile-pic" src="{% static 'PNP/img/avatar/default.jpg' %}" alt="">
                     {% endif %}
                     <div class="plus-div" id="addAbout" data-id="6">
-                        <h1>{{the_user.username}} · <small style="opacity:0.5;font-weight: 10;font-size:26px">{{the_user.user.Visibility}} account</small></h1>
+                        <h1>{{the_user.username}} · <small style="opacity:0.5;font-weight: 10;font-size:26px">{% if role == 3%} Company{% else %}{{the_user.user.Visibility}} {% endif %} account</small></h1>
                         <i class="fa fa-pencil edit-btn plus-btn" data-id="6"></i>
                     </div>
                     <b>{{the_user.user.introduction}}</b>
@@ -128,9 +128,11 @@
                     
                     {% if not isMe  and auth_user.is_authenticated %}
                     <div class="profile-btn">
+                    {% if role != 3 %}
                         <div id="followBtn" style="display: inline-flex;">
                             {% include './followBtn.html' with friend=the_user.username %}
                         </div>
+                    {% endif %}
                         <a id="chat"><img src="{% static 'PNP/img/message.png' %}" alt="">Chat</a>
                         
                     </div>
@@ -144,13 +146,12 @@
                 <i class="fa fa-pencil plus-btn" data-id="0"></i>
                 </div>
             {% endif %}
-                <h2>About</h2>
                 <p>
                 {{cv.about}}
                 </p>
                 {% comment %} <a class="see-more-link" onclick="show()">See <span id="more">More...</span></a> {% endcomment %}
             </div>
-            
+            {% if role != 3 %}
             <div class="profile-description experienceCont">
             
             {% include './experience.html'%}
@@ -178,7 +179,7 @@
                 <p>No Cv available</p>
             {% endif %}
             </div>
-
+            {% endif %}
         <div class="profile-description" id="postDesc">
         <h2>Posts</h2>
         {% include './Post.html' %}        

@@ -63,6 +63,7 @@
         </div>
       {% endif %}
         {% for fields in form %}
+
           {% if forloop.counter < 6 %}
             <div class="input-field" style="width: 50%">
             <i class="fas fa-user"></i>
@@ -72,10 +73,14 @@
             {% endif %}
             </div>
           {% else %}
-            {{fields.label}}
-            {{fields}}
+            {% if forloop.counter == 7 %}
+              {% if role != 3 %}
+                {{fields.label}}
+                {{fields}}
             {% if fields.errors %}
                 <p>{{fields.errors}}</p>
+            {% endif %}
+              {% endif %}
             {% endif %}
           {% endif %}
         {% endfor %}

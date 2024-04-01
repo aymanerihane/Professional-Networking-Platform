@@ -13,9 +13,10 @@ class Entreprise(models.Model):
     user = models.ForeignKey('PNP.User', on_delete=models.DO_NOTHING)
     #
 
-    def create_entreprise(self, user, ICE):
+    @classmethod
+    def create_entreprise(self, user, ice):
         entreprise = Entreprise.objects.create(
-            ICE=ICE,
+            ICE=ice,
             user=user
         )
         return entreprise

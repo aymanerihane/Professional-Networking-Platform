@@ -6,29 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'PNP/css/firstPage.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     
 </head>
 <body>
     <nav class="navbar navnav" style="z-index: 2;">
         <div class="navbar-left">
             <a href="{% url 'PNP:firstPage' %}">
-                <img src="{% static 'PNP/img/logo.png' %}" class="logo">
+                <img src="{% static 'PNP/img/logo.svg' %}" class="logo">
             </a>
             
-            <div class="search-box" style="position: relative;">
+            {% comment %} <div class="search-box" style="position: relative;">
                 <img src="./img/search.png' %}">
                 <input id="search" type="text" placeholder="Search">
                 
                 <div style="overflow:scroll;max-height: 300px;height: 300px;position: absolute;top: 110%;background-color: #efefef;width: 100%;left: 0;border-radius: 5px 5px 10px 10px; display:none">
                 
                 </div>
-            </div>
+            </div> {% endcomment %}
         </div>
         <div class="navbar-center">
         {% if auth_user.is_authenticated %}
             <ul>
                 <li><a href="{% url 'PNP:firstPage' %}" class="{% if ishome %}active-link{% endif %}"><img src="{% static 'PNP/img/home.png' %}"><span>Home</span></a></li>
-                <li><a href="{% url 'PNP:searchPage' %}" class="{% if isSearch %}active-link{% endif %}"><img src="{% static 'PNP/img/home.png' %}"><span>search</span></a></li>
+                <li><a href="{% url 'PNP:searchPage' %}" class="{% if isSearch %}active-link{% endif %}"><img style="width:20px;height:100%;opacity:0.6" src="{% static 'PNP/img/search1.svg' %}"><span>search</span></a></li>
                 <li><a class="{% if isNetwork %}active-link{% endif %}" href="{% url 'PNP:network' %}"><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
                 <li><a class="{% if ismessaging %}active-link{% endif %}" href="{% url 'PNP:messaging' %}"><img src="{% static 'PNP/img/message.png' %}"><span>Messaging</span></a></li>
                 <li><a class="{% if ismetting %}active-link{% endif %}" href="{% url 'PNP:mettingPage' %}"><img src="{% static 'PNP/img/notification.png' %}"><span>Metting</span></a></li>

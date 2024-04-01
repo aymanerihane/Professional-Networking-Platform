@@ -102,16 +102,16 @@ def signUp2(request):
                     description = request.POST.get('introduction')
                     if matricule is not None:  # Make sure cne is not None
                         user = User.objects.get(id=userid)  # Get the User instance with id=userid
-                        Teacher.create_teacher(user, matricule,description)  # Call create_student on the Student class
+                        Teacher.create_teacher(user, matricule,description)  # Call create_teacher on the Student class
                         return redirect('PNP:signUpStud')
                     else :
                         return HttpResponse("Matricule is missing")
                 else:
-                    ice = request.POST.get('ice')
+                    ice = request.POST.get('ICE')
                     if ice is not None:  # Make sure cne is not None
                         user = User.objects.get(id=userid)  # Get the User instance with id=userid
-                        Entreprise.create_entreprise(user, ice)  # Call create_student on the Student class
-                        return redirect('PNP:signUpStud')
+                        Entreprise.create_entreprise(user=user, ice=ice)  # Call create_entreprise on the Student class
+                        return redirect('PNP:firstPage')
             else:
                 # Handle missing user id here
                 return HttpResponse("User id is missing")
@@ -170,9 +170,15 @@ def signUpEntre(request):
 # profile views
 def profile(request, username):
     the_user = auth_user.objects.get(username=username)
-    cv = Cv.objects.get(user_id=the_user.id)
-    cv.skills = json.loads(cv.skills)
-    cv.languages = json.loads(cv.languages)
+    role = User.objects.get(user_id=the_user.id).role
+    if Cv.objects.filter(user_id=the_user.id).exists():
+        cv = Cv.objects.get(user_id=the_user.id)
+    else:
+        cv = Cv.create_cv(the_user)
+    if role != 3:
+        cv = Cv.objects.get(user_id=the_user.id)
+        cv.skills = json.loads(cv.skills)
+        cv.languages = json.loads(cv.languages)
     pnp_user = User.objects.get(user_id=the_user.id)
     posts = Post.objects.filter(user_id=pnp_user.id).all().order_by('-created_at')
     context = {}
@@ -189,6 +195,7 @@ def profile(request, username):
 
     if request.user.is_authenticated:
         current_user = User.objects.get(user_id=request.user.id)
+        current_user.role,
         #take all request of the current user
 
         all_requests = FriendRequest.objects.filter(receiver=current_user.id)
@@ -200,6 +207,7 @@ def profile(request, username):
         
         room = Room.objects.filter(participent__user__username=username).annotate(participent_count=Count('participent')).filter(participent_count__lt=2).first()
 
+
         if room is not None:
             room_id = room.room_ID
         else:
@@ -210,6 +218,7 @@ def profile(request, username):
         context.update({
             'auth_user': request.user,
             'user': current_user,
+            'role': role,
             'request_recived': all_requests,
             'requestsend': FriendRequest.objects.filter(sender=the_user.id).exists(),
             'isMe': request.user.username == username,
@@ -249,7 +258,10 @@ def formProfile(request, id, username):
         if form.is_valid():
             user = auth_user.objects.get(username=username)
             pnp_user = User.objects.get(user_id=user.id)
-            cv = Cv.objects.get(user_id=user.id)
+            if Cv.objects.filter(user_id=user.id).exists():
+                cv = Cv.objects.get(user_id=user.id)
+            else:
+                cv = Cv.create_cv(user)
             if id == 0:
                 cv.about = form.cleaned_data['about']
                 cv.save()
@@ -644,7 +656,7 @@ def firstPage(request):
         current_user = User.objects.get(user_id=request.user.id)
         friends = current_user.friends.all()
         segg = seggestedFriends(request)
-        posts = Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
+        posts = posts | Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
 
         # check if the current user liked the post or not
         for post in posts:
@@ -655,7 +667,8 @@ def firstPage(request):
             'numberComments': Comment.objects.filter(object_id=post.id).count()
         } for post in posts]
 
-        rooms = Room.objects.filter(participent=current_user)
+        # rooms that i am in and have name
+        rooms = Room.objects.filter(participent__user__username=current_user.user.username).exclude(name=None)
         context.update({
             'rooms': rooms,
             'segguestedFriends': segg,
