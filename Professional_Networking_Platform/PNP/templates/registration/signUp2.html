@@ -37,7 +37,9 @@
   <div class="steps">
     <div class="step selected completed" id="0"></div>
     <div class="step selected" id="1"></div>
-    <div class="step" id="2"></div>
+    {% if role != 3 %}
+      <div class="step" id="2"></div>
+    {% endif %}
   </div>
 </div>
   <div class="container">
@@ -72,17 +74,30 @@
                 <p>{{fields.errors}}</p>
             {% endif %}
             </div>
-          {% else %}
-            {% if forloop.counter == 7 %}
-              {% if role != 3 %}
-                {{fields.label}}
-                {{fields}}
-            {% if fields.errors %}
-                <p>{{fields.errors}}</p>
-            {% endif %}
+          {% elif forloop.counter == 6 %}
+            {% if role != 3 %}
+              {{fields.label}}
+              {{fields}}
+              {% if fields.errors %}
+                  <p>{{fields.errors}}</p>
               {% endif %}
             {% endif %}
+          {% elif forloop.counter == 7 %}
+            {% if role == 3%}
+              <label>image of company</label>
+              {{fields}}
+              {% if fields.errors %}
+                  <p>{{fields.errors}}</p>
+              {% endif %}
+              {% endif %}
+          {% else %}
+              {{fields.label}}
+              {{fields}}
+              {% if fields.errors %}
+                  <p>{{fields.errors}}</p>
+            {% endif %}
           {% endif %}
+
         {% endfor %}
       <input class="btn solid" type="submit" value="Next" />
       

@@ -12,6 +12,19 @@
   ></script>
   <link rel="stylesheet" href="{% static 'PNP/css/login.css' %}" />
   <title>Sign Up</title>
+  <style>
+  select {
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  font-size: 16px;
+  height: 41px;
+  margin: 10px;
+}
+  </style>
   
  </head>
 
@@ -34,8 +47,8 @@
       <h2 class="title">Sign Up</h2>
     <div style="display: flex;width: 100%;flex-wrap: wrap;flex-direction: row;">
         {% for fields in form %}
-            {% if forloop.counter == 6 or forloop.counter == 7 or forloop.counter == 11 or forloop.counter == 12 %}
-                <div  style="width: 70%;display:flex;height: 30px">
+            {% if forloop.counter == 6 or forloop.counter == 7 or forloop.counter == 10 or forloop.counter == 11 %}
+                <div  style="width: 100%;display:flex;height: 50px;margin-bottom:10px">
                 <p style="margin-top: 19px;margin-left:5px">{{fields.label_tag}}</p>
             {% else %}
                 <div class="input-field" style="width: 50%">

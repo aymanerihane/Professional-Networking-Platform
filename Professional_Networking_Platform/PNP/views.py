@@ -325,7 +325,7 @@ def formProfile(request, id, username):
                 pnp_user.Visibility = form.cleaned_data['Visibility']
                 pnp_user.save()
                 user.save()
-                return redirect('PNP:profile', username=request.user.username)
+                return redirect('PNP:profile', request.user.username)
         else:
             if request.session.get('error') is not None:
                 error = request.session.get('error')
@@ -473,13 +473,13 @@ def messaging(request):
     userInfo = User.objects.get(user_id=userID)
     # get all rooms that i am a participents in it
     rooms = Room.objects.filter(participent=userInfo)
+    print(rooms)
 
     room_with_participent=[{
         'room': room,
         'participent': room.participent.all().exclude(user_id=userID),
         'lastmessage': Message.objects.filter(room=room).last(),
     } for room in rooms]
-    part = []
 
     context = {
         'rooms': room_with_participent,
@@ -522,6 +522,7 @@ def roomCreateForm(request,type,id):
             return redirect('PNP:messaging')
     else:
         participents = []
+        participent1=[]
         user = User.objects.get(user_id=request.user.id)  # Get the current user
         part = user.friends.all().exclude(user_id=request.user.id)  # Get all friends of the user
         rooms = Room.objects.annotate(participent_count=Count('participent')).filter(participent_count__lt=2)
@@ -530,11 +531,16 @@ def roomCreateForm(request,type,id):
             if rooms.filter(participent=p).exists():  # Check if the friend is a participant in any of these rooms
                 participents.append(p)
         participent_ids = [p.id for p in participents]
+
+        for p in part:
+            if not rooms.filter(participent=p).exists():  # Check if the friend is a participant in any of these rooms
+                participent1.append(p)
+        participent_ids1 = [p.id for p in participent1]
         
 
         if type == 1:
             form = DuscForm()
-            form.fields['participent'].queryset = User.objects.filter(id__in=participent_ids)
+            form.fields['participent'].queryset = User.objects.filter(id__in=participent_ids1)
         elif type == 2:
             form = RoomForm()
             # get all rooms that participents is under 2 users 
@@ -600,6 +606,7 @@ def messageForm(request, id):
 def quitterRoom(request, id):
     room = Room.objects.get(pk=id)
     user = User.objects.get(user_id=request.user.id)
+    print(user,room)
     room.remove_participent(user)
     if room.participent.count() == 0:
         room.delete()
@@ -632,20 +639,27 @@ def searchRoom(request, roomname):
     userID = request.user.id
     userInfo = User.objects.get(user_id=userID)
     users = auth_user.objects.filter(username__startswith=roomname)
-    pnpusers = User.objects.filter(user_id__in=users).all()
-    rooms = Room.objects.filter(participent__in=pnpusers.values_list('id', flat=True))
+    pnpusers = User.objects.filter(user_id__in=users).all().exclude(user_id=userID)
+    roomss = set()
+    rooms = Room.objects.filter(Q(participent__in=pnpusers.values_list('id', flat=True)) | Q(name__startswith=roomname))
+    # filter those rooms by if tey contain me and have more than 2 participent 
+    for room in rooms:
+        if room.participent.count() ==2 and room.participent.filter(user_id=userID).exists():
+            roomss.add(room)
+        elif room.name is not None and room.participent.filter(user_id=userID).exists():
+            roomss.add(room)
+    
     print(rooms)
     if roomname == 'x212x':
         
         # get all rooms that i am a participents in it
-        rooms= Room.objects.filter(participent=userInfo)
-        print(rooms)
+        roomss= Room.objects.filter(participent=userInfo)
     
     rooms_with_participent=[{
         'room': room,
         'participent': room.participent.all().exclude(user_id=userID),
         'lastmessage': Message.objects.filter(room=room).last(),
-    } for room in rooms]
+    } for room in roomss]
 
 
     return render(request,'messagePage/message/sideBar/disc.html' , {'rooms': rooms_with_participent})

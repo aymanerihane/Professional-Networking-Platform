@@ -36,7 +36,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 500px;
-    height: 500px;
+    height: 554px;
     padding: 20px;
     background: #f4f4f4;
     border-radius: 10px;
@@ -180,8 +180,8 @@
             {% endif %}
             </div>
             {% endif %}
-        <div class="profile-description" id="postDesc">
         <h2>Posts</h2>
+        <div class="profile-description" id="postDesc">
         {% include './Post.html' %}        
         </div>
         <div id="modifie">
@@ -197,7 +197,7 @@
                 {% if request_recived %}
                     {% for req in request_recived %}
                     <div class="sidebar-people-row">
-                        <img src="{{req.sender.photo_profile}}">
+                        <img src="{{req.sender.photo_profile.url}}">
                         <div>
                             <h2>{{req.sender.user.username}}</h2>
                             <p>{{req.sender.introduction}}</p>

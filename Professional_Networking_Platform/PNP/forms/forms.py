@@ -27,8 +27,8 @@ class SignUpForm(forms.ModelForm):
 
 # signUp3
 class CVForm(forms.ModelForm):
-    company = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Company'}))
-    job_title = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'job_title'}))
+    company = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Company(optional)'}))
+    job_title = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'job_title(optional)'}))
     start_date = forms.CharField(required=False,max_length=100,
         widget=MonthYearSelectWidget(
             years=range(1980, 2025),
@@ -43,8 +43,8 @@ class CVForm(forms.ModelForm):
         }, empty_label=("Choisir l'année", "Choisir le mois", "Jour")),
         
     )
-    school = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'School'}))
-    degree = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Degree'}))
+    school = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'School(optional)'}))
+    degree = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Degree(optional)'}))
     start_dateE = forms.CharField(required=False,
         widget=forms.SelectDateWidget(years=range(1980, 2025), months={
             1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
@@ -60,13 +60,13 @@ class CVForm(forms.ModelForm):
         }, empty_label=("Choisir l'année", "Choisir le mois", "Jour")),
 
     )
-    description = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Experience description'}))
+    description = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Experience description(optional)'}))
     class Meta:
         model = Cv
-        fields = ['skills', 'languages','company', 'job_title', 'start_date', 'end_date', 'description','school', 'degree', 'start_dateE', 'end_dateE']
+        fields = ['skills', 'languages','company', 'job_title', 'description' ,'start_date', 'end_date','school', 'degree', 'start_dateE', 'end_dateE']
 
         widgets = {
-            'introduction': forms.TextInput(attrs={'placeholder': 'Introduction'}),
+            'introduction': forms.TextInput(attrs={'placeholder': 'Introduction(optional)'}),
             'skills': forms.TextInput(attrs={'placeholder': 'Skills(separeted by , ex: HTML, CSS, JavaScript)'}),
             'languages': forms.TextInput(attrs={'placeholder': 'Languages(separeted by , ex: English, French, Spanish)'}),
         }

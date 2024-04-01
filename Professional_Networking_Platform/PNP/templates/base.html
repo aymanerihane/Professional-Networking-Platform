@@ -74,11 +74,11 @@
                     <p>See Your Profile</p>
                     <span>></span>
                 </a>
-                <a href="" class="profile-menu-link">
+                {% comment %} <a href="" class="profile-menu-link">
                     <img src="{% static 'PNP/img/feedback.png' %}">
                     <p>My Requests</p>
                     <span>></span>
-                </a>
+                </a> {% endcomment %}
                 <form class="profile-menu-link" style="display: flex;align-items: center;justify-content: space-between;"  action="{% url 'PNP:logout' %}" method="post" >
                  {% csrf_token %}
                     <img style="width: 35px;" src="{% static 'PNP/img/logout.png' %}">
