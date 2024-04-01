@@ -121,6 +121,7 @@
       window.history.back();
     }
     backlink.addEventListener("click", goBack);
+    
   function toggleDropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
   }
@@ -150,7 +151,20 @@
     });
   });
 
- 
+  $(document).ready(function() {
+    $('#ouvrir-pdf').click(function() {
+        $.ajax({
+            url: '/ouvrir_pdf/',
+            type: 'GET',
+            success: function(response) {
+              window.open(response.url, '_blank');
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+            }
+        });
+    });
+});
   
 </script>
 

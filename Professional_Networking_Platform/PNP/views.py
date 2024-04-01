@@ -999,10 +999,11 @@ def create_cours(request):
     else:
         print("DEBUG: Utilisateur non connecté. Redirection vers la page de connexion.")
         return redirect('login')  # Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-    
+   
 def ouvrir_pdf(request):
     nom_du_fichier = "Calendrier-universitaire-2023-2024.pdf"
     chemin_pdf = settings.STATIC_URL + 'PNP/pdfs/' + nom_du_fichier
+    #chemin_pdf = request.build_absolute_uri('/static/PNP/pdfs/' + nom_du_fichier)
     return JsonResponse({'url': chemin_pdf})
     
 def rejoindre_cours(request):
@@ -1029,12 +1030,15 @@ def detail_cours(request, code):
     cours = get_object_or_404(Cours, code=code)
     # Obtenir la documentation associée à ce cours s'il y en a
     documentation = Documentation.objects.filter(cours=cours)
+    cours_rejoint = Cours.objects.filter(students=request.user)
 
     # Passer les données à votre modèle de page HTML
     context = {
         'cours': cours,
         'documentation': documentation,
-        'auth_user': request.user
+        'auth_user': request.user,
+        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
+        'cours_rejoint': cours_rejoint
     }
 
     return render(request, 'classroom/detail_cours.html', context)
@@ -1048,11 +1052,16 @@ def students_page(request, code):
 
     # Retrieve the teacher associated with this course and their username
     teacher_username = cours.teacher.username
+    cours_rejoint = Cours.objects.filter(students=request.user)
+       
+           
 
     context = {
         'students': students,
         'teacher_username': teacher_username,
-        'cours': cours
+        'cours': cours,
+        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
+        'cours_rejoint': cours_rejoint
     }
 
     # Render the HTML page with the real student and teacher data, along with course data
@@ -1065,7 +1074,10 @@ def mes_cours(request):
                
     context = {'cours_utilisateur': cours_utilisateur,
                'auth_user': request.user,
-               'cours_rejoint':cours_rejoint}
+               'cours_rejoint':cours_rejoint,
+               'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False
+               }
+
     return render(request, 'classroom/myCourses.html', context)
 
 
@@ -1077,7 +1089,8 @@ def travaux_et_devoir(request, code):
     context = {
         'devoirs': devoirs,  # Utilisation de la variable devoirs plutôt que travaux_et_devoir_list
         'cours': cours,
-        'auth_user': request.user  # Ajout de l'utilisateur actuel à context
+        'auth_user': request.user, # Ajout de l'utilisateur actuel à context
+        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False
     }
 
     # Renvoyez une réponse HTTP avec le modèle rendu contenant les travaux et devoirs
@@ -1128,7 +1141,8 @@ def accueil(request):
         cours_rejoint = Cours.objects.filter(students=request.user)
         context = {
             'cours_rejoint': cours_rejoint,
-            'auth_user': request.user
+            'auth_user': request.user,
+            'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
         }
         return render(request, 'classroom/accueil.html', context)
     else:
