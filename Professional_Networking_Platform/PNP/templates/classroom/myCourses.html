@@ -10,25 +10,27 @@
         <br><br>
         <div class="dropdown">
           <button onclick="toggleDropdown()" class="dropbtn icon-plus">+
-            {% if user.is_teacher %}
+          
           </button>
           <div id="myDropdown" class="dropdown-content">
+            {% if is_teacher %}
             <a href="/classroom/create/">créer un cour</a>
-{% endif %}
+            {% endif %}
              <a href="/classroom/rejoindre_cours">Rejoindre un cour</a>
           </div>
       </div>
+      </main>
       
       
       
     </section>
     
-      <section class="card-section"style="width:80%;display:flex;flex-wrap: wrap; right:0;">
+      <section class="card-section" style="width:80%;display:flex;flex-wrap: wrap; right:0;position:absolute">
               
     {% for cours in cours_utilisateur %}
           <!-- First Card -->
           <a href="/classroom/detail_cours/{{ cours.code }}/" class="card-link">
-          <div class="card">
+          <div class="card" style="max-width: 100px;">
               <div class="card-header">
                   <!-- Vérifiez si le nom du cours existe -->
                   {% if cours.name %}
@@ -68,7 +70,6 @@
           </a>
           {% endfor %}
       </section> 
-      </main>
     </main>
     <span class="material-icons help-icon"> 
         <img src="{% static 'PNP/img/question.png' %}" alt="">

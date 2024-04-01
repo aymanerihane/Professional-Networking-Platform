@@ -14,17 +14,18 @@
           
           </button>
           <div id="myDropdown" class="dropdown-content">
-            {% if user.is_teacher %}
+            {% if is_teacher %}
             <a href="/classroom/create/">créer un cour</a>
             {% endif %}
              <a href="/classroom/rejoindre_cours">Rejoindre un cour</a>
           </div>
       </div>
 
-   
       <!-- rooms.html -->
+      <div style="margin-left:150px">
       {% for classe, cours in cours_par_classe.items %}
       <h2>{{ classe|upper }}</h2>
+   <section class="card-section" style="width:80%;display:flex;flex-wrap: wrap; right:0;">
       {% if cours %}
           {% for cours_item in cours %}
               <a href="#" class="card-link" onclick="sendRequest('{{ cours_item.teacher.username }}', '{{ cours_item.name }}')">  
@@ -58,8 +59,9 @@
       {% else %}
           <p>Aucun cours trouvé pour cette classe.</p>
       {% endif %}
-  {% endfor %}
 </section>
+  {% endfor %}
+  </div>
 
     </main>
     <span class="material-icons help-icon"> 

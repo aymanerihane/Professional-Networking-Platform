@@ -853,6 +853,7 @@ def classroom(request):
         context.update({
             'auth_user': request.user,
             'isClassroom': True,
+            'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
         })
     return render(request,'classroom/rooms.html' , context)
 
@@ -1112,6 +1113,8 @@ def creer_documentation(request, code):
 #search Page
 def searchPage(request):
     return render(request, 'searchPa/searchPage.html', {'auth_user': request.user,'isSearch': True})
+
+#
 def accueil(request):
     if request.user.is_authenticated:
         # Récupérer les cours que l'utilisateur a rejoints

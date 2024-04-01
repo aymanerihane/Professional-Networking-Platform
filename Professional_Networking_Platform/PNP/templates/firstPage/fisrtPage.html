@@ -167,12 +167,14 @@ iframe #viewer{
             </div>
             <p id="showMoreLink" onclick="showSideBar()">Show More <b>+</b></p>
             {% endif %}
+            {% if auth_user.is_authenticated %}
             <div class="sidebar-activity" id="sidebarActivity" style="padding: 20px 30px;">
                 <h3>STATICS</h3>
                 <div id="chartContainer" style="height: 360px; width: 100%;"></div>
                 <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
                 <script src="{% static 'PNP/js/canvasjs.min.js' %}"></script>
             </div>
+            {% endif %}
         </div>
         
     <!--end left sidebar-->
@@ -224,6 +226,14 @@ iframe #viewer{
         
         <!--right sidebar-->
         <div class="right-sidebar">
+        {% if not auth_user.is_authenticated %}
+            <div class="sidebar-activity" id="sidebarActivity" style="padding: 20px 30px;">
+                <h3>STATICS</h3>
+                <div id="chartContainer" style="height: 360px; width: 100%;"></div>
+                <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+                <script src="{% static 'PNP/js/canvasjs.min.js' %}"></script>
+            </div>
+            {% endif %}
             {% if auth_user.is_authenticated %}
             <div class="sidebar-news" style="padding-bottom: 30px;background-color: #FFFF">
                 {% comment %} create a toolpit for this image {% endcomment %}

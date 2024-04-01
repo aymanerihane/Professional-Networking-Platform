@@ -37,7 +37,7 @@
   }
     </style>
     
-    <nav id="sidenav" class="open" style="z-index: 9999;position: relative;">
+    <nav id="sidenav" class="open" style="z-index: 1;position: relative;">
         <div class="logo">
           <i class="bx bx-menu menu-icon" style="color:black"></i>
           <i class='bx bxs-graduation' ></i>
@@ -64,7 +64,7 @@
                   <span class="link">Agenda</span>
                 </a>
               </li>
-              {% if user.is_teacher %}
+              {% if is_teacher %}
               <li class="list">
                 <a href="/mes_cours" class="nav-link">
                   <i class='bx bxs-graduation'></i>
@@ -154,3 +154,5 @@
 </script>
 
 {% endblock %}
+
+</body>
