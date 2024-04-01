@@ -37,17 +37,23 @@
 
 <div class="devoir-container">
   <!-- Boucle sur les devoirs pour les afficher -->
+<h1> TO DO :</h1>
+  <br>
+  <br>
 
   {% if devoirs %}
+  
   <ul >
       {% for devoir in devoirs %}
       <div class="devoir"  style="width: 800px;">
           <li>
-              <h3>{{ devoir.titre }}</h3>
+              <h2>{{ devoir.titre }}</h2>
               <p>{{ devoir.description }}</p>
               <p>Date limite: {{ devoir.date_limite }}</p>
               {% if devoir.fichier_joint %}
               <p>Fichier joint: <a href="{{ devoir.fichier_joint.url }}" download><i class="fas fa-download"></i> </a></p>
+              {% endif %}
+              <div class="delete">
               <form method="post" action="/classroom/detail_cours/{{ cours.code }}/travaux_et_devoir/delete_devoir/{{ devoir.id }}/">
                 {% csrf_token %}
                 <input type="hidden" name="devoir_id" value="{{ devoir.id }}">
@@ -56,9 +62,8 @@
                 </button>
             </form>
             
-              {% else %}
-              <p></p>
-              {% endif %}
+          </div>
+            
           </li>
       </div>
       {% endfor %}
@@ -105,7 +110,9 @@ header{
   display: none !important;
 }
 
-
+ul{
+  list-style-type: none; 
+}
 
 
 header .menuHeader ul{
@@ -336,6 +343,12 @@ header .menuHeader ul li ul li{
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre */
     width: calc(33.33% - 20px); 
 
+}
+
+.delete{
+  display:flex;
+  float:right;
+  
 }
 </style>
 <script>

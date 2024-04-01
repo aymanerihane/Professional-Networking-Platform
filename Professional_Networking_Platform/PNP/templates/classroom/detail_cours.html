@@ -151,18 +151,21 @@
             <p>{{ doc.description }}</p>
             {% if doc.fichier_joint %}
               <p>Fichier joint: <a href="{{ doc.fichier_joint.url }}" download><i class="fas fa-download"></i> </a></p>
+              {% endif %}
+              <div class="delete">
               <form method="post" action="/classroom/detail_cours/{{ cours.code }}/delete_doc/">
                 {% csrf_token %}
                 <button   type="submit">
                     <i style:"float:right" class="fa fa-trash"></i>
                 </button>
             </form>
-              {% else %}
-              <p></p>
-              {% endif %}
+         
+              
+              
         </li>
 
     </ul>
+  </div>
   </div>
         {% endfor %}
     {% else %}
@@ -445,6 +448,15 @@ header .menuHeader ul li ul li{
 
 
 
+}
+.delete{
+  display:flex;
+  float:right;
+  
+}.delete{
+  display:flex;
+  float:right;
+  
 }
     </style>
   </body>

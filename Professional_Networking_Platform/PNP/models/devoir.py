@@ -7,7 +7,7 @@ class Devoir(models.Model):
     titre = models.CharField(max_length=100)
     description = models.TextField()
     fichier_joint = models.FileField(upload_to='creer/devoir/', blank=True, null=True)
-    date_limite = models.DateTimeField()
+    date_limite = models.DateTimeField(blank=True)
 
 
     def __str__(self):
