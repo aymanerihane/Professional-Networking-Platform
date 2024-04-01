@@ -1083,14 +1083,18 @@ def mes_cours(request):
 
 def travaux_et_devoir(request, code):
     cours = get_object_or_404(Cours, code=code)
+    cours_utilisateur = Cours.objects.filter(teacher=request.user)
+    cours_rejoint = Cours.objects.filter(students=request.user)
 
     devoirs = Devoir.objects.filter(cours=cours)
     # Vous pouvez passer ces données à votre modèle de page HTML
     context = {
         'devoirs': devoirs,  # Utilisation de la variable devoirs plutôt que travaux_et_devoir_list
         'cours': cours,
+        'cours_rejoint':cours_rejoint,
         'auth_user': request.user, # Ajout de l'utilisateur actuel à context
-        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False
+        'is_teacher':True if User.objects.get(user_id=request.user.id).role == 2 else False,
+        'cours_utilisateur':cours_utilisateur
     }
 
     # Renvoyez une réponse HTTP avec le modèle rendu contenant les travaux et devoirs
@@ -1149,3 +1153,30 @@ def accueil(request):
         # Si l'utilisateur n'est pas connecté, afficher la page d'accueil normalement
         return render(request, 'classroom/accueil.html')
 
+def update_course_view(request, code):
+    # Retrieve the course object
+    cours = get_object_or_404(Cours, code=code)
+    
+    if request.method == 'POST':
+        # If the form is submitted, update the course details
+        cours.name = request.POST.get('name')
+        cours.class_name = request.POST.get('class_name')
+        cours.salle = request.POST.get('salle')
+        cours.subject = request.POST.get('subject')
+        cours.save()
+        return redirect('/classroom/detail_cours/{}'.format(code)) # Redirect to a success page
+    
+    # If it's a GET request, render the update course form template
+    return render(request, 'classroom/update_course_form.html', {'cours': cours})
+
+def delete_course_view(request, code):
+    # Retrieve the course object
+    cours = get_object_or_404(Cours, code=code)
+    
+    if request.method == 'POST':
+        # If the delete button is clicked, delete the course
+        cours.delete()
+        return redirect('/mes_cours')  # Redirect to a success page
+    
+    # Render the confirmation template if it's a GET request
+    return render(request, 'classroom/confirm_delete_course.html', {'cours': cours})

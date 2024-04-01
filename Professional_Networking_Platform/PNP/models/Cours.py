@@ -46,3 +46,20 @@ class Cours(models.Model):
       
     def __str__(self):
         return self.name
+    
+    def update_course(self, name=None, class_name=None, salle=None, subject=None):
+        # Update course attributes based on the provided keyword arguments
+        if name is not None:
+            self.name = name
+        if class_name is not None:
+            self.class_name = class_name
+        if salle is not None:
+            self.salle = salle
+        if subject is not None:
+            self.subject = subject
+        
+        # Save the updated course
+        self.save()
+        
+    def delete_course(self):
+        self.delete()

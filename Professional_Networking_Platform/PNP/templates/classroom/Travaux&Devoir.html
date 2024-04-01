@@ -18,6 +18,7 @@
         </header>
         {% if is_teacher %}
         
+        {% if cours.teacher.username == request.user.username %}
         
 <div class="dropdown">
     <button onclick="toggleDropdown()" class="dropbtn icon-plus"> + Créer
@@ -31,6 +32,9 @@
     </div>
 </div>
 {% endif %}
+{% endif %}
+
+
 <div class="devoir-container">
   <!-- Boucle sur les devoirs pour les afficher -->
 
