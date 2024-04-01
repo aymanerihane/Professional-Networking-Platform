@@ -1140,7 +1140,7 @@ def creer_documentation(request, code):
             documentation = form.save(commit=False)
             documentation.cours = cours
             documentation.save()
-            return redirect('/classroom/detail_cours/{}/travaux_et_devoir/'.format(code))
+            return redirect('/classroom/detail_cours/{}/'.format(code))
 
 
     else:
@@ -1194,3 +1194,23 @@ def delete_course_view(request, code):
     
     # Render the confirmation template if it's a GET request
     return render(request, 'classroom/confirm_delete_course.html', {'cours': cours})
+
+def delete_documentation(request, code, documentation_id):
+    if request.method == 'POST':
+        documentation = get_object_or_404(Documentation, id=documentation_id, cours__code=code)
+        course_code = documentation.cours.code  # Obtaining the code of the course associated with the documentation
+        documentation.delete()
+        return redirect('/classroom/detail_cours/{}'.format(course_code))  # Redirecting to the detail page of the course
+
+    # Retourner une réponse HTTP appropriée si la méthode de la requête n'est pas POST
+    return HttpResponse("Méthode non autorisée", status=405)
+
+def delete_devoir(request, code_cours, devoir_id):
+    if request.method == 'POST':
+        devoir = get_object_or_404(Devoir, id=devoir_id)
+        code_cours = devoir.cours.code  # Récupérer le code du cours associé au devoir
+        devoir.delete()
+        return redirect('/classroom/detail_cours/{}/travaux_et_devoir/'.format(code_cours)) 
+
+    return HttpResponse("Méthode non autorisée", status=405)
+

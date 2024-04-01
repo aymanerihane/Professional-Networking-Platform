@@ -2,6 +2,7 @@ from django.db import models
 from .Cours import Cours
 
 class Documentation(models.Model):
+    id = models.AutoField(primary_key=True)
     cours = models.ForeignKey(Cours, on_delete=models.CASCADE)
     titre = models.CharField(max_length=100)
     description = models.TextField()

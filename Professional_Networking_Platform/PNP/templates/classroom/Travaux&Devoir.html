@@ -48,6 +48,14 @@
               <p>Date limite: {{ devoir.date_limite }}</p>
               {% if devoir.fichier_joint %}
               <p>Fichier joint: <a href="{{ devoir.fichier_joint.url }}" download><i class="fas fa-download"></i> </a></p>
+              <form method="post" action="/classroom/detail_cours/{{ cours.code }}/travaux_et_devoir/delete_devoir/{{ devoir.id }}/">
+                {% csrf_token %}
+                <input type="hidden" name="devoir_id" value="{{ devoir.id }}">
+                <button type="submit">
+                    <i style="float:right" class="fa fa-trash"></i>
+                </button>
+            </form>
+            
               {% else %}
               <p></p>
               {% endif %}
