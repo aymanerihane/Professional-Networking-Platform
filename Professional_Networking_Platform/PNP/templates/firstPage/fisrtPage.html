@@ -163,7 +163,14 @@ iframe #viewer{
             </div>
             <p id="showMoreLink" onclick="showSideBar()">Show More <b>+</b></p>
             {% endif %}
+            <div class="sidebar-activity" id="sidebarActivity" style="padding: 20px 30px;">
+                <h3>STATICS</h3>
+                <div id="chartContainer" style="height: 360px; width: 100%;"></div>
+                <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+                <script src="{% static 'PNP/js/canvasjs.min.js' %}"></script>
+            </div>
         </div>
+        
     <!--end left sidebar-->
 
     <!--main content-->
@@ -279,6 +286,50 @@ iframe #viewer{
 
     
     <script>
+        window.onload = function () {
+     console.log(1)
+     // Initial Values
+     var xValue = 0;
+     var yValue = 10;
+     var newDataCount = 6;
+     dataPoints = [];
+      
+     var chart = new CanvasJS.Chart("chartContainer", {
+         theme: "light2",
+         exportEnabled: true,
+         data: [{
+             type: "spline",
+             dataPoints: dataPoints
+         }]
+     });
+      
+     updateData();
+      
+     function addData(data) {
+         if (newDataCount !== 1) {
+             $.each(data, function (key, value) {
+                 dataPoints.push({ x: value.x, y: parseFloat(value.y) });
+                 xValue++;
+                 yValue = parseFloat(value.y);
+             });
+             newDataCount = 1;
+         } else {
+             //dataPoints.shift();
+             dataPoints.push({ x: data[0].x, y: parseFloat(data[0].y) });
+             xValue++;
+             yValue = parseFloat(data[0].y);
+         }
+         chart.render();
+         
+         setTimeout(updateData, 3000);
+         
+     }
+      
+     function updateData() {
+         $.getJSON("get_datapoints.json?xstart=" + xValue + "&ystart=" + yValue + "&length=" + newDataCount, addData);
+     }
+      
+     }
 
     //addFriend
     document.addEventListener('click',(e)=> {
