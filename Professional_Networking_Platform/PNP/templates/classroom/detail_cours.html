@@ -107,7 +107,7 @@
                
                 <form method="post" action="/classroom/detail_cours/{{ cours.code }}/delete_course/">
                     {% csrf_token %}
-                    <button  type="submit" onclick="confirmer()"><a > <i class="fa fa-trash" aria-hidden="true"></i></a></button>
+                    <button  type="submit"><a > <i class="fa fa-trash" aria-hidden="true"></i></a></button>
                 </form>
               </li>
               <li>
@@ -161,7 +161,7 @@
               <p>Fichier joint: <a href="{{ doc.fichier_joint.url }}" download><i class="fas fa-download"></i> </a></p>
               {% endif %}
               <div class="delete">
-              <form method="post" action="/classroom/detail_cours/{{ cours.code }}/delete_doc/">
+              <form method="post" action="/classroom/detail_cours/{{ cours.code }}/delete_doc/{{doc.id}}/">
                 {% csrf_token %}
                 <button   type="submit">
                     <i style:"float:right" class="fa fa-trash"></i>

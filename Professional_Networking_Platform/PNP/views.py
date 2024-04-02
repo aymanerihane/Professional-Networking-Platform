@@ -1206,7 +1206,7 @@ def delete_course_view(request, code_cours):
 
 def delete_documentation(request, code, documentation_id):
     if request.method == 'POST':
-        documentation = get_object_or_404(Documentation, id=documentation_id, course__code=code)
+        documentation = get_object_or_404(Documentation, id=documentation_id, cours__code=code)
         course_code = documentation.cours.code  # Obtaining the code of the course associated with the documentation
         documentation.delete()
         return redirect('/classroom/detail_cours/{}'.format(course_code))  # Redirecting to the detail page of the course
