@@ -783,9 +783,11 @@ def reject_request(request, username):
 # create post
 
 def get_posts(request):
+    users = User.objects.filter(Visibility='public')
+    posts = Post.objects.filter(user_id__in=users)
     current_user = User.objects.get(user_id=request.user.id)
     friends = current_user.friends.all()
-    posts = Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
+    posts = posts | Post.objects.filter(Q(user_id__in=friends) | Q(user_id=current_user.id)).order_by('-created_at')
 
     # check if the current user liked the post or not
     for post in posts:
