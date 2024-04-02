@@ -120,7 +120,7 @@ def signUp2(request):
                 else:
                     ice = request.POST.get('ICE')
                     if ice is not None:  # Make sure cne is not None
-                        user = User.objects.get(id=userid)  # Get the User instance with id=userid
+                        user = pnp_user  # Get the User instance with id=userid
                         Entreprise.create_entreprise(user=user, ice=ice)  # Call create_entreprise on the Student class
                         return redirect('PNP:firstPage')
             else:
@@ -490,6 +490,7 @@ def messaging(request):
         'rooms': room_with_participent,
         'auth_user': request.user,
         'ismessaging': True,
+        'role': User.objects.get(user_id=request.user.id).role
     }
     return render(request,'messagePage/messagePage.html' , context)
 
@@ -708,6 +709,7 @@ def firstPage(request):
             'number_of_posts': Post.objects.filter(user_id=current_user.id).count(),
             'number_of_friends': current_user.friends.count(),
             'friends': friends,
+            'role': User.objects.get(user_id=request.user.id).role
         })
 
     context.update({
@@ -848,6 +850,7 @@ def network(request):
         'friends' : User.objects.get(user_id=request.user.id).friends.all().exclude(user_id=request.user.id),
         'auth_user': request.user,
         'isNetwork': True,
+        'role': User.objects.get(user_id=request.user.id).role
     }
     return render(request,'networkPage/networkPage.html' , context)
 
@@ -1158,7 +1161,7 @@ def creer_documentation(request, code):
 
 #search Page
 def searchPage(request):
-    return render(request, 'searchPa/searchPage.html', {'auth_user': request.user,'isSearch': True})
+    return render(request, 'searchPa/searchPage.html', {'auth_user': request.user,'isSearch': True,'role': User.objects.get(user_id=request.user.id).role})
 
 #
 def accueil(request):

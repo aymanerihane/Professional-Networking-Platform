@@ -33,7 +33,9 @@
                 <li><a class="{% if isNetwork %}active-link{% endif %}" href="{% url 'PNP:network' %}"><img src="{% static 'PNP/img/network.png' %}"><span>My Network</span></a></li>
                 <li><a class="{% if ismessaging %}active-link{% endif %}" href="{% url 'PNP:messaging' %}"><img src="{% static 'PNP/img/message.png' %}"><span>Messaging</span></a></li>
                 <li><a class="{% if ismetting %}active-link{% endif %}" href="{% url 'PNP:mettingPage' %}"><img src="{% static 'PNP/img/notification.png' %}"><span>Metting</span></a></li>
+                {% if role != 3 %}
                 <li><a class="{% if isClassroom %}active-link{% endif %}" href="{% url 'PNP:classroom' %}"><img src="{% static 'PNP/img/jobs.png' %}"><span>classroom</span></a></li>
+                {% endif %}
             </ul>
         {% else %}
         <h1>Guest Page</h1>
