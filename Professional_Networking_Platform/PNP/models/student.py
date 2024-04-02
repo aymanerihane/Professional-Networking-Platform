@@ -17,3 +17,6 @@ class Student(models.Model):
         student = self(user=user,CNE=cne, class_id=class_id)
         student.save()
         return student
+    
+    def __str__(self):
+        return self.CNE+ '-' + self.user.user.username

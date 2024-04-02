@@ -20,3 +20,6 @@ class Entreprise(models.Model):
             user=user
         )
         return entreprise
+    
+    def __str__(self):
+        return self.ICE

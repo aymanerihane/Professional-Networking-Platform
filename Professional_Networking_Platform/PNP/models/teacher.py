@@ -18,3 +18,6 @@ class Teacher(models.Model):
         teacher = self(user=user,matricule=matricule, speciality=speciality)
         teacher.save()
         return teacher
+    
+    def __str__(self):
+        return self.matricule+ '-' + self.user.user.username
