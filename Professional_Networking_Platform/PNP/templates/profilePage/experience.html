@@ -1,10 +1,10 @@
 {% load static %}
-{% if isMe %}
                 <div class="plus-div" id="addExperience" data-id="1">
                 <h2>Experience</h2>
+{% if isMe %}
                 <i class="fa fa-plus plus-btn" data-id="1"></i>
-                </div>
             {% endif %}
+                </div>
 {% if cv.experiences %}
                 {% for experience in cv.experiences %}
                 <div class="profile-desc-row">
@@ -12,11 +12,15 @@
                     <div>
                         <div class="plus-div" id="deleteExperi" data-id="{{experience.id}}">
                         <h3>{{experience.job_title}}</h3>
+                        {% if isMe %}
                         <i class="fa fa-trash plus-btn deleteexp" data-id="{{experience.id}}"></i>
+                        {% endif %}
                         </div>
                         <div class="plus-div " data-id="{{experience.id}}">
                         <b>{{experience.company}}</b>
+                        {% if isMe %}
                         <i class="fa fa-pencil editExp plus-btn" data-id="{{experience.id}}"></i>
+                        {% endif %}
                         </div>
                         <b>{{experience.start_date}}-{{experience.end_date}}</b>
                         <p>{{experience.description}}</p>

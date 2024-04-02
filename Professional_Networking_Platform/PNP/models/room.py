@@ -29,6 +29,7 @@ class Room(models.Model):
         room.add_participent(user)
         room.add_participent(participents)
         room.save()
+        return room
 
     def add_participent(self, user):
         self.participent.add(user)

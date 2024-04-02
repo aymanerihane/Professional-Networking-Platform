@@ -1,10 +1,10 @@
 {% load static %}
-{% if isMe %}
     <div class="plus-div " id="addEducation" data-id="2">
     <h2>Education</h2>
+{% if isMe %}
     <i class="fa fa-plus plus-btn" data-id="2"></i>
-    </div>
 {% endif %}
+    </div>
     {% if cv.educations %}
     {% for education in cv.educations %} 
     <div class="profile-desc-row">
@@ -12,11 +12,15 @@
         <div>
             <div class="plus-div " id="addEducation" data-id="2">
             <h3>{{education.school}}</h3>
+            {% if isMe %}
             <i class="fa fa-trash deleteeduc plus-btn" data-id="{{education.id}}"></i>
+            {% endif %}
             </div>
             <div class="plus-div " id="addEducation" data-id="{{education.id}}">
             <b>{{education.degree}}</b>
+            {% if isMe %}
             <i class="fa fa-pencil editEduc plus-btn" data-id="{{education.id}}"></i>
+            {% endif %}
             </div>
             <b>{{education.start_date}}-{{education.end_date}}</b>
             <hr>

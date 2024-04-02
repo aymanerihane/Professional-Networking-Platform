@@ -111,8 +111,8 @@ def signUp2(request):
                 elif role == 2:
                     matricule = request.POST.get('matricule')
                     description = request.POST.get('introduction')
-                    if matricule is not None:  # Make sure cne is not None
-                        user = User.objects.get(id=userid)  # Get the User instance with id=userid
+                    if matricule is not None:  # Make sure matricule is not None
+                        user = User.objects.get(user_id=userid)  # Get the User instance with id=userid
                         Teacher.create_teacher(user, matricule,description)  # Call create_teacher on the Student class
                         return redirect('PNP:signUpStud')
                     else :
@@ -232,7 +232,6 @@ def profile(request, username):
             'role': role,
             'request_recived': all_requests,
             'requestsend': FriendRequest.objects.filter(sender=the_user.id).exists(),
-            'isMe': request.user.username == username,
             'isFriend': current_user.friends.filter(user_id=the_user.id).exists(),
             'segguestedFriends': segg,
             'id': room_id,
@@ -240,6 +239,7 @@ def profile(request, username):
 
     context.update({
         'the_user': the_user,
+        'isMe': request.user.username == username,
         'cv': cv,
         'is_private': pnp_user.Visibility == 'private',
         'posts': posts_with_time_since,
@@ -424,19 +424,24 @@ def delete_language(request, id,username):
 
 
 def chat(request, username):
-    # get id of room that have <2 members and username in it
-    room = Room.objects.filter(participent__user__username=username).annotate(participent_count=Count('participent')).filter(participent_count__lt=2).first()
-    print(room)
+    # get the room that iam in and the user in and dont have name
+    user = auth_user.objects.get(username=username)
+    current_user = User.objects.get(user_id=request.user.id)
+    userpnp= User.objects.get(user_id=user.id)
+    room = Room.objects.filter(users__in=[current_user, userpnp], name__isnull=True).first()
+   
+    
     if room is None:
         # create a new room with the current user and the user with username
-        user = auth_user.objects.get(username=username)
-        userpnp= User.objects.get(user_id=user.id)
-        current_user = User.objects.get(user_id=request.user.id)
         room = Room.create_discussion(current_user,userpnp.id)
+
     context = {
         'id': room.room_ID,
     }
-    return render(request, 'messagePage/message/contentchat/content.html', context)
+    return JsonResponse({
+        'html': render(request, 'messagePage/message/contentchat/content.html', context).content.decode('utf-8'),
+        'id_room': room.room_ID
+    })
 # metting pages
 
 ##metting choix page

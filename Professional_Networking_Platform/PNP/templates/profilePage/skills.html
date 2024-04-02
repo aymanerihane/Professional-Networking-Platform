@@ -1,14 +1,14 @@
 {% load static %}
-{% if isMe %}
     <div class="plus-div" id="addSkills" data-id="3">
     <h2>Skills</h2>
+    {% if isMe %}
     <i class="fa fa-plus plus-btn" data-id="3"></i>
+    {% endif %}
     </div>
-{% endif %}
     {% if cv.skills %}
     <div> {% for skill in cv.skills %}
         
-        <div style="position:relative" class="skill-btn"><i style="position:absolute;transform: translate(50%,-100%);top: 0;right: 0;" class="fa fa-trash skilldelete plus-btn" data-id="{{skill}}"></i>{{skill}}</div>{% if not forloop.last %} {% endif %}
+        <div style="position:relative" class="skill-btn">{% if isMe %}<i style="position:absolute;transform: translate(50%,-100%);top: 0;right: 0;" class="fa fa-trash skilldelete plus-btn" data-id="{{skill}}"></i>{% endif %}{{skill}}</div>{% if not forloop.last %} {% endif %}
         {% endfor %}
     </div>
     {% else %}

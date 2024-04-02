@@ -49,6 +49,7 @@
         <h1>Friends</h1>
         <ul>
             {% for friend in friends %}
+            <a href="{% url 'PNP:profile' friend.user.username %}">
                 <li>
                     {{friend.user.username}}
                     <div>
@@ -62,6 +63,7 @@
                         </div>
                     </div>
                 </li>
+                </a>
             {% endfor %}
         </ul>
     {% else %}
