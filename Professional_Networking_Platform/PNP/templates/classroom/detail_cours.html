@@ -11,6 +11,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script></head>
    <title>{{cours.name}}</title>
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'PNP/css/detailCours.css' %}"/>
@@ -100,7 +102,13 @@
                 {% if is_teacher %}
                 {% if cours.teacher.username == request.user.username %}
               <li >
-               <a href="/classroom/detail_cours/{{ cours.code }}/delete_course/"> <i class="fa fa-trash" aria-hidden="true"></i></a>
+               
+               <div class="delete">
+               
+                <form method="post" action="/classroom/detail_cours/{{ cours.code }}/delete_course/">
+                    {% csrf_token %}
+                    <button  type="submit" onclick="confirmer()"><a > <i class="fa fa-trash" aria-hidden="true"></i></a></button>
+                </form>
               </li>
               <li>
                <a href="/classroom/detail_cours/{{ cours.code }}/update_course">  <i class="fas fa-edit"></i></a>
@@ -444,7 +452,7 @@ header .menuHeader ul li ul li{
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre */
     width: 789px;
-    height:95px;
+    height:auto;
 
 
 
@@ -452,13 +460,41 @@ header .menuHeader ul li ul li{
 .delete{
   display:flex;
   float:right;
-  
-}.delete{
-  display:flex;
-  float:right;
-  
 }
-    </style>
+  
+.delete button{
+  background-color: #fff; /* Couleur de fond */
+  border: none; /* Supprimer la bordure */
+}
+ul{
+  list-style:none;
+}
+    </style>{%comment%}
+    <script>
+      function confirmer() {
+      Swal.fire({
+        title: "Êtes-vous sûr ?",
+        text: "Vous ne pourrez pas annuler cette action !",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui, supprimer !",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Mettez ici la logique de suppression
+          // Par exemple, vous pouvez appeler une fonction pour supprimer l'élément
+          // ou effectuer une requête au serveur pour supprimer les données.
+          // Après la suppression, vous pouvez également actualiser la page si nécessaire.
+          Swal.fire("Supprimé !", "Votre élément a été supprimé.", "success");
+          window.location.href = "/mes_cours";
+        } else {
+          Swal.fire("Annulé", "Votre élément est en sécurité :)", "error");
+        }
+
+      });
+    }{% endcomment%}
+      </script>
   </body>
 </html>
 {% endblock %}

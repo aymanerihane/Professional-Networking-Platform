@@ -1006,7 +1006,7 @@ def create_cours(request):
                 if not new_cours.code:
                     new_cours.generate_code()
                 new_cours.save()
-                return redirect('/classroom')  
+                return redirect('/mes_cours')  
         else:
             form = CoursForm()
         return render(request, 'classroom/create_cours.html', {'form': form})
@@ -1044,6 +1044,7 @@ def detail_cours(request, code):
     cours = get_object_or_404(Cours, code=code)
     # Obtenir la documentation associée à ce cours s'il y en a
     documentation = Documentation.objects.filter(cours=cours)
+    
     cours_rejoint = Cours.objects.filter(students=request.user)
 
     # Passer les données à votre modèle de page HTML
@@ -1169,6 +1170,7 @@ def accueil(request):
 
 def update_course_view(request, code):
     # Retrieve the course object
+    
     cours = get_object_or_404(Cours, code=code)
     
     if request.method == 'POST':
@@ -1183,21 +1185,18 @@ def update_course_view(request, code):
     # If it's a GET request, render the update course form template
     return render(request, 'classroom/update_course_form.html', {'cours': cours})
 
-def delete_course_view(request, code):
-    # Retrieve the course object
-    cours = get_object_or_404(Cours, code=code)
-    
+def delete_course_view(request, code_cours):
+    # Vérifier si la méthode de requête est POST
     if request.method == 'POST':
-        # If the delete button is clicked, delete the course
+        cours = get_object_or_404(Cours, code=code_cours)
         cours.delete()
-        return redirect('/mes_cours')  # Redirect to a success page
-    
-    # Render the confirmation template if it's a GET request
-    return render(request, 'classroom/confirm_delete_course.html', {'cours': cours})
+        return redirect('/mes_cours')
+    else:
+        return redirect('/mes_cours')
 
 def delete_documentation(request, code, documentation_id):
     if request.method == 'POST':
-        documentation = get_object_or_404(Documentation, id=documentation_id, cours__code=code)
+        documentation = get_object_or_404(Documentation, id=documentation_id, course__code=code)
         course_code = documentation.cours.code  # Obtaining the code of the course associated with the documentation
         documentation.delete()
         return redirect('/classroom/detail_cours/{}'.format(course_code))  # Redirecting to the detail page of the course

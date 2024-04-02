@@ -181,41 +181,14 @@
           alert("Message envoyé avec succès à " + teacher + ".");
       } else {
           alert("Le message n'a pas été envoyé.");
-      }
-    }{% endcomment %}
-    function sendRequest(teacher, cours) {
-      // Utilisation de SweetAlert pour afficher une boîte de dialogue
-      Swal.fire({
-        title: "Envoyer un message au Professeur " + teacher +" pour avoir  le code du cour "+cours,
-        input: "text",
-        inputPlaceholder: "Saisissez votre message ici...",
-        showCancelButton: true,
-        confirmButtonText: "Envoyer",
-        cancelButtonText: "Annuler",
-        allowOutsideClick: false,
-        inputValidator: (value) => {
-          if (!value) {
-            return "Vous devez saisir un message!";
-          }
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          var message = result.value;
-          // Ici, vous pouvez envoyer le message au professeur via une requête AJAX ou autre méthode
-          Swal.fire({
-            title: "Message envoyé avec succès à " + teacher,
-            text: "Message: " + message,
-            icon: "success"
-          });
-        } else {
-          Swal.fire({
-            title: "Annulé",
-            text: "Le message n'a pas été envoyé.",
-            icon: "error"
-          });
-        }
-      });
-    }
+      }{%endcomment%}
+   function sendRequest(teacher, cours) {
+  // Utilisation de SweetAlert pour afficher une boîte de dialogue
+  Swal.fire({
+    title: "Veuillez avoir le code du cours pour y accéder",
+    confirmButtonText: "OK"
+  });
+}
     </script>
     
     

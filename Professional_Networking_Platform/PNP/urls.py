@@ -92,7 +92,7 @@ urlpatterns = [
     path('classroom/detail_cours/<str:code>/travaux_et_devoir/creer/documentation/', creer_documentation, name='creer_documentation'),
         
     path('classroom/detail_cours/<str:code>/update_course/', update_course_view, name='update_course'),
-    path('classroom/detail_cours/<str:code>/delete_course/', delete_course_view, name='delete_course'),
+    path('classroom/detail_cours/<str:code_cours>/delete_course/', delete_course_view, name='delete_course'),
     
     path('classroom/detail_cours/<str:code>/delete_doc/<int:documentation_id>/', delete_documentation, name='delete_documentation'),
     path('classroom/detail_cours/<str:code_cours>/travaux_et_devoir/delete_devoir/<int:devoir_id>/', delete_devoir, name='delete_devoir'),

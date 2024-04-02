@@ -61,5 +61,4 @@ class Cours(models.Model):
         # Save the updated course
         self.save()
         
-    def delete_course(self):
-        self.delete()
+    
